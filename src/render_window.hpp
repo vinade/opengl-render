@@ -1,6 +1,7 @@
 #ifndef RENDER_WINDOW_HPP
 #define RENDER_WINDOW_HPP
 
+#include <GL/glew.h>
 #include <GL/freeglut.h>
 
 #define RENDER_WINDOW_WIDTH 800

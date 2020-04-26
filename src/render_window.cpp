@@ -107,6 +107,12 @@ void RenderWindow::start(){
 	glutInitWindowPosition(this->pos_x, this->pos_y);
 	glutCreateWindow(this->title); // BUG: Não está exibindo o título
 
+	glewExperimental = true; // Needed for core profile
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "Failed to initialize GLEW" << std::endl;
+		exit(1);
+	}
+
 	if (this->gl_init != nullptr){
 		(*this->gl_init)();
 	}
