@@ -67,6 +67,9 @@ void Shader::setup(std::string name, UniformType type)
     case SHADER_TYPE_VEC3:
         selected_type = new UniformItem<glm::vec3>(name, this->program_id);
         break;
+    case SHADER_TYPE_VEC4:
+        selected_type = new UniformItem<glm::vec4>(name, this->program_id);
+        break;
     case SHADER_TYPE_MAT4:
         selected_type = new UniformItem<glm::mat4>(name, this->program_id);
         break;
@@ -81,14 +84,14 @@ void Shader::setup(std::string name, UniformType type)
 template <typename T>
 void Shader::fill(std::string name, T *value)
 {
-    BaseUniformItem *item = this->items[name];
+    UniformItem<T> *item = (UniformItem<T> *)this->items[name];
     item->set(value);
 }
 
 template <typename T>
 void Shader::fill(std::string name, const T &value)
 {
-    BaseUniformItem *item = this->items[name];
+    UniformItem<T> *item = (UniformItem<T> *)this->items[name];
     item->set((T *)&value);
 }
 
@@ -231,6 +234,12 @@ void Shader::exec()
             UniformItem<glm::vec3> *item_vec3 = (UniformItem<glm::vec3> *)item;
             glm::vec3 value = *(item_vec3->get());
             glUniform3fv(item_vec3->id, 1, glm::value_ptr(value));
+        }
+        else if (tid == typeid(glm::vec4))
+        {
+            UniformItem<glm::vec4> *item_vec4 = (UniformItem<glm::vec4> *)item;
+            glm::vec4 value = *(item_vec4->get());
+            glUniform4fv(item_vec4->id, 1, glm::value_ptr(value));
         }
         else if (tid == typeid(glm::mat4))
         {
