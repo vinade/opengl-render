@@ -1,3 +1,6 @@
+#ifndef RENDER_WINDOW_CPP
+#define RENDER_WINDOW_CPP
+
 #include "render_window.hpp"
 
 
@@ -143,3 +146,5 @@ void RenderWindow::stop(){
 	glutLeaveMainLoop();
 	this->running = false;
 }
+
+#endif
