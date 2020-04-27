@@ -102,6 +102,9 @@ void RenderWindow::start(){
 	this->running = true;
 
 	glutInit(&this->iArgc, this->cppArgv);
+	glutInitContextVersion(RENDER_WINDOW_OPENGL_VERSION_MAJOR, RENDER_WINDOW_OPENGL_VERSION_MINOR);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
+	// glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(this->width, this->height);
 	glutInitWindowPosition(this->pos_x, this->pos_y);
