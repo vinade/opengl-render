@@ -39,7 +39,6 @@ class BaseUniformItem
 private:
     void *item;
 public:
-    unsigned int debug;
     unsigned int id;
 
     BaseUniformItem() {};
@@ -61,7 +60,6 @@ private:
     T *item;
 
 public:
-    unsigned int debug;
     unsigned int id;
 
     UniformItem(std::string name, unsigned int program_id);

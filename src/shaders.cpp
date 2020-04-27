@@ -3,14 +3,15 @@
 
 #include "shaders.hpp"
 
-unsigned int deb = 0;
-
 template<typename T>
 UniformItem<T>::UniformItem(std::string name, unsigned int program_id)
 {
     T _item;
     this->id = glGetUniformLocation(program_id, name.c_str());
-    this->debug = deb++;
+
+    if (this->id == -1){
+        std::cerr << "[Shader] Uniform " << name.c_str() << " não utilizado pelo shader" << std::endl;
+    }
 }
 
 template<typename T>
@@ -210,42 +211,72 @@ void Shader::exec()
 
     for(auto item_map : this->items)
     {
-        BaseUniformItem *item = item_map.second;
-        const std::type_info &tid = item->getTID();
+        BaseUniformItem *base_item = item_map.second;
+        const std::type_info &tid = base_item->getTID();
 
         if (tid == typeid(int))
         {
-            UniformItem<int> *item_int = (UniformItem<int> *)item;
-            glUniform1i(item_int->id, *(item_int->get()));
+            UniformItem<int> *item = (UniformItem<int> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glUniform1i(item->id, *(item->get()));
         }
         else if (tid == typeid(float))
         {
-            UniformItem<float> *item_float = (UniformItem<float> *)item;
-            glUniform1f(item_float->id, *(item_float->get()));
+            UniformItem<float> *item = (UniformItem<float> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glUniform1f(item->id, *(item->get()));
         }
         else if (tid == typeid(glm::vec2))
         {
-            UniformItem<glm::vec2> *item_vec2 = (UniformItem<glm::vec2> *)item;
-            glm::vec2 value = *(item_vec2->get());
-            glUniform2fv(item_vec2->id, 1, glm::value_ptr(value));
+            UniformItem<glm::vec2> *item = (UniformItem<glm::vec2> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glm::vec2 value = *(item->get());
+            glUniform2fv(item->id, 1, glm::value_ptr(value));
         }
         else if (tid == typeid(glm::vec3))
         {
-            UniformItem<glm::vec3> *item_vec3 = (UniformItem<glm::vec3> *)item;
-            glm::vec3 value = *(item_vec3->get());
-            glUniform3fv(item_vec3->id, 1, glm::value_ptr(value));
+            UniformItem<glm::vec3> *item = (UniformItem<glm::vec3> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glm::vec3 value = *(item->get());
+            glUniform3fv(item->id, 1, glm::value_ptr(value));
         }
         else if (tid == typeid(glm::vec4))
         {
-            UniformItem<glm::vec4> *item_vec4 = (UniformItem<glm::vec4> *)item;
-            glm::vec4 value = *(item_vec4->get());
-            glUniform4fv(item_vec4->id, 1, glm::value_ptr(value));
+            UniformItem<glm::vec4> *item = (UniformItem<glm::vec4> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glm::vec4 value = *(item->get());
+            glUniform4fv(item->id, 1, glm::value_ptr(value));
         }
         else if (tid == typeid(glm::mat4))
         {
-            UniformItem<glm::mat4> *item_mat4 = (UniformItem<glm::mat4> *)item;
-            glm::mat4 value = *(item_mat4->get());
-            glUniformMatrix4fv(item_mat4->id, 1, GL_FALSE, glm::value_ptr(value));
+            UniformItem<glm::mat4> *item = (UniformItem<glm::mat4> *)base_item;
+
+            if (item->id == -1){
+                continue;
+            }
+
+            glm::mat4 value = *(item->get());
+            glUniformMatrix4fv(item->id, 1, GL_FALSE, glm::value_ptr(value));
         }
         else
         {
