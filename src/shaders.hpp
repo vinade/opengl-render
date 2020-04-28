@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <unordered_map>
+#include "data_types.hpp"
 
 #define SHADERS_FOLDER std::string("./shaders/")
 #define SHADERS_VERTEX_EXT std::string(".vertexshader")
@@ -22,24 +23,12 @@
 #define check_opengl_errors() Shader::list_opengl_errors(__FILE__, __LINE__) 
 
 
-enum UniformType
-{
-    SHADER_TYPE_FLOAT,
-    SHADER_TYPE_INT,
-    SHADER_TYPE_VEC2,
-    SHADER_TYPE_VEC3,
-    SHADER_TYPE_VEC4,
-    SHADER_TYPE_MAT4,
-    SHADER_TYPE_TEXTURE
-};
-
-
 class BaseUniformItem
 {
 private:
     void *item;
 public:
-    unsigned int id;
+    int id;
 
     BaseUniformItem() {};
     virtual void set(int* item) {};
@@ -60,7 +49,7 @@ private:
     T *item;
 
 public:
-    unsigned int id;
+    int id;
 
     UniformItem(std::string name, unsigned int program_id);
     // ~UniformItem();

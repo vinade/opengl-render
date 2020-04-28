@@ -56,22 +56,22 @@ void Shader::setup(std::string name, UniformType type)
 
     switch(type)
     {
-    case SHADER_TYPE_FLOAT:
+    case DATA_TYPE_FLOAT:
         selected_type = new UniformItem<float>(name, this->program_id);
         break;
-    case SHADER_TYPE_INT:
+    case DATA_TYPE_INT:
         selected_type = new UniformItem<int>(name, this->program_id);
         break;
-    case SHADER_TYPE_VEC2:
+    case DATA_TYPE_VEC2:
         selected_type = new UniformItem<glm::vec2>(name, this->program_id);
         break;
-    case SHADER_TYPE_VEC3:
+    case DATA_TYPE_VEC3:
         selected_type = new UniformItem<glm::vec3>(name, this->program_id);
         break;
-    case SHADER_TYPE_VEC4:
+    case DATA_TYPE_VEC4:
         selected_type = new UniformItem<glm::vec4>(name, this->program_id);
         break;
-    case SHADER_TYPE_MAT4:
+    case DATA_TYPE_MAT4:
         selected_type = new UniformItem<glm::mat4>(name, this->program_id);
         break;
     default:
