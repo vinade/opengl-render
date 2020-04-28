@@ -119,6 +119,8 @@ void RenderWindow::start(){
 		exit(1);
 	}
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	if (this->gl_init != nullptr){
 		(*this->gl_init)();
 	}
