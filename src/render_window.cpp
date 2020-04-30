@@ -9,6 +9,13 @@ RenderWindow::RenderWindow(){
 }
 
 
+RenderWindow::~RenderWindow(){
+	#ifdef DEBUG_MODE_COMPILE
+		delete this->imgui_controller;
+	#endif
+}
+
+
 RenderWindow::RenderWindow(int iArgc, char** cppArgv){
     this->init_RenderWindow(iArgc, cppArgv);
 }
@@ -45,6 +52,10 @@ void RenderWindow::init_RenderWindow(int iArgc, char** cppArgv, const std::strin
 	this->height = RENDER_WINDOW_HEIGHT;
 	this->pos_x = RENDER_WINDOW_POS_X;
 	this->pos_y = RENDER_WINDOW_POS_Y;
+
+	#ifdef DEBUG_MODE_COMPILE
+		this->imgui_controller = new ImGuiController();
+	#endif
 }
 
 
@@ -87,6 +98,14 @@ void RenderWindow::refresh( int data ){
   glutPostRedisplay();
   glutTimerFunc( RENDER_WINDOW_RENDER_WAIT, RenderWindow::refresh, -1);
 }
+
+
+#ifdef DEBUG_MODE_COMPILE
+	void RenderWindow::render_handler_wrapper(){
+		// RenderWindow::_render_handler();
+		RenderWindow::_imgui_controller->display();
+	}
+#endif
 
 
 void RenderWindow::start(){
@@ -137,7 +156,16 @@ void RenderWindow::start(){
 		glutReshapeFunc(this->reshape_handler);
 	}
 
-	glutDisplayFunc(this->render_handler);
+	#ifdef DEBUG_MODE_COMPILE
+		this->imgui_controller->init();
+
+		// RenderWindow::_render_handler = this->render_handler;
+		RenderWindow::_imgui_controller = this->imgui_controller;
+		glutDisplayFunc(RenderWindow::render_handler_wrapper);
+	#else
+		glutDisplayFunc(this->render_handler);
+	#endif
+
 	glutTimerFunc(RENDER_WINDOW_RENDER_WAIT, RenderWindow::refresh, -1);
 	glutMainLoop();
 
@@ -148,5 +176,11 @@ void RenderWindow::stop(){
 	glutLeaveMainLoop();
 	this->running = false;
 }
+
+
+#ifdef DEBUG_MODE_COMPILE
+	// void (RenderWindow::*_render_handler)();
+	ImGuiController* RenderWindow::_imgui_controller;
+#endif
 
 #endif

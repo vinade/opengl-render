@@ -12,6 +12,11 @@
 #define RENDER_WINDOW_POS_Y 100
 #define RENDER_WINDOW_RENDER_WAIT 32
 
+#ifdef DEBUG_MODE_COMPILE
+	#include "imgui_controller.cpp"
+#endif
+
+
 class RenderWindow {
 
 private:
@@ -37,10 +42,21 @@ private:
 	void init_RenderWindow(int iArgc, char** cppArgv, const std::string& title);
 
 public:
+
+	#ifdef DEBUG_MODE_COMPILE
+		static void render_handler_wrapper();
+		static void (*_render_handler)();
+		static ImGuiController* _imgui_controller;
+	#endif
+
+	#ifdef DEBUG_MODE_COMPILE
+		ImGuiController* imgui_controller;
+	#endif
+
 	RenderWindow();
+	~RenderWindow();
 	RenderWindow(int iArgc, char** cppArgv);
 	RenderWindow(int iArgc, char** cppArgv, const std::string& title);
-
 
 	void set_pos(int x, int y);
 	void set_size(int width, int height);

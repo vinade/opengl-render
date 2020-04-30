@@ -1,7 +1,7 @@
 #ifndef TEXTURE_CPP
 #define TEXTURE_CPP
 
-#include "./3rd/stb_image.cpp"
+#include "./3rd/stb/stb_image.cpp"
 #include "texture.hpp"
 
 
