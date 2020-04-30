@@ -2,7 +2,7 @@
 #define RENDER_WINDOW_HPP
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <GLFW/glfw3.h>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
 #define RENDER_WINDOW_OPENGL_VERSION_MINOR 6
@@ -29,8 +29,6 @@ private:
 	void (*mouse_handler)(int button, int state, int x, int y);
 	void (*reshape_handler)(int width, int height);
 	void (*render_handler)();
-
-	static void refresh(int data);
 
 	void init_RenderWindow();
 	void init_RenderWindow(int iArgc, char** cppArgv);
