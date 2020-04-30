@@ -28,8 +28,11 @@ MessageCallback( GLenum source,
     }
 }
 
-float meu_teste = 20.2;
+glm::vec3 translation_debug(0.0f, 0.0f, 0.0f);
 
+glm::mat4 projection_matrix;
+glm::mat4 view_matrix;
+glm::mat4 mvp_matrix;
 
 Shader *std_shader;
 
@@ -47,10 +50,6 @@ float rectangle_positions[] = {
 	 0.5f, -0.5f, 1.0f, 0.0f,
 	 0.5f,  0.5f, 1.0f, 1.0f,
     -0.5f,  0.5f, 0.0f, 1.0f
-    // -0.5f, -0.5f,
-    //  0.5f, -0.5f,
-    //  0.5f,  0.5f,
-    // -0.5f,  0.5f
 };
 
 unsigned int rectangle_indexes[] = {
@@ -82,12 +81,16 @@ void draw_rectangle(){
 
 void render_handler(){
 
+    view_matrix = glm::translate(glm::mat4(1.0f), translation_debug);
+    mvp_matrix = projection_matrix * view_matrix;
+
     glm::vec4 u_color(0.2, 0.4, 0.8, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 // ...............
     // std_shader->fill("u_Color", &u_color);
     std_shader->fill("u_Color", u_color);
     std_shader->fill("u_Texture", 0);
+    std_shader->fill("u_MVP", mvp_matrix);
     std_shader->exec();
     draw_rectangle();
 
@@ -110,10 +113,15 @@ void gl_init(){
     std_shader->load("std");
     std_shader->setup("u_Color", DATA_TYPE_VEC4);
     std_shader->setup("u_Texture", DATA_TYPE_INT);
+    std_shader->setup("u_MVP", DATA_TYPE_MAT4);
 
 
     /* load textures */
     texture1 = new Texture("./res/textures/rocks_1.png");
+
+    /* */
+    // projection_matrix = glm::perspective(glm::radians(65.0), 1.0, 10.0, 20000.0);
+    projection_matrix = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
     /* create objects */
 	init_rectangle();
@@ -125,7 +133,9 @@ int main(int iArgc, char** cppArgv){
 	RenderWindow* render = new RenderWindow();
 
     #ifdef DEBUG_MODE_COMPILE
-        render->imgui_controller->observef("Meu teste", &meu_teste, 0.0f, 50.0f);
+        render->imgui_controller->observef("x", &translation_debug[0], -1.0f, 1.0f);
+        render->imgui_controller->observef("y", &translation_debug[1], -1.0f, 1.0f);
+        render->imgui_controller->observef("z", &translation_debug[2], -1.0f, 1.0f);
     #endif
 
 	render->set_gl_init(gl_init);
