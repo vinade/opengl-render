@@ -33,7 +33,7 @@ public:
 	ImGuiController(){};
 	~ImGuiController();
 
-	void init();
+	void init(GLFWwindow* window);
 	void display(GLFWwindow* window);
 
 	void observef(const std::string& title, float* variable, float min, float max);

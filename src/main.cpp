@@ -1,4 +1,5 @@
 #define DEBUG_MODE_COMPILE
+
 #define DEBUG_MODE true
 
 #include "shaders.cpp"
@@ -92,7 +93,7 @@ void render_handler(){
 
 // ...............
     glFlush();
-    glutSwapBuffers();
+
 }
 
 

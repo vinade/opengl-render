@@ -2,7 +2,7 @@
 #define RENDER_WINDOW_HPP
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <GLFW/glfw3.h>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
 #define RENDER_WINDOW_OPENGL_VERSION_MINOR 6
@@ -35,19 +35,15 @@ private:
 	void (*reshape_handler)(int width, int height);
 	void (*render_handler)();
 
-	static void refresh(int data);
-
 	void init_RenderWindow();
 	void init_RenderWindow(int iArgc, char** cppArgv);
 	void init_RenderWindow(int iArgc, char** cppArgv, const std::string& title);
 
-public:
-
 	#ifdef DEBUG_MODE_COMPILE
-		static void render_handler_wrapper();
-		static void (*_render_handler)();
-		static ImGuiController* _imgui_controller;
+		void render_handler_wrapper(GLFWwindow* window);
 	#endif
+
+public:
 
 	#ifdef DEBUG_MODE_COMPILE
 		ImGuiController* imgui_controller;

@@ -12,7 +12,7 @@ ImGuiController::~ImGuiController(){
 }
 
 
-void ImGuiController::init(window){
+void ImGuiController::init(GLFWwindow* window){
 	const char* glsl_version = "#version 130";
 
     IMGUI_CHECKVERSION();
@@ -25,7 +25,7 @@ void ImGuiController::init(window){
 }
 
 
-void ImGuiController::display(){
+void ImGuiController::display(GLFWwindow* window){
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -87,8 +87,6 @@ void ImGuiController::display(){
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 

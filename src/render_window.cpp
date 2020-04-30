@@ -94,16 +94,10 @@ void RenderWindow::set_gl_init(void (*handler)()){
 }
 
 
-void RenderWindow::refresh( int data ){
-  glutPostRedisplay();
-  glutTimerFunc( RENDER_WINDOW_RENDER_WAIT, RenderWindow::refresh, -1);
-}
-
-
 #ifdef DEBUG_MODE_COMPILE
-	void RenderWindow::render_handler_wrapper(){
-		// RenderWindow::_render_handler();
-		RenderWindow::_imgui_controller->display();
+	void RenderWindow::render_handler_wrapper(GLFWwindow* window){
+		this->render_handler();
+		this->imgui_controller->display(window);
 	}
 #endif
 
@@ -123,18 +117,32 @@ void RenderWindow::start(){
 
 	this->running = true;
 
-	glutInit(&this->iArgc, this->cppArgv);
-	glutInitContextVersion(RENDER_WINDOW_OPENGL_VERSION_MAJOR, RENDER_WINDOW_OPENGL_VERSION_MINOR);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
-	// glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(this->width, this->height);
-	glutInitWindowPosition(this->pos_x, this->pos_y);
-	glutCreateWindow(this->title); // BUG: Não está exibindo o título
+    GLFWwindow* window;
+
+    /* Initialize the library */
+    if (!glfwInit()){
+        std::cerr << "[RenderWindow] glfwInit retornou um erro." << std::endl;
+        exit(1);
+    }
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, RENDER_WINDOW_OPENGL_VERSION_MAJOR);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, RENDER_WINDOW_OPENGL_VERSION_MINOR);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(this->width, this->height, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        std::cerr << "[RenderWindow] glfwCreateWindow retornou um erro." << std::endl;
+        exit(1);
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
 
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
-		std::cerr << "Failed to initialize GLEW" << std::endl;
+		std::cerr << "[RenderWindow] glewInit retornou um erro." << std::endl;
 		exit(1);
 	}
 
@@ -144,43 +152,30 @@ void RenderWindow::start(){
 		(*this->gl_init)();
 	}
 
-	if (this->keyboard_handler != nullptr){
-		glutKeyboardFunc(this->keyboard_handler);
-	}
-
-	if (this->mouse_handler != nullptr){
-		glutMouseFunc(this->mouse_handler);
-	}
-
-	if (this->reshape_handler != nullptr){
-		glutReshapeFunc(this->reshape_handler);
-	}
-
 	#ifdef DEBUG_MODE_COMPILE
-		this->imgui_controller->init();
-
-		// RenderWindow::_render_handler = this->render_handler;
-		RenderWindow::_imgui_controller = this->imgui_controller;
-		glutDisplayFunc(RenderWindow::render_handler_wrapper);
-	#else
-		glutDisplayFunc(this->render_handler);
+		this->imgui_controller->init(window);
 	#endif
 
-	glutTimerFunc(RENDER_WINDOW_RENDER_WAIT, RenderWindow::refresh, -1);
-	glutMainLoop();
+	while (!glfwWindowShouldClose(window) && this->running)
+    {
+
+    	glClear(GL_COLOR_BUFFER_BIT);
+    
+		#ifdef DEBUG_MODE_COMPILE
+			this->render_handler_wrapper(window);
+		#else
+	    	this->render_handler();
+		#endif
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
 }
 
 
 void RenderWindow::stop(){
-	glutLeaveMainLoop();
 	this->running = false;
 }
-
-
-#ifdef DEBUG_MODE_COMPILE
-	// void (RenderWindow::*_render_handler)();
-	ImGuiController* RenderWindow::_imgui_controller;
-#endif
 
 #endif

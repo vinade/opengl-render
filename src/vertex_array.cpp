@@ -6,7 +6,6 @@
 
 VertexArray::VertexArray(){
 	glGenVertexArrays(1, &this->id);
-	std::cout << "GENERATE\n";
 }
 
 VertexArray::~VertexArray(){
