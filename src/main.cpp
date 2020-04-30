@@ -28,10 +28,12 @@ MessageCallback( GLenum source,
     }
 }
 
-glm::vec3 translation_debug(0.0f, 0.0f, 0.0f);
+glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
+glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);
 
 glm::mat4 projection_matrix;
 glm::mat4 view_matrix;
+glm::mat4 model_matrix;
 glm::mat4 mvp_matrix;
 
 Shader *std_shader;
@@ -46,10 +48,10 @@ IndexBuffer* rectangle_ibo;
 
 unsigned int rectangle_index_buffer;
 float rectangle_positions[] = {
-	-0.5f, -0.5f, 0.0f, 0.0f,
-	 0.5f, -0.5f, 1.0f, 0.0f,
-	 0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f, 0.0f, 1.0f
+	-5.0f, -5.0f, -30.0f, 0.0f, 0.0f,
+	 5.0f, -5.0f, -30.0f, 1.0f, 0.0f,
+	 5.0f,  5.0f, -30.0f, 1.0f, 1.0f,
+    -5.0f,  5.0f, -30.0f, 0.0f, 1.0f
 };
 
 unsigned int rectangle_indexes[] = {
@@ -60,10 +62,10 @@ unsigned int rectangle_indexes[] = {
 void init_rectangle(){
 
     rectangle_vao = new VertexArray();
-    rectangle_vbo = new VertexBuffer(rectangle_positions, 4 * 4);
+    rectangle_vbo = new VertexBuffer(rectangle_positions, 5 * 4);
     rectangle_vbo_layout = new VertexBufferLayout();
 
-    rectangle_vbo_layout->push(DATA_TYPE_FLOAT, 2);
+    rectangle_vbo_layout->push(DATA_TYPE_FLOAT, 3);
     rectangle_vbo_layout->push(DATA_TYPE_FLOAT, 2);
     rectangle_vao->add_buffer(rectangle_vbo, rectangle_vbo_layout);
 
@@ -81,8 +83,15 @@ void draw_rectangle(){
 
 void render_handler(){
 
-    view_matrix = glm::translate(glm::mat4(1.0f), translation_debug);
-    mvp_matrix = projection_matrix * view_matrix;
+    model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -30.0f));
+    model_matrix = glm::rotate(model_matrix, glm::radians(model_rotation_debug[0]), glm::vec3(1.0f, 0.0f, 0.0f));
+    model_matrix = glm::rotate(model_matrix, glm::radians(model_rotation_debug[1]), glm::vec3(0.0f, 1.0f, 0.0f));
+    model_matrix = glm::rotate(model_matrix, glm::radians(model_rotation_debug[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+    model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, 30.0f));
+
+    view_matrix = glm::translate(glm::mat4(1.0f), view_translation_debug);
+
+    mvp_matrix = projection_matrix * view_matrix * model_matrix;
 
     glm::vec4 u_color(0.2, 0.4, 0.8, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -120,8 +129,7 @@ void gl_init(){
     texture1 = new Texture("./res/textures/rocks_1.png");
 
     /* */
-    // projection_matrix = glm::perspective(glm::radians(65.0), 1.0, 10.0, 20000.0);
-    projection_matrix = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+    projection_matrix = glm::perspective(glm::radians(45.0), 1.0, 0.0, 200.0);
 
     /* create objects */
 	init_rectangle();
@@ -133,9 +141,13 @@ int main(int iArgc, char** cppArgv){
 	RenderWindow* render = new RenderWindow();
 
     #ifdef DEBUG_MODE_COMPILE
-        render->imgui_controller->observef("x", &translation_debug[0], -1.0f, 1.0f);
-        render->imgui_controller->observef("y", &translation_debug[1], -1.0f, 1.0f);
-        render->imgui_controller->observef("z", &translation_debug[2], -1.0f, 1.0f);
+        render->imgui_controller->observef("alpha", &model_rotation_debug[0], -180.0f, 180.0f);
+        render->imgui_controller->observef("beta", &model_rotation_debug[1], -180.0f, 180.0f);
+        render->imgui_controller->observef("gamma", &model_rotation_debug[2], -180.0f, 180.0f);
+
+        render->imgui_controller->observef("x", &view_translation_debug[0], -100.0f, 100.0f);
+        render->imgui_controller->observef("y", &view_translation_debug[1], -100.0f, 100.0f);
+        render->imgui_controller->observef("z", &view_translation_debug[2], -100.0f, 100.0f);
     #endif
 
 	render->set_gl_init(gl_init);
