@@ -25,6 +25,11 @@ Texture::Texture(const std::string& file_path, aiTextureType tex_type) :
 	unsigned char* local_buffer = nullptr;
 	local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
 
+	if (!this->width || !this->height){
+		std::cerr << "[Texture] Não foi possível carregar a textura: " << file_path << std::endl;
+		exit(1);
+	}
+
 	glGenTextures(1, &this->id);
 	glBindTexture(GL_TEXTURE_2D, this->id);
 
@@ -42,6 +47,8 @@ Texture::Texture(const std::string& file_path, aiTextureType tex_type) :
 
 	Texture::textures[this->id] = this;
 	Texture::sources[file_path] = this->id;
+	std::cerr << "[Texture] carregado: " << file_path.c_str() << std::endl;
+	std::cerr << "\t" << this->width << "x" << this->height << std::endl;
 }
 
 
@@ -54,7 +61,7 @@ Texture::~Texture(){
 	glDeleteTextures(1, &this->id);
 }
 
-
+// see: http://assimp.sourceforge.net/lib_html/material_8h.html#a7dd415ff703a2cc53d1c22ddbbd7dde0
 inline int Texture::get_slot() const {
 	switch(this->type){
 		case aiTextureType_NONE:
