@@ -1,17 +1,18 @@
 #ifndef TEXTURE_CPP
 #define TEXTURE_CPP
 
-#include "./3rd/stb/stb_image.cpp"
 #include "texture.hpp"
 
 
-Texture::Texture(const std::string& file_path) :
+Texture::Texture(const std::string& file_path, aiTextureType tex_type) :
 	id(0),
 	file_path(file_path),
 	height(0),
 	width(0),
 	bpp(0)
 {
+
+	this->type = tex_type;
 
 	if (Texture::sources.find(file_path) != Texture::sources.end()){
 		unsigned int tid = Texture::sources[file_path];
@@ -22,7 +23,7 @@ Texture::Texture(const std::string& file_path) :
 	stbi_set_flip_vertically_on_load(1);
 
 	unsigned char* local_buffer = nullptr;
-	local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, TEXTURE_CHANNELS);
+	local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
 
 	glGenTextures(1, &this->id);
 	glBindTexture(GL_TEXTURE_2D, this->id);
@@ -54,6 +55,63 @@ Texture::~Texture(){
 }
 
 
+inline int Texture::get_slot() const {
+	switch(this->type){
+		case aiTextureType_NONE:
+		case aiTextureType_DIFFUSE:
+			return 0;
+		case aiTextureType_SPECULAR:
+			return 1;
+		case aiTextureType_AMBIENT:
+			return 2;
+		case aiTextureType_EMISSIVE:
+			return 3;
+		case aiTextureType_HEIGHT:
+			return 4;
+		case aiTextureType_NORMALS:
+			return 5;
+		case aiTextureType_SHININESS:
+			return 6;
+		case aiTextureType_OPACITY:
+			return 7;
+		case aiTextureType_DISPLACEMENT:
+			return 8;
+		case aiTextureType_LIGHTMAP:
+			return 9;
+		case aiTextureType_REFLECTION:
+			return 10;
+		case aiTextureType_UNKNOWN:
+			return 11;
+	}
+
+	return 0;
+}
+
+
+inline int Texture::get_channels() const {
+	switch(this->type){
+		case aiTextureType_NONE:
+		case aiTextureType_DIFFUSE:
+		case aiTextureType_UNKNOWN:
+			return 4;
+		case aiTextureType_DISPLACEMENT:
+		case aiTextureType_SPECULAR:
+		case aiTextureType_AMBIENT:
+		case aiTextureType_EMISSIVE:
+		case aiTextureType_NORMALS:
+			return 3;
+		case aiTextureType_OPACITY:
+		case aiTextureType_SHININESS:
+		case aiTextureType_HEIGHT:
+		case aiTextureType_LIGHTMAP:
+		case aiTextureType_REFLECTION:
+			return 1;
+	}
+
+	return 4;
+}
+
+
 void Texture::load_from_tid(unsigned int tid){
 	Texture* tex;
 
@@ -66,6 +124,12 @@ void Texture::load_from_tid(unsigned int tid){
 	this->width = tex->get_width();
 	this->height = tex->get_height();
 	this->id = tid;
+}
+
+
+void Texture::bind() const {
+	unsigned int slot = this->get_slot();
+	this->bind(slot);
 }
 
 

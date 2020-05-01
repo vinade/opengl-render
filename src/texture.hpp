@@ -2,6 +2,8 @@
 #define TEXTURE_HPP
 
 #include <unordered_map>
+#include <assimp/material.h>
+#include "./3rd/stb/stb_image.cpp"
 
 #define TEXTURE_CHANNELS 4
 
@@ -15,17 +17,22 @@ private:
 	int width;
 	int bpp;
 
-	void load_from_tid(unsigned int tid);
-
 	static std::unordered_map <unsigned int, Texture*> textures;
 	static std::unordered_map <std::string, unsigned int> sources;
 
+	void load_from_tid(unsigned int tid);
+	inline int get_slot() const;
+	inline int get_channels() const;
+
 public:
-	Texture(const std::string& file_path); // verifica antes se já existe em Texture::sources
+	aiTextureType type = aiTextureType_DIFFUSE;
+
+	Texture(const std::string& file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
 	Texture(const unsigned int tid); // verifica antes se em textures
 	~Texture();
 
-	void bind(unsigned int slot = 0) const;
+	void bind() const;
+	void bind(unsigned int slot) const;
 	void unbind() const;
 
 	inline int get_width() const { return this->width; };
