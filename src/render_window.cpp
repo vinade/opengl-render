@@ -147,6 +147,7 @@ void RenderWindow::start(){
 	}
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
 
 	if (this->gl_init != nullptr){
 		(*this->gl_init)();
@@ -160,6 +161,7 @@ void RenderWindow::start(){
     {
 
     	glClear(GL_COLOR_BUFFER_BIT);
+    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
 		#ifdef DEBUG_MODE_COMPILE
 			this->render_handler_wrapper(window);
