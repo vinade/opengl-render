@@ -1,2 +1,2 @@
 all:
-	g++ -std=c++0x -o bin/depth src/main.cpp  src/3rd/imgui/*.cpp -lGL -lGLU -lGLEW -lglfw -lassimp
+	g++ -std=c++0x -o bin/depth src/main.cpp  src/3rd/imgui/*.cpp -lGL -lGLEW -lglfw -lassimp
