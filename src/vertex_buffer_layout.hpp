@@ -32,28 +32,18 @@ class VertexBufferLayout {
 private:
 	std::vector<VertexBufferElement> elements;
 	unsigned int stride;
+	unsigned int counter = 0;
 public:
 
 	VertexBufferLayout():
 		stride(0){};
-
-	// template<typename T>
-	// void push(int count){ };
-
-	// template<>
-	// void push<float>(int count);
-
-	// template<>
-	// void push<unsigned int>(int count);
-
-	// template<>
-	// void push<unsigned char>(int count);
 
 	void push(DataType type, unsigned int count);
 
 	inline const std::vector<VertexBufferElement>& get_elements() const;
 
 	inline unsigned int get_stride() const;
+	inline unsigned int get_counter() const;
 };
 
 #endif

@@ -131,7 +131,7 @@ unsigned int Shader::compile(std::string file_path, unsigned int type)
         std::vector<char> log_message(log_length + 1);
         glGetShaderInfoLog(shader_id, log_length, NULL, &log_message[0]);
 
-        std::cerr << "[shader] Failed to compile "
+        std::cerr << "[Shader] Failed to compile "
             << ((type == GL_VERTEX_SHADER) ? "vertex" : "fragment")
             << " shader ("
             << file_path
@@ -168,7 +168,7 @@ void Shader::load(std::string shader_name)
         std::vector<char> log_message(log_length + 1);
         glGetProgramInfoLog(program_id, log_length, NULL, &log_message[0]);
 
-        std::cerr << "[shader] Failed to link shader program" << std::endl;
+        std::cerr << "[Shader] Failed to link shader program" << std::endl;
         std::cerr << "\t" << &log_message[0] << std::endl;
         glDeleteProgram(program_id);
         return;
@@ -184,7 +184,7 @@ void Shader::load(std::string shader_name)
         std::vector<char> log_message(log_length + 1);
         glGetProgramInfoLog(program_id, log_length, NULL, &log_message[0]);
 
-        std::cerr << "[shader] Failed to validate shader program" << std::endl;
+        std::cerr << "[Shader] Failed to validate shader program" << std::endl;
         std::cerr << "\t" << &log_message[0] << std::endl;
         glDeleteProgram(program_id);
         return;
@@ -203,7 +203,7 @@ void Shader::exec()
 
     if (!this->loaded)
     {
-        std::cerr << "[shader] Shader executado sem ser carregado\n";
+        std::cerr << "[Shader] Shader executado sem ser carregado\n";
         exit(1);
     }
 
@@ -280,7 +280,7 @@ void Shader::exec()
         }
         else
         {
-            std::cerr << "[shader] Tipo de dado inválido na execução\n";
+            std::cerr << "[Shader] Tipo de dado inválido na execução\n";
             exit(1);
         }
     }
@@ -302,7 +302,7 @@ void Shader::list_opengl_errors(const char *file, int line){
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-        std::cerr << "[opengl] Error "
+        std::cerr << "[Opengl] Error "
             << file
             << " (" << line << ")"
             << std::endl;
