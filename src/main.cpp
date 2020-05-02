@@ -31,6 +31,7 @@ MessageCallback( GLenum source,
 
 SceneItem cat_1;
 SceneItem rocks_1;
+SceneItem moon_1;
 
 
 glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
@@ -102,6 +103,9 @@ void render_handler(){
     draw_scene_item(rocks_1);
     draw_scene_item(cat_1);
 
+    moon_1.inc_rotation(glm::vec3(0.0f, 0.001f, 0.0f));
+    draw_scene_item(moon_1);
+
     glFlush();
 }
 
@@ -134,6 +138,10 @@ void gl_init(){
     rocks_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     // rocks_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
     rocks_1.set_scale(200.0);
+
+    moon_1.load_data_from_file("./res/models/moon_1/Moon 2K.obj");
+    moon_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
+    moon_1.set_scale(200.0);
 
     std::cerr << "[done]" << std::endl;
 

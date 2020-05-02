@@ -54,5 +54,10 @@ public:
 	void set_scale(const glm::vec3 scale);
 	void set_scale(float scale);
 
+	void inc_position(const glm::vec3 pos);
+	void inc_rotation(const glm::vec3 rotation);
+	void inc_scale(const glm::vec3 scale);
+	void inc_scale(float scale);
+
 	void debug_coords();
 };

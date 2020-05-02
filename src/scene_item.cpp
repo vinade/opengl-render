@@ -275,6 +275,31 @@ void SceneItem::set_scale(float scale){
 }
 
 
+void SceneItem::inc_position(const glm::vec3 position){
+	this->m_position[0] = this->m_position[0] + position[0];
+	this->m_position[1] = this->m_position[1] + position[1];
+	this->m_position[2] = this->m_position[2] + position[2];
+}
+
+void SceneItem::inc_rotation(const glm::vec3 rotation){
+	this->m_rotation[0] = this->m_rotation[0] + rotation[0];
+	this->m_rotation[1] = this->m_rotation[1] + rotation[1];
+	this->m_rotation[2] = this->m_rotation[2] + rotation[2];
+}
+
+void SceneItem::inc_scale(const glm::vec3 scale){
+	this->m_scale[0] = this->m_scale[0] + scale[0];
+	this->m_scale[1] = this->m_scale[1] + scale[1];
+	this->m_scale[2] = this->m_scale[2] + scale[2];
+}
+
+void SceneItem::inc_scale(float scale){
+	this->m_scale[0] = this->m_scale[0] + scale;
+	this->m_scale[1] = this->m_scale[1] + scale;
+	this->m_scale[2] = this->m_scale[2] + scale;
+}
+
+
 aiTextureType SceneItem::texture_types[SCENE_ITEM_TEX_TYPE_COUNTER] = {
 	aiTextureType_NONE,
 	aiTextureType_DIFFUSE,
