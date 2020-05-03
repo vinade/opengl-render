@@ -63,6 +63,8 @@ private:
     unsigned int program_id;
     std::unordered_map<std::string, BaseUniformItem *> items;
 
+    static std::unordered_map<std::string, Shader *> loaded_shaders;
+
     unsigned int compile(std::string file_path, unsigned int type);
 
 public:
@@ -79,6 +81,7 @@ public:
     void load(std::string shader_name);
     void exec();
 
+    static Shader *getShader(std::string shader_name);
     static void stop_all();
     static void list_opengl_errors(const char *file, int line);
 };

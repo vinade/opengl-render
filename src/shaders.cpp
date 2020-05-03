@@ -52,6 +52,18 @@ Shader::~Shader()
     }
 }
 
+Shader *Shader::getShader(std::string shader_name)
+{
+    if (Shader::loaded_shaders.find(shader_name) == Shader::loaded_shaders.end())
+    {
+        return new Shader(shader_name);
+    }
+
+    std::cerr << "[Shader] load de shader cacheado: " << shader_name.c_str() << std::endl;
+
+    return Shader::loaded_shaders[shader_name];
+}
+
 void Shader::setup(std::string name, UniformType type)
 {
     BaseUniformItem *selected_type;
@@ -154,6 +166,8 @@ void Shader::load(std::string shader_name)
     std::string vertex_file_path = SHADERS_FOLDER + shader_name + SHADERS_VERTEX_EXT;
     std::string fragment_file_path = SHADERS_FOLDER + shader_name + SHADERS_FRAGMENT_EXT;
 
+    std::cerr << "[Shader] carregamento de shader: " << shader_name.c_str() << std::endl;
+
     {
         bool vert_found;
         bool frag_found;
@@ -228,6 +242,8 @@ void Shader::load(std::string shader_name)
 
     this->loaded = GL_TRUE;
     this->program_id = program_id;
+
+    Shader::loaded_shaders[shader_name] = this;
 }
 
 void Shader::exec()
@@ -367,5 +383,7 @@ void Shader::stop_all()
 {
     glUseProgram(0);
 }
+
+std::unordered_map<std::string, Shader *> Shader::loaded_shaders;
 
 #endif

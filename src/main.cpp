@@ -117,8 +117,7 @@ void gl_init()
 
     /* compile shaders */
 
-    std_shader = new Shader();
-    std_shader->load("std");
+    std_shader = Shader::getShader("std");
     std_shader->setup("u_Color", DATA_TYPE_VEC4);
     std_shader->setup("u_Texture", DATA_TYPE_INT);
     std_shader->setup("u_MVP", DATA_TYPE_MAT4);
