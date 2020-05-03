@@ -33,7 +33,7 @@ public:
 
 	void bind() const;
 	void bind(unsigned int slot) const;
-	void unbind() const;
+	static void unbind();
 
 	inline int get_width() const { return this->width; };
 	inline int get_height() const { return this->height; };
