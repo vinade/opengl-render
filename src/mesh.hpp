@@ -7,6 +7,10 @@
 class Mesh
 {
 
+private:
+	void flat_vertex_data(VertexBufferLayout *vbo_layout);
+	void normalize(glm::vec3 &center, glm::vec3 &size);
+
 public:
 	unsigned int vertex_size = 8;
 	unsigned int vertex_count;
@@ -22,8 +26,6 @@ public:
 	VertexArray *vao;
 	IndexBuffer *ibo;
 
-	void flat_vertex_data(VertexBufferLayout *vbo_layout);
-	void normalize(glm::vec3 &center, glm::vec3 &size);
 	void prepare(glm::vec3 &center, glm::vec3 &size);
 	void draw();
 };
