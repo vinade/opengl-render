@@ -7,8 +7,8 @@
 
 #define TEXTURE_CHANNELS 4
 
-
-class Texture {
+class Texture
+{
 
 private:
 	unsigned int id;
@@ -17,8 +17,8 @@ private:
 	int width;
 	int bpp;
 
-	static std::unordered_map <unsigned int, Texture*> textures;
-	static std::unordered_map <std::string, unsigned int> sources;
+	static std::unordered_map<unsigned int, Texture *> textures;
+	static std::unordered_map<std::string, unsigned int> sources;
 
 	void load_from_tid(unsigned int tid);
 	inline int get_slot() const;
@@ -27,8 +27,8 @@ private:
 public:
 	aiTextureType type = aiTextureType_DIFFUSE;
 
-	Texture(const std::string& file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
-	Texture(const unsigned int tid); // verifica antes se em textures
+	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
+	Texture(const unsigned int tid);													   // verifica antes se em textures
 	~Texture();
 
 	void bind() const;
@@ -37,7 +37,6 @@ public:
 
 	inline int get_width() const { return this->width; };
 	inline int get_height() const { return this->height; };
-
 };
 
 #endif

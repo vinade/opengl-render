@@ -3,8 +3,8 @@
 
 #include "index_buffer.hpp"
 
-
-IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count){
+IndexBuffer::IndexBuffer(const unsigned int *data, unsigned int count)
+{
 	this->count = count;
 
 	glGenBuffers(1, &this->id);
@@ -12,19 +12,23 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count){
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 }
 
-IndexBuffer::~IndexBuffer(){
+IndexBuffer::~IndexBuffer()
+{
 	glDeleteBuffers(1, &this->id);
 }
 
-void IndexBuffer::bind(){
+void IndexBuffer::bind()
+{
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
 }
 
-void IndexBuffer::unbind(){
+void IndexBuffer::unbind()
+{
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void IndexBuffer::draw(){
+void IndexBuffer::draw()
+{
 	glDrawElements(GL_TRIANGLES, this->count, GL_UNSIGNED_INT, nullptr);
 }
 

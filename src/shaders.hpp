@@ -20,29 +20,28 @@
 #define SHADERS_VERTEX_EXT std::string(".vertexshader")
 #define SHADERS_FRAGMENT_EXT std::string(".fragmentshader")
 
-#define check_opengl_errors() Shader::list_opengl_errors(__FILE__, __LINE__) 
-
+#define check_opengl_errors() Shader::list_opengl_errors(__FILE__, __LINE__)
 
 class BaseUniformItem
 {
 private:
     void *item;
+
 public:
     int id;
 
-    BaseUniformItem() {};
-    virtual void set(int* item) {};
-    virtual void set(float* item) {};
-    virtual void set(glm::vec2* item) {};
-    virtual void set(glm::vec3* item) {};
-    virtual void set(glm::vec4* item) {};
-    virtual void set(glm::mat4* item) {};
-    virtual const std::type_info& getTID() {return typeid(void);};
+    BaseUniformItem(){};
+    virtual void set(int *item){};
+    virtual void set(float *item){};
+    virtual void set(glm::vec2 *item){};
+    virtual void set(glm::vec3 *item){};
+    virtual void set(glm::vec4 *item){};
+    virtual void set(glm::mat4 *item){};
+    virtual const std::type_info &getTID() { return typeid(void); };
 };
 
-
 template <typename T>
-class UniformItem: public BaseUniformItem
+class UniformItem : public BaseUniformItem
 {
 
 private:
@@ -54,11 +53,10 @@ public:
     UniformItem(std::string name, unsigned int program_id);
     // ~UniformItem();
 
-    void set(T* item);
+    void set(T *item);
     T *get();
-    const std::type_info& getTID();
+    const std::type_info &getTID();
 };
-
 
 class Shader
 {
@@ -66,7 +64,7 @@ class Shader
 private:
     unsigned int loaded;
     unsigned int program_id;
-    std::unordered_map <std::string, BaseUniformItem *> items;
+    std::unordered_map<std::string, BaseUniformItem *> items;
 
     unsigned int compile(std::string file_path, unsigned int type);
 
@@ -76,8 +74,10 @@ public:
     ~Shader();
 
     void setup(std::string name, UniformType type);
-    template <class T> void fill(std::string name, T* value);
-    template <class T> void fill(std::string name, const T& value);
+    template <class T>
+    void fill(std::string name, T *value);
+    template <class T>
+    void fill(std::string name, const T &value);
 
     void load(std::string shader_name);
     void exec();

@@ -3,30 +3,31 @@
 
 #include "shaders.hpp"
 
-template<typename T>
+template <typename T>
 UniformItem<T>::UniformItem(std::string name, unsigned int program_id)
 {
     T _item;
     this->id = glGetUniformLocation(program_id, name.c_str());
 
-    if (this->id == -1){
+    if (this->id == -1)
+    {
         std::cerr << "[Shader] Uniform " << name.c_str() << " não utilizado pelo shader" << std::endl;
     }
 }
 
-template<typename T>
+template <typename T>
 void UniformItem<T>::set(T *_item)
 {
     this->item = _item;
 }
 
-template<typename T>
+template <typename T>
 T *UniformItem<T>::get()
 {
     return this->item;
 }
 
-template<typename T>
+template <typename T>
 const std::type_info &UniformItem<T>::getTID()
 {
     return typeid(T);
@@ -45,7 +46,8 @@ Shader::Shader(std::string shader_name)
 
 Shader::~Shader()
 {
-    if (this->loaded){
+    if (this->loaded)
+    {
         glDeleteProgram(this->program_id);
     }
 }
@@ -54,7 +56,7 @@ void Shader::setup(std::string name, UniformType type)
 {
     BaseUniformItem *selected_type;
 
-    switch(type)
+    switch (type)
     {
     case DATA_TYPE_FLOAT:
         selected_type = new UniformItem<float>(name, this->program_id);
@@ -102,7 +104,7 @@ unsigned int Shader::compile(std::string file_path, unsigned int type)
 
     std::string shader_code;
     std::ifstream shader_stream(file_path.c_str(), std::ios::in);
-    if(shader_stream.is_open())
+    if (shader_stream.is_open())
     {
         std::stringstream sstr;
         sstr << shader_stream.rdbuf();
@@ -132,11 +134,11 @@ unsigned int Shader::compile(std::string file_path, unsigned int type)
         glGetShaderInfoLog(shader_id, log_length, NULL, &log_message[0]);
 
         std::cerr << "[Shader] Failed to compile "
-            << ((type == GL_VERTEX_SHADER) ? "vertex" : "fragment")
-            << " shader ("
-            << file_path
-            << ")."
-            << std::endl;
+                  << ((type == GL_VERTEX_SHADER) ? "vertex" : "fragment")
+                  << " shader ("
+                  << file_path
+                  << ")."
+                  << std::endl;
         std::cerr << "\t" << &log_message[0] << std::endl;
         glDeleteShader(shader_id);
         return 0;
@@ -161,7 +163,8 @@ void Shader::load(std::string shader_name)
 
     glLinkProgram(program_id);
     glGetProgramiv(program_id, GL_LINK_STATUS, &status);
-    if (status == GL_FALSE){
+    if (status == GL_FALSE)
+    {
         int log_length;
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
 
@@ -174,10 +177,10 @@ void Shader::load(std::string shader_name)
         return;
     }
 
-
     glValidateProgram(program_id);
     glGetProgramiv(program_id, GL_VALIDATE_STATUS, &status);
-    if (status == GL_FALSE){
+    if (status == GL_FALSE)
+    {
         int log_length;
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
 
@@ -197,7 +200,6 @@ void Shader::load(std::string shader_name)
     this->program_id = program_id;
 }
 
-
 void Shader::exec()
 {
 
@@ -209,7 +211,7 @@ void Shader::exec()
 
     glUseProgram(this->program_id);
 
-    for(auto item_map : this->items)
+    for (auto item_map : this->items)
     {
         BaseUniformItem *base_item = item_map.second;
         const std::type_info &tid = base_item->getTID();
@@ -218,7 +220,8 @@ void Shader::exec()
         {
             UniformItem<int> *item = (UniformItem<int> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -228,7 +231,8 @@ void Shader::exec()
         {
             UniformItem<float> *item = (UniformItem<float> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -238,7 +242,8 @@ void Shader::exec()
         {
             UniformItem<glm::vec2> *item = (UniformItem<glm::vec2> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -249,7 +254,8 @@ void Shader::exec()
         {
             UniformItem<glm::vec3> *item = (UniformItem<glm::vec3> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -260,7 +266,8 @@ void Shader::exec()
         {
             UniformItem<glm::vec4> *item = (UniformItem<glm::vec4> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -271,7 +278,8 @@ void Shader::exec()
         {
             UniformItem<glm::mat4> *item = (UniformItem<glm::mat4> *)base_item;
 
-            if (item->id == -1){
+            if (item->id == -1)
+            {
                 continue;
             }
 
@@ -286,7 +294,8 @@ void Shader::exec()
     }
 }
 
-void Shader::list_opengl_errors(const char *file, int line){
+void Shader::list_opengl_errors(const char *file, int line)
+{
 
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR)
@@ -294,18 +303,32 @@ void Shader::list_opengl_errors(const char *file, int line){
         std::string error;
         switch (errorCode)
         {
-            case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
-            case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
-            case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
-            case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
-            case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
-            case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+        case GL_INVALID_ENUM:
+            error = "INVALID_ENUM";
+            break;
+        case GL_INVALID_VALUE:
+            error = "INVALID_VALUE";
+            break;
+        case GL_INVALID_OPERATION:
+            error = "INVALID_OPERATION";
+            break;
+        case GL_STACK_OVERFLOW:
+            error = "STACK_OVERFLOW";
+            break;
+        case GL_STACK_UNDERFLOW:
+            error = "STACK_UNDERFLOW";
+            break;
+        case GL_OUT_OF_MEMORY:
+            error = "OUT_OF_MEMORY";
+            break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            error = "INVALID_FRAMEBUFFER_OPERATION";
+            break;
         }
         std::cerr << "[Opengl] Error "
-            << file
-            << " (" << line << ")"
-            << std::endl;
+                  << file
+                  << " (" << line << ")"
+                  << std::endl;
         std::cout << "\t" << error << std::endl;
     }
 }
@@ -314,6 +337,5 @@ void Shader::stop_all()
 {
     glUseProgram(0);
 }
-
 
 #endif

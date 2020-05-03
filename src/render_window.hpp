@@ -13,11 +13,11 @@
 #define RENDER_WINDOW_RENDER_WAIT 32
 
 #ifdef DEBUG_MODE_COMPILE
-	#include "imgui_controller.cpp"
+#include "imgui_controller.cpp"
 #endif
 
-
-class RenderWindow {
+class RenderWindow
+{
 
 private:
 	bool running = false;
@@ -26,8 +26,8 @@ private:
 	int pos_x;
 	int pos_y;
 	int iArgc;
-	char** cppArgv;
-	const char* title;
+	char **cppArgv;
+	const char *title;
 
 	void (*gl_init)();
 	void (*keyboard_handler)(unsigned char key, int x, int y);
@@ -36,23 +36,22 @@ private:
 	void (*render_handler)();
 
 	void init_RenderWindow();
-	void init_RenderWindow(int iArgc, char** cppArgv);
-	void init_RenderWindow(int iArgc, char** cppArgv, const std::string& title);
+	void init_RenderWindow(int iArgc, char **cppArgv);
+	void init_RenderWindow(int iArgc, char **cppArgv, const std::string &title);
 
-	#ifdef DEBUG_MODE_COMPILE
-		void render_handler_wrapper(GLFWwindow* window);
-	#endif
+#ifdef DEBUG_MODE_COMPILE
+	void render_handler_wrapper(GLFWwindow *window);
+#endif
 
 public:
-
-	#ifdef DEBUG_MODE_COMPILE
-		ImGuiController* imgui_controller;
-	#endif
+#ifdef DEBUG_MODE_COMPILE
+	ImGuiController *imgui_controller;
+#endif
 
 	RenderWindow();
 	~RenderWindow();
-	RenderWindow(int iArgc, char** cppArgv);
-	RenderWindow(int iArgc, char** cppArgv, const std::string& title);
+	RenderWindow(int iArgc, char **cppArgv);
+	RenderWindow(int iArgc, char **cppArgv, const std::string &title);
 
 	void set_pos(int x, int y);
 	void set_size(int width, int height);

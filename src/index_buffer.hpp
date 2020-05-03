@@ -3,15 +3,15 @@
 
 #include <GLFW/glfw3.h>
 
-
-class IndexBuffer {
+class IndexBuffer
+{
 
 private:
 	unsigned int id;
 	unsigned int count;
 
 public:
-	IndexBuffer(const unsigned int* data, unsigned int count);
+	IndexBuffer(const unsigned int *data, unsigned int count);
 	~IndexBuffer();
 
 	void bind();

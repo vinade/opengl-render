@@ -16,5 +16,4 @@ enum DataType
     DATA_TYPE_TEXTURE
 };
 
-
 #endif

@@ -4,18 +4,17 @@
 #include "vertex_buffer.cpp"
 #include "vertex_buffer_layout.cpp"
 
-
-class VertexArray {
+class VertexArray
+{
 
 private:
 	unsigned int id;
 
 public:
-
 	VertexArray();
 	~VertexArray();
 
-	void add_buffer(VertexBuffer* vbo, VertexBufferLayout* layout);
+	void add_buffer(VertexBuffer *vbo, VertexBufferLayout *layout);
 	void bind();
 	void unbind();
 };
