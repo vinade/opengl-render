@@ -1,15 +1,11 @@
 #ifndef SHADERS_HPP
 #define SHADERS_HPP
 
-#include <stdio.h>
-#include <string>
-#include <vector>
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include <algorithm>
 #include <sstream>
-#include <stdlib.h>
-#include <string.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,6 +15,7 @@
 #define SHADERS_FOLDER std::string("./shaders/")
 #define SHADERS_VERTEX_EXT std::string(".vertexshader")
 #define SHADERS_FRAGMENT_EXT std::string(".fragmentshader")
+#define SHADERS_DEFAULT_SHADER std::string("std")
 
 #define check_opengl_errors() Shader::list_opengl_errors(__FILE__, __LINE__)
 

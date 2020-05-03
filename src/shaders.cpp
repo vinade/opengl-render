@@ -154,6 +154,36 @@ void Shader::load(std::string shader_name)
     std::string vertex_file_path = SHADERS_FOLDER + shader_name + SHADERS_VERTEX_EXT;
     std::string fragment_file_path = SHADERS_FOLDER + shader_name + SHADERS_FRAGMENT_EXT;
 
+    {
+        bool vert_found;
+        bool frag_found;
+
+        std::ifstream vertex_shader_file(vertex_file_path.c_str());
+        std::ifstream fragment_shader_file(fragment_file_path.c_str());
+
+        vert_found = vertex_shader_file.good();
+        frag_found = fragment_shader_file.good();
+
+        vertex_shader_file.close(); // não é necessário, pois fecha ao sair do escopo
+        fragment_shader_file.close();
+
+        if (!vert_found && !frag_found)
+        {
+            std::cerr << "[Shader] Shader não encontrado: " << shader_name.c_str() << std::endl;
+            exit(1);
+        }
+
+        if (!vert_found)
+        {
+            vertex_file_path = SHADERS_FOLDER + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
+        }
+
+        if (!frag_found)
+        {
+            fragment_file_path = SHADERS_FOLDER + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
+        }
+    }
+
     unsigned int vertex_shader_id = this->compile(vertex_file_path, GL_VERTEX_SHADER);
     unsigned int fragment_shader_id = this->compile(fragment_file_path, GL_FRAGMENT_SHADER);
 
