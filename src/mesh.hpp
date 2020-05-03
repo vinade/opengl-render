@@ -1,3 +1,6 @@
+#ifndef MESH_HPP
+#define MESH_HPP
+
 #include "vertex_buffer.cpp"
 #include "index_buffer.cpp"
 #include "texture.cpp"
@@ -29,3 +32,5 @@ public:
 	void prepare(glm::vec3 &center, glm::vec3 &size);
 	void draw();
 };
+
+#endif

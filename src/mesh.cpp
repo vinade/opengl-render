@@ -1,3 +1,6 @@
+#ifndef MESH_CPP
+#define MESH_CPP
+
 #include "mesh.hpp"
 
 void Mesh::flat_vertex_data(VertexBufferLayout *vbo_layout)
@@ -70,3 +73,5 @@ void Mesh::draw()
     this->ibo->bind();
     this->ibo->draw();
 }
+
+#endif

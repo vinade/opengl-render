@@ -1,3 +1,6 @@
+#ifndef SCENE_ITEM_HPP
+#define SCENE_ITEM_HPP
+
 #include "mesh.cpp"
 
 #include <assimp/Importer.hpp>
@@ -58,3 +61,5 @@ public:
 
 	void debug_coords();
 };
+
+#endif

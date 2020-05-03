@@ -1,3 +1,6 @@
+#ifndef SCENE_ITEM_CPP
+#define SCENE_ITEM_CPP
+
 #include "scene_item.hpp"
 
 void SceneItem::load_scene_from_file(const std::string &file_path)
@@ -333,3 +336,5 @@ aiTextureType SceneItem::texture_types[SCENE_ITEM_TEX_TYPE_COUNTER] = {
 	aiTextureType_REFLECTION};
 
 Assimp::Importer SceneItem::assimp_importer;
+
+#endif
