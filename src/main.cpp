@@ -1,7 +1,5 @@
-#define DEBUG_MODE_COMPILE
-#define DEBUG_MODE true
-
-#include "render_window.cpp"
+#include "debug_flags.hpp"
+#include "render_window.hpp"
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "shader.hpp"

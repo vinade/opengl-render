@@ -25,7 +25,8 @@ SRC_FILES  = $(VENDOR_SRC_FILES) \
 	mesh.cpp \
 	debug_mesh.cpp \
 	scene_item.cpp \
-	light.cpp
+	light.cpp \
+	render_window.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

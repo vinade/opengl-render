@@ -1,6 +1,7 @@
 #ifndef RENDER_WINDOW_HPP
 #define RENDER_WINDOW_HPP
 
+#include "debug_flags.hpp"
 #include <string>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
