@@ -42,4 +42,5 @@ all: $(OBJS)
 %.o: $$(wildcard $(SRC_FOLDER)/$$*.cpp) $$(wildcard $(STB_FOLDER)/$$*.cpp) $$(wildcard $(IMGUI_FOLDER)/$$*.cpp)
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-stb:
+clean:
+	rm *.o
