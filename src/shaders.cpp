@@ -68,6 +68,18 @@ void Shader::setup(std::string name, UniformType type)
 {
     BaseUniformItem *selected_type;
 
+    if (this->items.find(name) != this->items.end())
+    {
+        if (this->items[name]->type != type)
+        {
+            std::cerr << "[Shader] Uniform definido duas vezes, com tipos diferentes." << std::endl;
+            std::cerr << "\tuniform: " << name.c_str() << std::endl;
+            std::cerr << "\tLEMBRETE: talvez o BaseUniformItem->type não esteja guardando o dado." << std::endl;
+            exit(1);
+        }
+        return; // Ignora, caso o uniform já tenha sido definido
+    }
+
     switch (type)
     {
     case DATA_TYPE_FLOAT:
@@ -93,12 +105,22 @@ void Shader::setup(std::string name, UniformType type)
         exit(1);
     }
 
+    selected_type->type = type;
     this->items[name] = selected_type;
 }
 
 template <typename T>
 void Shader::fill(std::string name, T *value)
 {
+#ifdef DEBUG_MODE_COMPILE
+    if (this->items.find(name) == this->items.end())
+    {
+        std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
+        std::cerr << "\tshader: " << this->name << std::endl;
+        exit(1);
+    }
+#endif
+
     UniformItem<T> *item = (UniformItem<T> *)this->items[name];
     item->set(value);
 }
@@ -106,8 +128,7 @@ void Shader::fill(std::string name, T *value)
 template <typename T>
 void Shader::fill(std::string name, const T &value)
 {
-    UniformItem<T> *item = (UniformItem<T> *)this->items[name];
-    item->set((T *)&value);
+    this->fill(name, (T *)&value);
 }
 
 unsigned int Shader::compile(std::string file_path, unsigned int type)
@@ -242,6 +263,7 @@ void Shader::load(std::string shader_name)
 
     this->loaded = GL_TRUE;
     this->program_id = program_id;
+    this->name = shader_name;
 
     Shader::loaded_shaders[shader_name] = this;
 }

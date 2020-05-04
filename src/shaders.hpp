@@ -26,6 +26,7 @@ private:
 
 public:
     int id;
+    UniformType type;
 
     BaseUniformItem(){};
     virtual void set(int *item){};
@@ -66,6 +67,7 @@ private:
     static std::unordered_map<std::string, Shader *> loaded_shaders;
 
     unsigned int compile(std::string file_path, unsigned int type);
+    std::string name;
 
 public:
     Shader();
