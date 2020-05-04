@@ -1,7 +1,7 @@
 NAME = depth
 BUILD_FOLDER = ./bin
 DEST = $(BUILD_FOLDER)/$(NAME)
-CC = g++ -std=c++0x
+CC = g++ -std=c++11
 CFLAGS = -g -Wall -Wextra
 LIBS = -lGL -lGLEW -lglfw -lassimp
 
