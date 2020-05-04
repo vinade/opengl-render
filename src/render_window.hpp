@@ -12,7 +12,7 @@
 #define RENDER_WINDOW_RENDER_WAIT 32
 
 #ifdef DEBUG_MODE_COMPILE
-#include "imgui_controller.cpp"
+#include "imgui_controller.hpp"
 #endif
 
 class RenderWindow

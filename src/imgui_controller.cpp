@@ -1,7 +1,6 @@
 #ifndef IMGUI_CONTROLLER_CPP
 #define IMGUI_CONTROLLER_CPP
 
-#include <GL/glew.h>
 #include "./vendor/imgui/imgui.h"
 #include "./vendor/imgui/imgui_impl_glfw.h"
 #include "./vendor/imgui/imgui_impl_opengl3.h"

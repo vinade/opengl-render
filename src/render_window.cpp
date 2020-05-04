@@ -1,6 +1,9 @@
 #ifndef RENDER_WINDOW_CPP
 #define RENDER_WINDOW_CPP
 
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "render_window.hpp"
 
 RenderWindow::RenderWindow()

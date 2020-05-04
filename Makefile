@@ -13,6 +13,7 @@ VENDOR_SRC_FILES = stb_image.cpp \
 	imgui.cpp
 
 SRC_FILES  = $(VENDOR_SRC_FILES) \
+	imgui_controller.cpp \
 	vertex_buffer_layout.cpp \
 	vertex_buffer.cpp \
 	index_buffer.cpp \
@@ -25,7 +26,6 @@ SRC_FILES  = $(VENDOR_SRC_FILES) \
 	debug_mesh.cpp \
 	scene_item.cpp \
 	light.cpp
-	# render_window.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

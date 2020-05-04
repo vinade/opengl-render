@@ -81,14 +81,15 @@ public:
 template <typename T>
 void Shader::fill(std::string name, T *value)
 {
-#ifdef DEBUG_MODE_COMPILE
-    if (this->items.find(name) == this->items.end())
+    if (DEBUG_MODE)
     {
-        std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
-        std::cerr << "\tshader: " << this->name << std::endl;
-        exit(1);
+        if (this->items.find(name) == this->items.end())
+        {
+            std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
+            std::cerr << "\tshader: " << this->name << std::endl;
+            exit(1);
+        }
     }
-#endif
 
     UniformItem<T> *item = (UniformItem<T> *)this->items[name];
     item->set(value);

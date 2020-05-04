@@ -1,11 +1,10 @@
 #define DEBUG_MODE_COMPILE
-
 #define DEBUG_MODE true
 
+#include "render_window.cpp"
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "shader.hpp"
-#include "render_window.cpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "texture.hpp"
@@ -106,7 +105,6 @@ void gl_init()
 {
 
     /* initialize flags */
-
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
 
@@ -145,7 +143,6 @@ void gl_init()
 
 int main()
 {
-
     RenderWindow *render = new RenderWindow();
 
 #ifdef DEBUG_MODE_COMPILE
