@@ -10,10 +10,6 @@ void VertexBufferLayout::push(DataType type, unsigned int count)
 
 	switch (type)
 	{
-	case DATA_TYPE_FLOAT:
-		gl_type = GL_FLOAT;
-		normalized = GL_FALSE;
-		break;
 	case DATA_TYPE_UINT:
 		gl_type = GL_UNSIGNED_INT;
 		normalized = GL_FALSE;
@@ -21,6 +17,11 @@ void VertexBufferLayout::push(DataType type, unsigned int count)
 	case DATA_TYPE_BYTE:
 		gl_type = GL_UNSIGNED_BYTE;
 		normalized = GL_TRUE;
+		break;
+	case DATA_TYPE_FLOAT:
+	default:
+		gl_type = GL_FLOAT;
+		normalized = GL_FALSE;
 		break;
 	}
 

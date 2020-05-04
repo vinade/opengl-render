@@ -6,7 +6,6 @@
 template <typename T>
 UniformItem<T>::UniformItem(std::string name, unsigned int program_id)
 {
-    T _item;
     this->id = glGetUniformLocation(program_id, name.c_str());
 
     if (this->id == -1)

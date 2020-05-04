@@ -67,9 +67,6 @@ inline int Texture::get_slot() const
 {
 	switch (this->type)
 	{
-	case aiTextureType_NONE:
-	case aiTextureType_DIFFUSE:
-		return 0;
 	case aiTextureType_SPECULAR:
 		return 1;
 	case aiTextureType_AMBIENT:
@@ -92,6 +89,10 @@ inline int Texture::get_slot() const
 		return 10;
 	case aiTextureType_UNKNOWN:
 		return 11;
+	case aiTextureType_NONE:
+	case aiTextureType_DIFFUSE:
+	default:
+		return 0;
 	}
 
 	return 0;
@@ -101,10 +102,6 @@ inline int Texture::get_channels() const
 {
 	switch (this->type)
 	{
-	case aiTextureType_NONE:
-	case aiTextureType_DIFFUSE:
-	case aiTextureType_UNKNOWN:
-		return 4;
 	case aiTextureType_DISPLACEMENT:
 	case aiTextureType_SPECULAR:
 	case aiTextureType_AMBIENT:
@@ -117,6 +114,11 @@ inline int Texture::get_channels() const
 	case aiTextureType_LIGHTMAP:
 	case aiTextureType_REFLECTION:
 		return 1;
+	case aiTextureType_NONE:
+	case aiTextureType_DIFFUSE:
+	case aiTextureType_UNKNOWN:
+	default:
+		return 4;
 	}
 
 	return 4;

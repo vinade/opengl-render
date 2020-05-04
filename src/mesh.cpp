@@ -32,7 +32,7 @@ void Mesh::normalize(glm::vec3 &center, glm::vec3 &size)
         max = size.z;
     }
 
-    for (int i = 0; i < this->vertex_count; i++)
+    for (unsigned int i = 0; i < this->vertex_count; i++)
     {
         this->vertex_data[i][0] = this->vertex_data[i][0] - center.x;
         this->vertex_data[i][1] = this->vertex_data[i][1] - center.y;

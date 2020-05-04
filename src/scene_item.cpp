@@ -40,7 +40,9 @@ void SceneItem::load_material_textures(aiMaterial *material, aiTextureType tex_t
 	{
 		aiString tex_path;
 		material->GetTexture(tex_type, tex_index, &tex_path);
-		Texture *tex = new Texture(this->base_path + tex_path.data, tex_type);
+		new Texture(this->base_path + tex_path.data, tex_type);
+		// Texture *tex = new Texture(this->base_path + tex_path.data, tex_type);
+		// material->textures.push_back(tex);
 	}
 }
 
@@ -60,7 +62,7 @@ void SceneItem::load_scene_textures()
 		return;
 	}
 
-	for (int i = 0; i < this->scene->mNumMaterials; i++)
+	for (unsigned int i = 0; i < this->scene->mNumMaterials; i++)
 	{
 		for (int tex_type_index = 0; tex_type_index < SCENE_ITEM_TEX_TYPE_COUNTER; tex_type_index++)
 		{
@@ -122,7 +124,7 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 {
 	Mesh mesh_data(8);
 
-	for (int n = 0; n < nd->mNumMeshes; n++)
+	for (unsigned int n = 0; n < nd->mNumMeshes; n++)
 	{
 		const struct aiMesh *mesh = sc->mMeshes[nd->mMeshes[n]];
 		const aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
@@ -134,7 +136,7 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 			mesh_data.textures.push_back(tex);
 		}
 
-		for (int vi = 0; vi < mesh->mNumVertices; vi++)
+		for (unsigned int vi = 0; vi < mesh->mNumVertices; vi++)
 		{
 			std::vector<float> vertex;
 
@@ -183,7 +185,7 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 			mesh_data.vertex_data.push_back(vertex);
 		}
 
-		for (int fi = 0; fi < mesh->mNumFaces; fi++)
+		for (unsigned int fi = 0; fi < mesh->mNumFaces; fi++)
 		{
 			const struct aiFace *face = &mesh->mFaces[fi];
 
@@ -221,7 +223,7 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 		this->meshes.push_back(mesh_data);
 	}
 
-	for (int n = 0; n < nd->mNumChildren; n++)
+	for (unsigned int n = 0; n < nd->mNumChildren; n++)
 	{
 		SceneItem::collect_vertex_data(sc, nd->mChildren[n]);
 	}
@@ -236,7 +238,7 @@ void SceneItem::load_data_from_file(const std::string &file_path)
 
 	// this->debug_coords();
 
-	for (int i = 0; i < this->meshes.size(); i++)
+	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
 		this->meshes[i].prepare(this->center, this->size);
 	}
@@ -245,7 +247,7 @@ void SceneItem::load_data_from_file(const std::string &file_path)
 void SceneItem::draw()
 {
 	this->update_model_matrix();
-	for (int i = 0; i < this->meshes.size(); i++)
+	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
 		this->meshes[i].draw(this->model_matrix);
 	}

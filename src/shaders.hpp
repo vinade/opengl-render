@@ -29,12 +29,7 @@ public:
     UniformType type;
 
     BaseUniformItem(){};
-    virtual void set(int *item){};
-    virtual void set(float *item){};
-    virtual void set(glm::vec2 *item){};
-    virtual void set(glm::vec3 *item){};
-    virtual void set(glm::vec4 *item){};
-    virtual void set(glm::mat4 *item){};
+    virtual void set(){};
     virtual const std::type_info &getTID() { return typeid(void); };
 };
 
