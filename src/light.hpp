@@ -1,8 +1,8 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include "debug_mesh.cpp"
-#include "scene_item.cpp"
+#include "debug_mesh.hpp"
+#include "scene_item.hpp"
 
 class Light : public SceneItem
 {

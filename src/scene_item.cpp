@@ -1,6 +1,12 @@
 #ifndef SCENE_ITEM_CPP
 #define SCENE_ITEM_CPP
 
+#include <fstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/LogStream.hpp>
 #include "scene_item.hpp"
 
 void SceneItem::load_scene_from_file(const std::string &file_path)

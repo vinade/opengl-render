@@ -1,6 +1,9 @@
 #ifndef TEXTURE_CPP
 #define TEXTURE_CPP
 
+#include <GL/glew.h>
+#include <iostream>
+#include "./vendor/stb/stb_image.h"
 #include "texture.hpp"
 
 Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),

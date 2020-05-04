@@ -1,6 +1,8 @@
 #ifndef MESH_CPP
 #define MESH_CPP
 
+#include "camera.hpp"
+#include "perspective.hpp"
 #include "mesh.hpp"
 
 void Mesh::flat_vertex_data(VertexBufferLayout *vbo_layout)

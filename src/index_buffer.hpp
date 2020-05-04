@@ -1,8 +1,6 @@
 #ifndef INDEX_BUFFER_HPP
 #define INDEX_BUFFER_HPP
 
-#include <GLFW/glfw3.h>
-
 class IndexBuffer
 {
 

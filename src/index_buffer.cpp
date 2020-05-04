@@ -1,6 +1,7 @@
 #ifndef INDEX_BUFFER_CPP
 #define INDEX_BUFFER_CPP
 
+#include <GL/glew.h>
 #include "index_buffer.hpp"
 
 IndexBuffer::IndexBuffer(const unsigned int *data, unsigned int count)

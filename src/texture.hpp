@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 #include <assimp/material.h>
-#include "./3rd/stb/stb_image.cpp"
 
 #define TEXTURE_CHANNELS 4
 

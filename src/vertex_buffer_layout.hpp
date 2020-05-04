@@ -2,6 +2,7 @@
 #define VERTEX_BUFFER_LAYOUT_HPP
 
 #include <vector>
+#include <GL/glew.h>
 #include "data_types.hpp"
 
 typedef struct str_vertex_buffer_element
@@ -42,10 +43,10 @@ public:
 
 	void push(DataType type, unsigned int count);
 
-	inline const std::vector<VertexBufferElement> &get_elements() const;
+	inline const std::vector<VertexBufferElement> &get_elements() const { return this->elements; };
 
-	inline unsigned int get_stride() const;
-	inline unsigned int get_counter() const;
+	inline unsigned int get_stride() const { return this->stride; };
+	inline unsigned int get_counter() const { return this->counter; };
 };
 
 #endif

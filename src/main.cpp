@@ -2,16 +2,16 @@
 
 #define DEBUG_MODE true
 
-#include "camera.cpp"
-#include "perspective.cpp"
-#include "shaders.cpp"
+#include "camera.hpp"
+#include "perspective.hpp"
+#include "shader.hpp"
 #include "render_window.cpp"
-#include "vertex_buffer.cpp"
-#include "index_buffer.cpp"
-#include "texture.cpp"
-#include "vertex_array.cpp"
-#include "scene_item.cpp"
-#include "light.cpp"
+#include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
+#include "texture.hpp"
+#include "vertex_array.hpp"
+#include "scene_item.hpp"
+#include "light.hpp"
 
 #include <stdio.h>
 

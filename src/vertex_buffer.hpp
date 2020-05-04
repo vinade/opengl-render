@@ -1,8 +1,6 @@
 #ifndef VERTEX_BUFFER_HPP
 #define VERTEX_BUFFER_HPP
 
-#include <GLFW/glfw3.h>
-
 class VertexBuffer
 {
 

@@ -1,6 +1,7 @@
 #ifndef VERTEX_BUFFER_CPP
 #define VERTEX_BUFFER_CPP
 
+#include <GL/glew.h>
 #include "vertex_buffer.hpp"
 
 VertexBuffer::VertexBuffer(const void *data, unsigned int size)

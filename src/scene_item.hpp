@@ -1,13 +1,9 @@
 #ifndef SCENE_ITEM_HPP
 #define SCENE_ITEM_HPP
 
-#include "mesh.cpp"
-
+#include "mesh.hpp"
 #include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <assimp/DefaultLogger.hpp>
-#include <assimp/LogStream.hpp>
 
 #define SCENE_ITEM_TEX_TYPE_COUNTER 13
 

@@ -1,15 +1,9 @@
 #ifndef IMGUI_CONTROLLER_HPP
 #define IMGUI_CONTROLLER_HPP
 
-#include <GL/glew.h>
+#include <iostream>
 #include <GLFW/glfw3.h>
-
-#include "./3rd/imgui/imgui.h"
-#include "./3rd/imgui/imgui_impl_glfw.h"
-#include "./3rd/imgui/imgui_impl_opengl3.h"
-
 #include <vector>
-#include <cassert>
 
 template <typename T>
 struct imgui_item

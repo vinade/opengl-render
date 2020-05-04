@@ -1,8 +1,7 @@
 #ifndef RENDER_WINDOW_HPP
 #define RENDER_WINDOW_HPP
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <string>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
 #define RENDER_WINDOW_OPENGL_VERSION_MINOR 6

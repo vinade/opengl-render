@@ -1,7 +1,7 @@
 #ifndef DEBUG_MESH_HPP
 #define DEBUG_MESH_HPP
 
-#include "mesh.cpp"
+#include "mesh.hpp"
 
 class DebugMesh : public Mesh
 {

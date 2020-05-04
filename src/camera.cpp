@@ -1,6 +1,7 @@
 #ifndef CAMERA_CPP
 #define CAMERA_CPP
 
+#include <glm/gtc/matrix_transform.hpp>
 #include "camera.hpp"
 
 void Camera::set_position(const glm::vec3 &position)

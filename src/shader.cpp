@@ -1,36 +1,12 @@
-#ifndef SHADERS_CPP
-#define SHADERS_CPP
+#ifndef SHADER_CPP
+#define SHADER_CPP
 
-#include "shaders.hpp"
-
-template <typename T>
-UniformItem<T>::UniformItem(std::string name, unsigned int program_id)
-{
-    this->id = glGetUniformLocation(program_id, name.c_str());
-
-    if (this->id == -1)
-    {
-        std::cerr << "[Shader] Uniform " << name.c_str() << " não utilizado pelo shader" << std::endl;
-    }
-}
-
-template <typename T>
-void UniformItem<T>::set(T *_item)
-{
-    this->item = _item;
-}
-
-template <typename T>
-T *UniformItem<T>::get()
-{
-    return this->item;
-}
-
-template <typename T>
-const std::type_info &UniformItem<T>::getTID()
-{
-    return typeid(T);
-}
+#include <algorithm>
+#include <sstream>
+#include <fstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "shader.hpp"
 
 Shader::Shader()
 {
@@ -106,28 +82,6 @@ void Shader::setup(std::string name, UniformType type)
 
     selected_type->type = type;
     this->items[name] = selected_type;
-}
-
-template <typename T>
-void Shader::fill(std::string name, T *value)
-{
-#ifdef DEBUG_MODE_COMPILE
-    if (this->items.find(name) == this->items.end())
-    {
-        std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
-        std::cerr << "\tshader: " << this->name << std::endl;
-        exit(1);
-    }
-#endif
-
-    UniformItem<T> *item = (UniformItem<T> *)this->items[name];
-    item->set(value);
-}
-
-template <typename T>
-void Shader::fill(std::string name, const T &value)
-{
-    this->fill(name, (T *)&value);
 }
 
 unsigned int Shader::compile(std::string file_path, unsigned int type)

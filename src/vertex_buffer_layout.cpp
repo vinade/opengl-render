@@ -30,19 +30,4 @@ void VertexBufferLayout::push(DataType type, unsigned int count)
 	this->counter += count;
 }
 
-inline const std::vector<VertexBufferElement> &VertexBufferLayout::get_elements() const
-{
-	return this->elements;
-}
-
-inline unsigned int VertexBufferLayout::get_stride() const
-{
-	return this->stride;
-}
-
-inline unsigned int VertexBufferLayout::get_counter() const
-{
-	return this->counter;
-}
-
 #endif

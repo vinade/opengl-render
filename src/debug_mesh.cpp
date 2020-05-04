@@ -1,6 +1,8 @@
 #ifndef DEBUG_MESH_CPP
 #define DEBUG_MESH_CPP
 
+#include "camera.hpp"
+#include "perspective.hpp"
 #include "debug_mesh.hpp"
 
 DebugMesh::DebugMesh()

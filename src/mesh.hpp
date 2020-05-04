@@ -1,14 +1,13 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include "camera.cpp"
-#include "perspective.cpp"
-#include "vertex_buffer.cpp"
-#include "index_buffer.cpp"
-#include "texture.cpp"
-#include "vertex_array.cpp"
-#include "shaders.cpp"
+#include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
+#include "texture.hpp"
+#include "vertex_array.hpp"
+#include "shader.hpp"
 #include <vector>
+#include <glm/glm.hpp>
 
 class Mesh
 {
