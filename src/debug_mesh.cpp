@@ -7,7 +7,9 @@ DebugMesh::DebugMesh()
 {
     this->shader = Shader::getShader("debug");
     this->shader->setup("u_Color", DATA_TYPE_VEC4);
-    this->shader->setup("u_MVP", DATA_TYPE_MAT4);
+    this->shader->setup("u_Model", DATA_TYPE_MAT4);
+    this->shader->setup("u_View", DATA_TYPE_MAT4);
+    this->shader->setup("u_Projection", DATA_TYPE_MAT4);
 
     this->vao = new VertexArray();
 
@@ -20,11 +22,13 @@ DebugMesh::DebugMesh()
     this->ibo = new IndexBuffer(&this->index_buffer_src[0], this->index_count);
 };
 
-void DebugMesh::draw(glm::mat4 *mvp)
+void DebugMesh::draw(const glm::mat4 &model_view)
 {
-    // Texture::unbind();
+    Texture::unbind();
     this->shader->fill("u_Color", this->color);
-    this->shader->fill("u_MVP", *mvp);
+    this->shader->fill("u_Model", model_view);
+    this->shader->fill("u_View", Camera::view_matrix);
+    this->shader->fill("u_Projection", Perspective::projection_matrix);
     this->shader->exec();
     this->vao->bind();
     this->ibo->bind();

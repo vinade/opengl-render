@@ -244,9 +244,10 @@ void SceneItem::load_data_from_file(const std::string &file_path)
 
 void SceneItem::draw()
 {
+	this->get_model_matrix();
 	for (int i = 0; i < this->meshes.size(); i++)
 	{
-		this->meshes[i].draw(this->mvp);
+		this->meshes[i].draw(this->model_matrix);
 	}
 }
 

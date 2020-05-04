@@ -17,7 +17,7 @@ public:
     glm::vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
 
     DebugMesh();
-    void draw(glm::mat4 *mvp);
+    void draw(const glm::mat4 &model_view);
 };
 
 #endif

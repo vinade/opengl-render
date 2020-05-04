@@ -21,7 +21,6 @@ private:
 	glm::vec3 center;
 	glm::vec3 size;
 
-	glm::mat4 model_matrix;
 	glm::vec3 m_position = {0.0, 0.0, 0.0};
 	glm::vec3 m_rotation = {0.0, 0.0, 0.0};
 	glm::vec3 m_scale = {1.0, 1.0, 1.0};
@@ -37,7 +36,7 @@ private:
 	inline void calculate_coords();
 
 public:
-	glm::mat4 *mvp;
+	glm::mat4 model_matrix;
 	std::vector<Mesh> meshes;
 	const aiScene *scene = NULL;
 

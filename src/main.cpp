@@ -2,6 +2,8 @@
 
 #define DEBUG_MODE true
 
+#include "camera.cpp"
+#include "perspective.cpp"
 #include "shaders.cpp"
 #include "render_window.cpp"
 #include "vertex_buffer.cpp"
@@ -30,6 +32,7 @@ MessageCallback(GLenum source,
     }
 }
 
+Camera camera;
 Light light_0;
 SceneItem cat_1;
 SceneItem rocks_1;
@@ -37,11 +40,6 @@ SceneItem moon_1;
 
 glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
 glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);
-
-glm::mat4 projection_matrix;
-glm::mat4 view_matrix;
-glm::mat4 model_matrix;
-glm::mat4 mvp_matrix;
 
 Shader *std_shader;
 
@@ -78,39 +76,22 @@ void init_rectangle()
     rectangle_ibo = new IndexBuffer(rectangle_indexes, 6);
 }
 
-void draw_scene_item(SceneItem &item)
-{ // TODO: passar tudo para o draw do item
-
-    model_matrix = item.get_model_matrix();
-    view_matrix = glm::translate(glm::mat4(1.0f), view_translation_debug); // TODO: Colocar na Câmera
-    mvp_matrix = projection_matrix * view_matrix * model_matrix;
-    item.mvp = &mvp_matrix;
-    item.draw();
-}
-
-void draw_basic(Light &item)
-{ // TODO: passar tudo para o draw do item
-
-    model_matrix = item.get_model_matrix();
-    view_matrix = glm::translate(glm::mat4(1.0f), view_translation_debug); // TODO: Colocar na Câmera
-    mvp_matrix = projection_matrix * view_matrix * model_matrix;
-    item.mvp = &mvp_matrix;
-    item.draw();
-}
-
 void render_handler()
 {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    draw_scene_item(rocks_1);
-    draw_scene_item(cat_1);
+    camera.set_position(view_translation_debug);
+    camera.update_view_matrix();
+
+    rocks_1.draw();
+    cat_1.draw();
 
     light_0.inc_position(glm::vec3(0.001f, -0.001f, 0.0f));
-    draw_basic(light_0);
+    light_0.draw();
 
     moon_1.inc_rotation(glm::vec3(0.0f, 0.001f, 0.0f));
-    draw_scene_item(moon_1);
+    moon_1.draw();
 
     glFlush();
 }
@@ -148,10 +129,9 @@ void gl_init()
     moon_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     moon_1.set_scale(200.0);
 
-    std::cerr << "[done]" << std::endl;
+    Perspective::set_default();
 
-    /* */
-    projection_matrix = glm::perspective(glm::radians(45.0), 1.0, 1.0, 2000.0); // TODO: Colocar no RenderWindow
+    std::cerr << "[done]" << std::endl;
 
     /* create objects */
     init_rectangle();

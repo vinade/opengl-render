@@ -1,6 +1,8 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
+#include "camera.cpp"
+#include "perspective.cpp"
 #include "vertex_buffer.cpp"
 #include "index_buffer.cpp"
 #include "texture.cpp"
@@ -33,7 +35,7 @@ public:
 	IndexBuffer *ibo;
 
 	void prepare(glm::vec3 &center, glm::vec3 &size);
-	void draw(glm::mat4 *mvp);
+	void draw(const glm::mat4 &model_view);
 };
 
 #endif
