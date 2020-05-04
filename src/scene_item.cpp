@@ -246,7 +246,7 @@ void SceneItem::draw()
 {
 	for (int i = 0; i < this->meshes.size(); i++)
 	{
-		this->meshes[i].draw();
+		this->meshes[i].draw(this->mvp);
 	}
 }
 

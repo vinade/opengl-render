@@ -9,6 +9,7 @@
 #include "texture.cpp"
 #include "vertex_array.cpp"
 #include "scene_item.cpp"
+#include "light.cpp"
 
 #include <stdio.h>
 
@@ -29,6 +30,7 @@ MessageCallback(GLenum source,
     }
 }
 
+Light light_0;
 SceneItem cat_1;
 SceneItem rocks_1;
 SceneItem moon_1;
@@ -82,14 +84,17 @@ void draw_scene_item(SceneItem &item)
     model_matrix = item.get_model_matrix();
     view_matrix = glm::translate(glm::mat4(1.0f), view_translation_debug); // TODO: Colocar na Câmera
     mvp_matrix = projection_matrix * view_matrix * model_matrix;
+    item.mvp = &mvp_matrix;
+    item.draw();
+}
 
-    glm::vec4 u_color(0.2, 0.4, 0.8, 1.0);
+void draw_basic(Light &item)
+{ // TODO: passar tudo para o draw do item
 
-    // std_shader->fill("u_Color", &u_color);
-    std_shader->fill("u_Color", u_color);
-    std_shader->fill("u_Texture", 0);
-    std_shader->fill("u_MVP", mvp_matrix);
-    std_shader->exec();
+    model_matrix = item.get_model_matrix();
+    view_matrix = glm::translate(glm::mat4(1.0f), view_translation_debug); // TODO: Colocar na Câmera
+    mvp_matrix = projection_matrix * view_matrix * model_matrix;
+    item.mvp = &mvp_matrix;
     item.draw();
 }
 
@@ -100,6 +105,9 @@ void render_handler()
 
     draw_scene_item(rocks_1);
     draw_scene_item(cat_1);
+
+    light_0.inc_position(glm::vec3(0.001f, -0.001f, 0.0f));
+    draw_basic(light_0);
 
     moon_1.inc_rotation(glm::vec3(0.0f, 0.001f, 0.0f));
     draw_scene_item(moon_1);
@@ -124,6 +132,7 @@ void gl_init()
 
     /* load textures */
     // texture1 = new Texture("./res/textures/rocks_1.png");
+    light_0.set_position(glm::vec3(-80.0f, 40.0f, -300.0f));
 
     cat_1.load_data_from_file("./res/models/cat_1/12221_Cat_v1_l3.obj");
     cat_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
@@ -158,8 +167,8 @@ int main(int iArgc, char **cppArgv)
     render->imgui_controller->observef("beta", &model_rotation_debug[1], -180.0f, 180.0f);
     render->imgui_controller->observef("gamma", &model_rotation_debug[2], -180.0f, 180.0f);
 
-    render->imgui_controller->observef("x", &view_translation_debug[0], -100.0f, 100.0f);
-    render->imgui_controller->observef("y", &view_translation_debug[1], -100.0f, 100.0f);
+    render->imgui_controller->observef("x", &view_translation_debug[0], -1000.0f, 1000.0f);
+    render->imgui_controller->observef("y", &view_translation_debug[1], -1000.0f, 1000.0f);
     render->imgui_controller->observef("z", &view_translation_debug[2], -1000.0f, 1000.0f);
 #endif
 

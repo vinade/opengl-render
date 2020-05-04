@@ -37,6 +37,7 @@ private:
 	inline void calculate_coords();
 
 public:
+	glm::mat4 *mvp;
 	std::vector<Mesh> meshes;
 	const aiScene *scene = NULL;
 

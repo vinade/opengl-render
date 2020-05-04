@@ -49,6 +49,9 @@ void Mesh::normalize(glm::vec3 &center, glm::vec3 &size)
 
 void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
 {
+    this->shader = Shader::getShader("std");
+    this->shader->setup("u_Texture", DATA_TYPE_INT);
+    this->shader->setup("u_MVP", DATA_TYPE_MAT4);
 
     this->normalize(center, size);
 
@@ -66,8 +69,12 @@ void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
 }
 
-void Mesh::draw()
+void Mesh::draw(glm::mat4 *mvp)
 {
+    this->shader->fill("u_Texture", 0);
+    this->shader->fill("u_MVP", *mvp);
+    this->shader->exec();
+
     this->textures[0]->bind();
     this->vao->bind();
     this->ibo->bind();
