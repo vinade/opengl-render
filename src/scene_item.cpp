@@ -244,14 +244,14 @@ void SceneItem::load_data_from_file(const std::string &file_path)
 
 void SceneItem::draw()
 {
-	this->get_model_matrix();
+	this->update_model_matrix();
 	for (int i = 0; i < this->meshes.size(); i++)
 	{
 		this->meshes[i].draw(this->model_matrix);
 	}
 }
 
-glm::mat4 SceneItem::get_model_matrix()
+void SceneItem::update_model_matrix()
 {
 
 	// pela normalizacao, o objeto já se encontra no p(0,0,0)
@@ -261,8 +261,11 @@ glm::mat4 SceneItem::get_model_matrix()
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+}
 
-	return this->model_matrix;
+glm::vec3 SceneItem::get_position()
+{
+	return glm::vec3(this->m_position[0], this->m_position[2], this->m_position[2]);
 }
 
 void SceneItem::set_position(const glm::vec3 position)

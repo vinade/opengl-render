@@ -48,7 +48,9 @@ public:
 	void load_data_from_file(const std::string &file_path);
 	void draw();
 
-	glm::mat4 get_model_matrix();
+	void update_model_matrix();
+	glm::vec3 get_position();
+
 	void set_position(const glm::vec3 pos);
 	void set_rotation(const glm::vec3 rotation);
 	void set_scale(const glm::vec3 scale);

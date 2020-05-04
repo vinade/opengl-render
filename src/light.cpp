@@ -23,7 +23,7 @@ void Light::draw()
         this->set(); // carrega config padrão
     }
 
-    this->get_model_matrix();
+    this->update_model_matrix();
     this->debug_mesh->draw(this->model_matrix);
 }
 
