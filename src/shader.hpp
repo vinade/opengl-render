@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <GL/glew.h>
+#include "debug_flags.hpp"
 #include "data_types.hpp"
 
 #define SHADERS_FOLDER std::string("./shaders/")
@@ -81,15 +82,14 @@ public:
 template <typename T>
 void Shader::fill(std::string name, T *value)
 {
-    if (DEBUG_MODE)
+#ifdef DEBUG_MODE_COMPILE
+    if (this->items.find(name) == this->items.end())
     {
-        if (this->items.find(name) == this->items.end())
-        {
-            std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
-            std::cerr << "\tshader: " << this->name << std::endl;
-            exit(1);
-        }
+        std::cerr << "[Shader] Fill do Uniform " << name.c_str() << " chamado antes do setup." << std::endl;
+        std::cerr << "\tshader: " << this->name << std::endl;
+        exit(1);
     }
+#endif
 
     UniformItem<T> *item = (UniformItem<T> *)this->items[name];
     item->set(value);
