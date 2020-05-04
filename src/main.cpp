@@ -46,39 +46,6 @@ glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);
 
 Shader *std_shader;
 
-Texture *texture1;
-
-VertexArray *rectangle_vao;
-VertexBufferLayout *rectangle_vbo_layout;
-
-VertexBuffer *rectangle_vbo;
-IndexBuffer *rectangle_ibo;
-
-unsigned int rectangle_index_buffer;
-float rectangle_positions[] = {
-    -5.0f, -5.0f, -30.0f, 0.0f, 0.0f,
-    5.0f, -5.0f, -30.0f, 1.0f, 0.0f,
-    5.0f, 5.0f, -30.0f, 1.0f, 1.0f,
-    -5.0f, 5.0f, -30.0f, 0.0f, 1.0f};
-
-unsigned int rectangle_indexes[] = {
-    0, 1, 2,
-    0, 2, 3};
-
-void init_rectangle()
-{
-
-    rectangle_vao = new VertexArray();
-    rectangle_vbo = new VertexBuffer(rectangle_positions, 5 * 4);
-    rectangle_vbo_layout = new VertexBufferLayout();
-
-    rectangle_vbo_layout->push(DATA_TYPE_FLOAT, 3);
-    rectangle_vbo_layout->push(DATA_TYPE_FLOAT, 2);
-    rectangle_vao->add_buffer(rectangle_vbo, rectangle_vbo_layout);
-
-    rectangle_ibo = new IndexBuffer(rectangle_indexes, 6);
-}
-
 void render_handler()
 {
 
@@ -134,9 +101,6 @@ void gl_init()
     Perspective::set_default();
 
     std::cerr << "[done]" << std::endl;
-
-    /* create objects */
-    init_rectangle();
 }
 
 int main()
