@@ -1,0 +1,11 @@
+
+include_directories(imgui stb)
+
+file(GLOB STB "stb/*.cpp")
+file(GLOB IMGUI "imgui/*.cpp")
+
+add_library(stb ${STB})
+add_library(imgui ${IMGUI})
+
+target_include_directories(stb PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/stb")
+target_include_directories(imgui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/imgui")
