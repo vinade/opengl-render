@@ -8,7 +8,11 @@
 #include "debug_flags.hpp"
 #include "data_types.hpp"
 
-#define SHADERS_FOLDER std::string("./shaders/")
+#ifndef CMAKE_ROOT_DIR
+#define CMAKE_ROOT_DIR "./"
+#endif
+
+#define SHADERS_FOLDER "./shaders/"
 #define SHADERS_VERTEX_EXT std::string(".vertexshader")
 #define SHADERS_FRAGMENT_EXT std::string(".fragmentshader")
 #define SHADERS_DEFAULT_SHADER std::string("std")
@@ -56,6 +60,7 @@ private:
     std::unordered_map<std::string, BaseUniformItem *> items;
 
     static std::unordered_map<std::string, Shader *> loaded_shaders;
+    static const std::string shaders_folder;
 
     unsigned int compile(std::string file_path, unsigned int type);
     std::string name;
