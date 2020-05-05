@@ -10,6 +10,12 @@ void Light::set()
 
 void Light::set(const glm::vec4 &color)
 {
+    this->set(glm::vec4(1.0, 1.0, 1.0, 1.0), LIGHT_DIFFUSE);
+}
+
+void Light::set(const glm::vec4 &color, LightType type)
+{
+    this->m_type = type;
     this->set_scale(5.0);
     this->debug_mesh = new DebugMesh();
     this->debug_mesh->color = color;
