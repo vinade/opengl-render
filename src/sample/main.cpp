@@ -6,7 +6,7 @@
 #include "index_buffer.hpp"
 #include "texture.hpp"
 #include "vertex_array.hpp"
-#include "scene_item.hpp"
+#include "scenario_item.hpp"
 #include "light.hpp"
 
 #include <stdio.h>
@@ -36,9 +36,9 @@ MessageCallback(GLenum source,
 
 Camera camera;
 Light light_0;
-SceneItem cat_1;
-SceneItem rocks_1;
-SceneItem moon_1;
+ScenarioItem cat_1;
+ScenarioItem rocks_1;
+ScenarioItem moon_1;
 
 glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
 glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);

@@ -2,14 +2,14 @@
 #define LIGHT_HPP
 
 #include "debug_mesh.hpp"
-#include "scene_item.hpp"
+#include "scenario_item.hpp"
 
 enum LightType
 {
     LIGHT_DIFFUSE
 };
 
-class Light : public SceneItem
+class Light : public ScenarioItem
 {
 private:
     bool loaded = false;

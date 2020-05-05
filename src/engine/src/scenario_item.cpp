@@ -1,5 +1,5 @@
-#ifndef SCENE_ITEM_CPP
-#define SCENE_ITEM_CPP
+#ifndef SCENARIO_ITEM_CPP
+#define SCENARIO_ITEM_CPP
 
 #include <fstream>
 #include <glm/glm.hpp>
@@ -7,27 +7,27 @@
 #include <assimp/postprocess.h>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
-#include "scene_item.hpp"
+#include "scenario_item.hpp"
 
-void SceneItem::load_scene_from_file(const std::string &file_path)
+void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
 	// TODO: cache do objeto pelo file_path
-	std::string complete_path = SceneItem::models_folder + file_path;
+	std::string complete_path = ScenarioItem::models_folder + file_path;
 	std::ifstream file_stream(complete_path.c_str());
 
 	if (file_stream.fail())
 	{
-		std::cerr << "[SceneItem] erro." << std::endl;
-		std::cerr << "\t" << SceneItem::assimp_importer.GetErrorString() << std::endl;
+		std::cerr << "[ScenarioItem] erro." << std::endl;
+		std::cerr << "\t" << ScenarioItem::assimp_importer.GetErrorString() << std::endl;
 		exit(1);
 	}
 	file_stream.close();
 
-	this->scene = SceneItem::assimp_importer.ReadFile(complete_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
+	this->scene = ScenarioItem::assimp_importer.ReadFile(complete_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
 	if (!this->scene)
 	{
-		std::cerr << "[SceneItem] erro." << std::endl;
-		std::cerr << "\t" << SceneItem::assimp_importer.GetErrorString() << std::endl;
+		std::cerr << "[ScenarioItem] erro." << std::endl;
+		std::cerr << "\t" << ScenarioItem::assimp_importer.GetErrorString() << std::endl;
 		exit(1);
 	}
 
@@ -41,7 +41,7 @@ void SceneItem::load_scene_from_file(const std::string &file_path)
 	}
 }
 
-void SceneItem::load_material_textures(aiMaterial *material, aiTextureType tex_type)
+void ScenarioItem::load_material_textures(aiMaterial *material, aiTextureType tex_type)
 {
 	int counter = material->GetTextureCount(tex_type);
 	for (int tex_index = 0; tex_index < counter; tex_index++)
@@ -54,32 +54,32 @@ void SceneItem::load_material_textures(aiMaterial *material, aiTextureType tex_t
 	}
 }
 
-void SceneItem::load_scene_textures()
+void ScenarioItem::load_scene_textures()
 {
 
 	if (!this->scene)
 	{
-		std::cerr << "[SceneItem] Tentativa de carregamento de texturas sem uma cena válida." << std::endl;
+		std::cerr << "[ScenarioItem] Tentativa de carregamento de texturas sem uma cena válida." << std::endl;
 		exit(1);
 	}
 
 	if (this->scene->HasTextures())
 	{
-		std::cerr << "[SceneItem] a cena já tem texturas. ------- DEBUG." << std::endl;
+		std::cerr << "[ScenarioItem] a cena já tem texturas. ------- DEBUG." << std::endl;
 		// a cena já contém as texturas
 		return;
 	}
 
 	for (unsigned int i = 0; i < this->scene->mNumMaterials; i++)
 	{
-		for (int tex_type_index = 0; tex_type_index < SCENE_ITEM_TEX_TYPE_COUNTER; tex_type_index++)
+		for (int tex_type_index = 0; tex_type_index < SCENARIO_ITEM_TEX_TYPE_COUNTER; tex_type_index++)
 		{
-			SceneItem::load_material_textures(this->scene->mMaterials[i], SceneItem::texture_types[tex_type_index]);
+			ScenarioItem::load_material_textures(this->scene->mMaterials[i], ScenarioItem::texture_types[tex_type_index]);
 		}
 	}
 }
 
-inline void SceneItem::get_min_max(aiVector3D &value, int i)
+inline void ScenarioItem::get_min_max(aiVector3D &value, int i)
 {
 
 	if (this->min_max_undefined || value[i] < this->min[i])
@@ -93,7 +93,7 @@ inline void SceneItem::get_min_max(aiVector3D &value, int i)
 	}
 }
 
-inline void SceneItem::calculate_coords()
+inline void ScenarioItem::calculate_coords()
 {
 
 	this->center.x = (this->min.x + this->max.x) / 2.0;
@@ -105,7 +105,7 @@ inline void SceneItem::calculate_coords()
 	this->size.z = this->max.z - this->min.z;
 }
 
-void SceneItem::debug_coords()
+void ScenarioItem::debug_coords()
 {
 	std::cerr << "DEBUG COORDS\n";
 
@@ -128,7 +128,7 @@ void SceneItem::debug_coords()
 	ESTÁ ACEITANDO APENAS UMA TEXTURA, E IGNORANDO OS MATERIAIS
 
 */
-void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNode *nd)
+void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct aiNode *nd)
 {
 	Mesh mesh_data(8);
 
@@ -217,7 +217,7 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 				break;
 			// default: // GL_POLYGON
 			default:
-				std::cerr << "[SceneItem] número de lados não suportados: " << face->mNumIndices << std::endl;
+				std::cerr << "[ScenarioItem] número de lados não suportados: " << face->mNumIndices << std::endl;
 				exit(1);
 			}
 		}
@@ -233,11 +233,11 @@ void SceneItem::collect_vertex_data(const struct aiScene *sc, const struct aiNod
 
 	for (unsigned int n = 0; n < nd->mNumChildren; n++)
 	{
-		SceneItem::collect_vertex_data(sc, nd->mChildren[n]);
+		ScenarioItem::collect_vertex_data(sc, nd->mChildren[n]);
 	}
 }
 
-void SceneItem::load_data_from_file(const std::string &file_path)
+void ScenarioItem::load_data_from_file(const std::string &file_path)
 {
 	this->load_scene_from_file(file_path);
 	this->load_scene_textures();
@@ -252,7 +252,7 @@ void SceneItem::load_data_from_file(const std::string &file_path)
 	}
 }
 
-void SceneItem::draw()
+void ScenarioItem::draw()
 {
 	this->update_model_matrix();
 	for (unsigned int i = 0; i < this->meshes.size(); i++)
@@ -261,7 +261,7 @@ void SceneItem::draw()
 	}
 }
 
-void SceneItem::update_model_matrix()
+void ScenarioItem::update_model_matrix()
 {
 
 	// pela normalizacao, o objeto já se encontra no p(0,0,0)
@@ -273,68 +273,68 @@ void SceneItem::update_model_matrix()
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
-glm::vec3 SceneItem::get_position()
+glm::vec3 ScenarioItem::get_position()
 {
 	return glm::vec3(this->m_position[0], this->m_position[2], this->m_position[2]);
 }
 
-void SceneItem::set_position(const glm::vec3 position)
+void ScenarioItem::set_position(const glm::vec3 position)
 {
 	this->m_position[0] = position[0];
 	this->m_position[1] = position[1];
 	this->m_position[2] = position[2];
 }
 
-void SceneItem::set_rotation(const glm::vec3 rotation)
+void ScenarioItem::set_rotation(const glm::vec3 rotation)
 {
 	this->m_rotation[0] = rotation[0];
 	this->m_rotation[1] = rotation[1];
 	this->m_rotation[2] = rotation[2];
 }
 
-void SceneItem::set_scale(const glm::vec3 scale)
+void ScenarioItem::set_scale(const glm::vec3 scale)
 {
 	this->m_scale[0] = scale[0];
 	this->m_scale[1] = scale[1];
 	this->m_scale[2] = scale[2];
 }
 
-void SceneItem::set_scale(float scale)
+void ScenarioItem::set_scale(float scale)
 {
 	this->m_scale[0] = scale;
 	this->m_scale[1] = scale;
 	this->m_scale[2] = scale;
 }
 
-void SceneItem::inc_position(const glm::vec3 position)
+void ScenarioItem::inc_position(const glm::vec3 position)
 {
 	this->m_position[0] = this->m_position[0] + position[0];
 	this->m_position[1] = this->m_position[1] + position[1];
 	this->m_position[2] = this->m_position[2] + position[2];
 }
 
-void SceneItem::inc_rotation(const glm::vec3 rotation)
+void ScenarioItem::inc_rotation(const glm::vec3 rotation)
 {
 	this->m_rotation[0] = this->m_rotation[0] + rotation[0];
 	this->m_rotation[1] = this->m_rotation[1] + rotation[1];
 	this->m_rotation[2] = this->m_rotation[2] + rotation[2];
 }
 
-void SceneItem::inc_scale(const glm::vec3 scale)
+void ScenarioItem::inc_scale(const glm::vec3 scale)
 {
 	this->m_scale[0] = this->m_scale[0] + scale[0];
 	this->m_scale[1] = this->m_scale[1] + scale[1];
 	this->m_scale[2] = this->m_scale[2] + scale[2];
 }
 
-void SceneItem::inc_scale(float scale)
+void ScenarioItem::inc_scale(float scale)
 {
 	this->m_scale[0] = this->m_scale[0] + scale;
 	this->m_scale[1] = this->m_scale[1] + scale;
 	this->m_scale[2] = this->m_scale[2] + scale;
 }
 
-aiTextureType SceneItem::texture_types[SCENE_ITEM_TEX_TYPE_COUNTER] = {
+aiTextureType ScenarioItem::texture_types[SCENARIO_ITEM_TEX_TYPE_COUNTER] = {
 	aiTextureType_NONE,
 	aiTextureType_DIFFUSE,
 	aiTextureType_UNKNOWN,
@@ -349,7 +349,7 @@ aiTextureType SceneItem::texture_types[SCENE_ITEM_TEX_TYPE_COUNTER] = {
 	aiTextureType_LIGHTMAP,
 	aiTextureType_REFLECTION};
 
-Assimp::Importer SceneItem::assimp_importer;
-const std::string SceneItem::models_folder = std::string(CMAKE_ROOT_DIR SCENE_ITEM_MODELS_FOLDER);
+Assimp::Importer ScenarioItem::assimp_importer;
+const std::string ScenarioItem::models_folder = std::string(CMAKE_ROOT_DIR SCENARIO_ITEM_MODELS_FOLDER);
 
 #endif

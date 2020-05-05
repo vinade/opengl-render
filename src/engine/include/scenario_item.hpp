@@ -1,5 +1,5 @@
-#ifndef SCENE_ITEM_HPP
-#define SCENE_ITEM_HPP
+#ifndef SCENARIO_ITEM_HPP
+#define SCENARIO_ITEM_HPP
 
 #include "mesh.hpp"
 #include <assimp/Importer.hpp>
@@ -9,10 +9,10 @@
 #define CMAKE_ROOT_DIR "./"
 #endif
 
-#define SCENE_ITEM_MODELS_FOLDER "./res/models/"
-#define SCENE_ITEM_TEX_TYPE_COUNTER 13
+#define SCENARIO_ITEM_MODELS_FOLDER "./res/models/"
+#define SCENARIO_ITEM_TEX_TYPE_COUNTER 13
 
-class SceneItem
+class ScenarioItem
 {
 
 private:
@@ -45,7 +45,7 @@ public:
 	static Assimp::Importer assimp_importer;
 	static const std::string models_folder;
 
-	SceneItem(){};
+	ScenarioItem(){};
 
 	void load_data_from_file(const std::string &file_path);
 	void draw();
