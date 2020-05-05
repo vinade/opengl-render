@@ -7,11 +7,15 @@
 
 DebugMesh::DebugMesh()
 {
-    this->shader = Shader::getShader("debug");
+    this->shader = Shader::get_shader("debug", SHADER_TYPE_OTHER);
+    this->shader->use_mvp = true;
+
+    // esse bloco será desnecessário, ficará como responsabilidade da cena.
     this->shader->setup("u_Color", DATA_TYPE_VEC4);
     this->shader->setup("u_Model", DATA_TYPE_MAT4);
     this->shader->setup("u_View", DATA_TYPE_MAT4);
     this->shader->setup("u_Projection", DATA_TYPE_MAT4);
+    // fim do bloco
 
     this->vao = new VertexArray();
 

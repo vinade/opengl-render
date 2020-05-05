@@ -10,12 +10,33 @@
 
 Shader::Shader()
 {
-    this->loaded = GL_FALSE;
+    this->init(SHADER_TYPE_SCENE);
+}
+
+Shader::Shader(ShaderType shader_type)
+{
+    this->init(shader_type);
 }
 
 Shader::Shader(std::string shader_name)
 {
+    this->init(shader_name, SHADER_TYPE_SCENE);
+}
+
+Shader::Shader(std::string shader_name, ShaderType shader_type)
+{
+    this->init(shader_name, shader_type);
+}
+
+void Shader::init(ShaderType shader_type)
+{
     this->loaded = GL_FALSE;
+    this->set_shader_type(shader_type);
+}
+
+void Shader::init(std::string shader_name, ShaderType shader_type)
+{
+    this->init(shader_type);
     this->load(shader_name);
 }
 
@@ -27,7 +48,7 @@ Shader::~Shader()
     }
 }
 
-Shader *Shader::getShader(std::string shader_name)
+Shader *Shader::get_shader(std::string shader_name)
 {
     if (Shader::loaded_shaders.find(shader_name) == Shader::loaded_shaders.end())
     {
@@ -37,6 +58,38 @@ Shader *Shader::getShader(std::string shader_name)
     std::cerr << "[Shader] load de shader cacheado: " << shader_name.c_str() << std::endl;
 
     return Shader::loaded_shaders[shader_name];
+}
+
+Shader *Shader::get_shader(std::string shader_name, ShaderType shader_type)
+{
+    if (Shader::loaded_shaders.find(shader_name) == Shader::loaded_shaders.end())
+    {
+        return new Shader(shader_name, shader_type);
+    }
+
+    std::cerr << "[Shader] load de shader cacheado: " << shader_name.c_str() << std::endl;
+
+    return Shader::loaded_shaders[shader_name]; // Ignora shader_type.
+}
+
+void Shader::set_shader_type(ShaderType shader_type)
+{
+    switch (shader_type)
+    {
+    case SHADER_TYPE_OTHER:
+        this->use_ligths = false;
+        this->use_mvp = false;
+        break;
+    case SHADER_TYPE_POST_PROCESSING:
+        this->use_ligths = false;
+        this->use_mvp = false;
+        break;
+    case SHADER_TYPE_SCENE:
+    default:
+        this->use_ligths = true;
+        this->use_mvp = true;
+        break;
+    }
 }
 
 void Shader::setup(std::string name, UniformType type)

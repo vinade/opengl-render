@@ -19,6 +19,13 @@
 
 #define check_opengl_errors() Shader::list_opengl_errors(__FILE__, __LINE__)
 
+enum ShaderType
+{
+    SHADER_TYPE_SCENE,
+    SHADER_TYPE_POST_PROCESSING,
+    SHADER_TYPE_OTHER
+};
+
 class BaseUniformItem
 {
 private:
@@ -63,11 +70,18 @@ private:
     static const std::string shaders_folder;
 
     unsigned int compile(std::string file_path, unsigned int type);
+    void init(ShaderType shader_type);
+    void init(std::string shader_name, ShaderType shader_type);
     std::string name;
 
 public:
+    bool use_ligths = true;
+    bool use_mvp = true;
+
     Shader();
+    Shader(ShaderType shader_type);
     Shader(std::string shader_name);
+    Shader(std::string shader_name, ShaderType shader_type);
     ~Shader();
 
     void setup(std::string name, UniformType type);
@@ -78,8 +92,10 @@ public:
 
     void load(std::string shader_name);
     void exec();
+    void set_shader_type(ShaderType shader_type);
 
-    static Shader *getShader(std::string shader_name);
+    static Shader *get_shader(std::string shader_name);
+    static Shader *get_shader(std::string shader_name, ShaderType shader_type);
     static void stop_all();
     static void list_opengl_errors(const char *file, int line);
 };

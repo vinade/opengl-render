@@ -2,7 +2,6 @@
 #include "render_window.hpp"
 #include "camera.hpp"
 #include "perspective.hpp"
-#include "shader.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "texture.hpp"
@@ -44,8 +43,6 @@ SceneItem moon_1;
 glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
 glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);
 
-Shader *std_shader;
-
 void render_handler()
 {
 
@@ -72,13 +69,6 @@ void gl_init()
     /* initialize flags */
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
-
-    /* compile shaders */
-
-    std_shader = Shader::getShader("std");
-    std_shader->setup("u_Color", DATA_TYPE_VEC4);
-    std_shader->setup("u_Texture", DATA_TYPE_INT);
-    std_shader->setup("u_MVP", DATA_TYPE_MAT4);
 
     /* load textures */
     // texture1 = new Texture("./res/textures/rocks_1.png");
