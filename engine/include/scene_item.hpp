@@ -5,6 +5,11 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#ifndef CMAKE_ROOT_DIR
+#define CMAKE_ROOT_DIR "./"
+#endif
+
+#define SCENE_ITEM_MODELS_FOLDER "./res/models/"
 #define SCENE_ITEM_TEX_TYPE_COUNTER 13
 
 class SceneItem
@@ -38,6 +43,7 @@ public:
 
 	static aiTextureType texture_types[];
 	static Assimp::Importer assimp_importer;
+	static const std::string models_folder;
 
 	SceneItem(){};
 

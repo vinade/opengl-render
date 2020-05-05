@@ -84,17 +84,17 @@ void gl_init()
     // texture1 = new Texture("./res/textures/rocks_1.png");
     light_0.set_position(glm::vec3(-80.0f, 40.0f, -300.0f));
 
-    cat_1.load_data_from_file("./res/models/cat_1/12221_Cat_v1_l3.obj");
+    cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
     cat_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     cat_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
     cat_1.set_scale(200.0);
 
-    rocks_1.load_data_from_file("./res/models/simple_1/12221_Simple_v1_l3.obj");
+    rocks_1.load_data_from_file("simple_1/12221_Simple_v1_l3.obj");
     rocks_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     // rocks_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
     rocks_1.set_scale(200.0);
 
-    moon_1.load_data_from_file("./res/models/moon_1/Moon 2K.obj");
+    moon_1.load_data_from_file("moon_1/Moon 2K.obj");
     moon_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     moon_1.set_scale(200.0);
 

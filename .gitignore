@@ -32,6 +32,7 @@
 *.app
 
 bin/
+build/
 imgui.ini
 *.rar
 *.zip

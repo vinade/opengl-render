@@ -11,7 +11,9 @@
 
 void SceneItem::load_scene_from_file(const std::string &file_path)
 {
-	std::ifstream file_stream(file_path.c_str());
+	// TODO: cache do objeto pelo file_path
+	std::string complete_path = SceneItem::models_folder + file_path;
+	std::ifstream file_stream(complete_path.c_str());
 
 	if (file_stream.fail())
 	{
@@ -21,7 +23,7 @@ void SceneItem::load_scene_from_file(const std::string &file_path)
 	}
 	file_stream.close();
 
-	this->scene = SceneItem::assimp_importer.ReadFile(file_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
+	this->scene = SceneItem::assimp_importer.ReadFile(complete_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
 	if (!this->scene)
 	{
 		std::cerr << "[SceneItem] erro." << std::endl;
@@ -29,13 +31,13 @@ void SceneItem::load_scene_from_file(const std::string &file_path)
 		exit(1);
 	}
 
-	this->model_path = std::string(file_path);
+	this->model_path = std::string(complete_path);
 
-	size_t slash_pos = file_path.find_last_of("\\/");
+	size_t slash_pos = complete_path.find_last_of("\\/");
 	this->base_path = std::string("");
 	if (std::string::npos != slash_pos)
 	{
-		this->base_path = file_path.substr(0, slash_pos + 1);
+		this->base_path = complete_path.substr(0, slash_pos + 1);
 	}
 }
 
@@ -348,5 +350,6 @@ aiTextureType SceneItem::texture_types[SCENE_ITEM_TEX_TYPE_COUNTER] = {
 	aiTextureType_REFLECTION};
 
 Assimp::Importer SceneItem::assimp_importer;
+const std::string SceneItem::models_folder = std::string(CMAKE_ROOT_DIR SCENE_ITEM_MODELS_FOLDER);
 
 #endif

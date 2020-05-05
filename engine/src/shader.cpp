@@ -137,8 +137,8 @@ void Shader::load(std::string shader_name)
 {
 
     int status;
-    std::string vertex_file_path = SHADERS_FOLDER + shader_name + SHADERS_VERTEX_EXT;
-    std::string fragment_file_path = SHADERS_FOLDER + shader_name + SHADERS_FRAGMENT_EXT;
+    std::string vertex_file_path = Shader::shaders_folder + shader_name + SHADERS_VERTEX_EXT;
+    std::string fragment_file_path = Shader::shaders_folder + shader_name + SHADERS_FRAGMENT_EXT;
 
     std::cerr << "[Shader] carregamento de shader: " << shader_name.c_str() << std::endl;
 
@@ -158,17 +158,18 @@ void Shader::load(std::string shader_name)
         if (!vert_found && !frag_found)
         {
             std::cerr << "[Shader] Shader não encontrado: " << shader_name.c_str() << std::endl;
+            std::cerr << "\tpath: " << vertex_file_path.c_str() << std::endl;
             exit(1);
         }
 
         if (!vert_found)
         {
-            vertex_file_path = SHADERS_FOLDER + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
+            vertex_file_path = Shader::shaders_folder + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
         }
 
         if (!frag_found)
         {
-            fragment_file_path = SHADERS_FOLDER + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
+            fragment_file_path = Shader::shaders_folder + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
         }
     }
 
@@ -360,5 +361,6 @@ void Shader::stop_all()
 }
 
 std::unordered_map<std::string, Shader *> Shader::loaded_shaders;
+const std::string Shader::shaders_folder = std::string(CMAKE_ROOT_DIR SHADERS_FOLDER);
 
 #endif
