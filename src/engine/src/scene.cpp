@@ -32,6 +32,13 @@ void Scene::init()
 
 void Scene::add_light(Light *light)
 {
+
+    if (this->lights.size() > SCENE_MAX_LIGHTS)
+    {
+        std::cerr << "[Scene] Atingido o número máximo de luzes. Ignorando novas entradas." << std::endl;
+        return;
+    }
+
     if (Scene::add_once(this->lights, light))
     {
         if (!this->ambient_shader->use_ligths)
