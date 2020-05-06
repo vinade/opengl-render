@@ -49,7 +49,7 @@ void Scene::add_light(Light *light)
         // std::string light_direction = prefix + "direction";  // TODO
         // std::string light_direction_angle = prefix + "angle";  // angulo de abertura da luz direcional
 
-        this->ambient_shader->setup(light_type, DATA_TYPE_UINT);
+        this->ambient_shader->setup(light_type, DATA_TYPE_INT);
         this->ambient_shader->setup(light_color, DATA_TYPE_VEC4);
         this->ambient_shader->setup(light_position, DATA_TYPE_VEC3);
     }
@@ -84,7 +84,7 @@ void Scene::draw()
         this->ambient_shader->fill("u_Projection", this->perspective.projection_matrix);
     }
 
-    if (false && this->ambient_shader->use_ligths)
+    if (this->ambient_shader->use_ligths)
     {
         unsigned int light_size = this->lights.size();
         for (unsigned int i = 0; i < light_size; i++)
