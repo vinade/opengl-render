@@ -70,7 +70,15 @@ void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
 
 void Mesh::draw()
 {
-    this->textures[0]->bind();
+    if (this->textures.size() > 0)
+    {
+        this->textures[0]->bind();
+    }
+    else
+    {
+        Texture::fallback->bind();
+    }
+
     this->vao->bind();
     this->ibo->bind();
     this->ibo->draw();

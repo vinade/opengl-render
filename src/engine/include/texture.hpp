@@ -25,6 +25,7 @@ private:
 
 public:
 	aiTextureType type = aiTextureType_DIFFUSE;
+	static Texture* fallback;
 
 	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
 	Texture(const unsigned int tid);													   // verifica antes se em textures

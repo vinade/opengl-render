@@ -53,6 +53,11 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 	Texture::sources[file_path] = this->id;
 	std::cerr << "[Texture] carregado: " << file_path.c_str() << std::endl;
 	std::cerr << "\t" << this->width << "x" << this->height << std::endl;
+
+	if (Texture::fallback == nullptr)
+	{
+		Texture::fallback = this;
+	}
 }
 
 Texture::Texture(unsigned int tid)
@@ -162,5 +167,6 @@ void Texture::unbind()
 
 std::unordered_map<unsigned int, Texture *> Texture::textures;
 std::unordered_map<std::string, unsigned int> Texture::sources;
+Texture *Texture::fallback = nullptr;
 
 #endif
