@@ -34,7 +34,7 @@ public:
 	IndexBuffer *ibo;
 
 	void prepare(glm::vec3 &center, glm::vec3 &size);
-	void draw(const glm::mat4 &model_view);
+	void draw();
 };
 
 #endif

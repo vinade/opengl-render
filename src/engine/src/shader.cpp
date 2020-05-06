@@ -79,15 +79,18 @@ void Shader::set_shader_type(ShaderType shader_type)
     case SHADER_TYPE_OTHER:
         this->use_ligths = false;
         this->use_mvp = false;
+        this->use_materials = false;
         break;
     case SHADER_TYPE_POST_PROCESSING:
         this->use_ligths = false;
         this->use_mvp = false;
+        this->use_materials = false;
         break;
     case SHADER_TYPE_SCENE:
     default:
         this->use_ligths = true;
         this->use_mvp = true;
+        this->use_materials = true;
         break;
     }
 }
@@ -285,7 +288,6 @@ void Shader::exec()
     }
 
     glUseProgram(this->program_id);
-
     for (auto item_map : this->items)
     {
         BaseUniformItem *base_item = item_map.second;

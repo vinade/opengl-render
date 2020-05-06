@@ -8,6 +8,7 @@
 #include "vertex_array.hpp"
 #include "scenario_item.hpp"
 #include "light.hpp"
+#include "scene.hpp"
 
 #include <stdio.h>
 
@@ -32,13 +33,18 @@ MessageCallback(GLenum source,
                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
                 type, severity, message);
     }
+
+    if (type == GL_DEBUG_TYPE_ERROR)
+    {
+        exit(1);
+    }
 }
 
-Camera camera;
 Light light_0;
 ScenarioItem cat_1;
 ScenarioItem rocks_1;
 ScenarioItem moon_1;
+Scene scene;
 
 glm::vec3 model_rotation_debug(0.0f, 0.0f, 0.0f);
 glm::vec3 view_translation_debug(0.0f, 0.0f, 0.0f);
@@ -48,17 +54,13 @@ void render_handler()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    camera.set_position(view_translation_debug);
-    camera.update_view_matrix();
-
-    rocks_1.draw();
-    cat_1.draw();
+    scene.camera.set_position(view_translation_debug);
+    scene.camera.update_view_matrix();
 
     light_0.inc_position(glm::vec3(0.001f, -0.001f, 0.0f));
-    light_0.draw();
-
     moon_1.inc_rotation(glm::vec3(0.0f, 0.001f, 0.0f));
-    moon_1.draw();
+
+    scene.draw();
 
     glFlush();
 }
@@ -88,7 +90,11 @@ void gl_init()
     moon_1.set_position(glm::vec3(0.0f, 0.0f, -400.0f));
     moon_1.set_scale(200.0);
 
-    Perspective::set_default();
+    scene.init();
+    scene.add_light(light_0);
+    scene.add_scenario_item(cat_1);
+    scene.add_scenario_item(rocks_1);
+    scene.add_scenario_item(moon_1);
 
     std::cerr << "[done]" << std::endl;
 }

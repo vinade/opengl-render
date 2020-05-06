@@ -257,7 +257,7 @@ void ScenarioItem::draw()
 	this->update_model_matrix();
 	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
-		this->meshes[i].draw(this->model_matrix);
+		this->meshes[i].draw();
 	}
 }
 
@@ -271,11 +271,6 @@ void ScenarioItem::update_model_matrix()
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->model_matrix = glm::rotate(this->model_matrix, glm::radians(this->m_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
-}
-
-glm::vec3 ScenarioItem::get_position()
-{
-	return glm::vec3(this->m_position[0], this->m_position[2], this->m_position[2]);
 }
 
 void ScenarioItem::set_position(const glm::vec3 position)

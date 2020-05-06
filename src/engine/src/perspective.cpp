@@ -4,11 +4,28 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "perspective.hpp"
 
-void Perspective::set_default()
+Perspective::Perspective()
 {
-    Perspective::projection_matrix = glm::perspective(glm::radians(45.0), 1.0, 1.0, 2000.0);
+    Perspective::set_default(this);
 }
 
-glm::mat4 Perspective::projection_matrix;
+void Perspective::set_default(Perspective *perspective)
+{
+    perspective->fovy = glm::radians(45.0);
+    perspective->aspect = 1.0;
+    perspective->near = 1.0;
+    perspective->far = 2000.0;
+
+    perspective->update_matrix();
+}
+
+void Perspective::update_matrix()
+{
+    this->projection_matrix = glm::perspective(
+        this->fovy,
+        this->aspect,
+        this->near,
+        this->far);
+}
 
 #endif

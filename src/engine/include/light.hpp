@@ -15,7 +15,7 @@ private:
     bool loaded = false;
 
 public:
-    LightType m_type;
+    LightType type;
     glm::vec4 color;
     DebugMesh *debug_mesh;
 
@@ -24,7 +24,8 @@ public:
     void set(const glm::vec4 &color);
     void set(const glm::vec4 &color, LightType type);
 
-    void draw();
+    void draw(){};
+    void draw(const Camera &camera, const Perspective &perspective);
 };
 
 #endif

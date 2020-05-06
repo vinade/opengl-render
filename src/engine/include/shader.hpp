@@ -28,9 +28,6 @@ enum ShaderType
 
 class BaseUniformItem
 {
-private:
-    void *item;
-
 public:
     int id;
     UniformType type;
@@ -45,15 +42,15 @@ class UniformItem : public BaseUniformItem
 {
 
 private:
-    T *item;
+    T *item_ref;
+    T item;
 
 public:
-    int id;
-
     UniformItem(std::string name, unsigned int program_id);
     // ~UniformItem();
 
     void set(T *item);
+    void set(const T &item);
     T *get();
     const std::type_info &getTID();
 };
@@ -77,6 +74,7 @@ private:
 public:
     bool use_ligths = true;
     bool use_mvp = true;
+    bool use_materials = true;
 
     Shader();
     Shader(ShaderType shader_type);
@@ -136,13 +134,14 @@ UniformItem<T>::UniformItem(std::string name, unsigned int program_id)
 template <typename T>
 void UniformItem<T>::set(T *_item)
 {
-    this->item = _item;
+    this->item = *_item;
+    this->item_ref = &this->item;
 }
 
 template <typename T>
 T *UniformItem<T>::get()
 {
-    return this->item;
+    return this->item_ref;
 }
 
 template <typename T>

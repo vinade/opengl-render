@@ -10,7 +10,7 @@ private:
     glm::vec3 m_rotation = {0.0f, 0.0f, 0.0f};
 
 public:
-    static glm::mat4 view_matrix;
+    glm::mat4 view_matrix;
 
     Camera(){};
     void set_position(const glm::vec3 &position);

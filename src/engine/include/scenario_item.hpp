@@ -51,7 +51,7 @@ public:
 	void draw();
 
 	void update_model_matrix();
-	glm::vec3 get_position();
+	inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[2], this->m_position[2]); };
 
 	void set_position(const glm::vec3 pos);
 	void set_rotation(const glm::vec3 rotation);

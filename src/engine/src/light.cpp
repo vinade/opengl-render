@@ -1,6 +1,8 @@
 #ifndef LIGHT_CPP
 #define LIGHT_CPP
 
+#include "perspective.hpp"
+#include "camera.hpp"
 #include "light.hpp"
 
 void Light::set()
@@ -15,14 +17,14 @@ void Light::set(const glm::vec4 &color)
 
 void Light::set(const glm::vec4 &color, LightType type)
 {
-    this->m_type = type;
+    this->type = type;
     this->set_scale(5.0);
     this->debug_mesh = new DebugMesh();
     this->debug_mesh->color = color;
     this->loaded = true;
 }
 
-void Light::draw()
+void Light::draw(const Camera &camera, const Perspective &perspective)
 {
     if (!this->loaded) // Se não foi carregado na hora do draw()
     {
@@ -30,7 +32,7 @@ void Light::draw()
     }
 
     this->update_model_matrix();
-    this->debug_mesh->draw(this->model_matrix);
+    this->debug_mesh->draw(this->model_matrix, camera.view_matrix, perspective.projection_matrix);
 }
 
 #endif

@@ -28,13 +28,13 @@ DebugMesh::DebugMesh()
     this->ibo = new IndexBuffer(&this->index_buffer_src[0], this->index_count);
 };
 
-void DebugMesh::draw(const glm::mat4 &model_view)
+void DebugMesh::draw(const glm::mat4 &model_view, const glm::mat4 &view_matrix, const glm::mat4 &projection_matrix)
 {
     Texture::unbind();
     this->shader->fill("u_Color", this->color);
     this->shader->fill("u_Model", model_view);
-    this->shader->fill("u_View", Camera::view_matrix);
-    this->shader->fill("u_Projection", Perspective::projection_matrix);
+    this->shader->fill("u_View", view_matrix);
+    this->shader->fill("u_Projection", projection_matrix);
     this->shader->exec();
     this->vao->bind();
     this->ibo->bind();
