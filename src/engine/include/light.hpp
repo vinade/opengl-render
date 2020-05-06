@@ -16,7 +16,8 @@ private:
 
 public:
     LightType type;
-    glm::vec4 color;
+    float ambient = 0.1;
+    glm::vec4 color = {1.0, 0.8, 0.3, 1.0};
     DebugMesh *debug_mesh;
 
     Light(){};
@@ -26,6 +27,9 @@ public:
 
     void draw(){};
     void draw(const Camera &camera, const Perspective &perspective);
+
+    void set_color(const glm::vec4 &color);
+    inline void set_ambient(float ambient) { this->ambient = ambient; };
 };
 
 #endif

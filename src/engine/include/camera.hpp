@@ -13,6 +13,7 @@ public:
     glm::mat4 view_matrix;
 
     Camera(){};
+    inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[1], this->m_position[2]); };
     void set_position(const glm::vec3 &position);
     void set_rotation(const glm::vec3 &rotation);
     void update_view_matrix();
