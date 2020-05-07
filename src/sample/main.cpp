@@ -41,6 +41,7 @@ MessageCallback(GLenum source,
 }
 
 Light light_0;
+Light light_1;
 ScenarioItem cat_1;
 ScenarioItem rocks_1;
 ScenarioItem moon_1;
@@ -62,6 +63,9 @@ void render_handler()
     light_0.set_position(light_translation_debug);
     light_0.set_color(glm::vec4(color_light_debug, 1.0));
     light_0.set_ambient(light_ambient_debug);
+
+    light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+
     moon_1.inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
     scene.draw();
@@ -83,6 +87,10 @@ void gl_init()
     light_0.set_position(glm::vec3(-80.0f, 40.0f, -300.0f));
     light_0.set_ambient(light_ambient_debug);
 
+    light_1.set_position(glm::vec3(100.0, 50.0, -300.0));
+    light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+    light_1.set_ambient(0.0);
+
     cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
     cat_1.set_position(glm::vec3(0.0f, -50.0f, -400.0f));
     cat_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
@@ -102,6 +110,7 @@ void gl_init()
 
     scene.init();
     scene.add_light(light_0);
+    scene.add_light(light_1);
     scene.add_scenario_item(cat_1);
     // scene.add_scenario_item(rocks_1);
     scene.add_scenario_item(moon_1);

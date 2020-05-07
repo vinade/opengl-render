@@ -54,6 +54,7 @@ void Scene::add_light(Light *light)
         std::string light_ambient = prefix + "ambient";
         std::string light_color = prefix + "color";
         std::string light_position = prefix + "position";
+
         // std::string light_direction = prefix + "direction";  // TODO
         // std::string light_direction_angle = prefix + "angle";  // angulo de abertura da luz direcional
 
@@ -107,10 +108,10 @@ void Scene::draw()
             std::string light_color = prefix + "color";
             std::string light_position = prefix + "position";
 
-            this->ambient_shader->fill(light_ambient, this->lights[0]->ambient);
-            this->ambient_shader->fill(light_type, this->lights[0]->type);
-            this->ambient_shader->fill(light_color, this->lights[0]->color);
-            this->ambient_shader->fill(light_position, this->lights[0]->get_position());
+            this->ambient_shader->fill(light_ambient, this->lights[i]->ambient);
+            this->ambient_shader->fill(light_type, this->lights[i]->type);
+            this->ambient_shader->fill(light_color, this->lights[i]->color);
+            this->ambient_shader->fill(light_position, this->lights[i]->get_position());
         }
 
         this->ambient_shader->fill("u_Camera", this->camera.get_position());
