@@ -28,6 +28,13 @@ void Scene::init()
         std::cerr << "[Scene] Ambient shader deveria ter use_mvp == true." << std::endl;
         return;
     }
+
+    if (this->skybox == nullptr)
+    {
+        this->skybox = new SkyboxMesh();
+        this->skybox->set_scale(5000.0);
+        // this->skybox->set_position(glm::vec3(0.0f, -50.0f, -200.0f));
+    }
 }
 
 void Scene::add_light(Light *light)
@@ -83,7 +90,15 @@ void Scene::add_scenario_item(ScenarioItem &scenario_item)
 
 void Scene::draw()
 {
+    /*
+        Skybox
+    */
+    this->skybox->set_position(this->camera.get_position());
+    this->skybox->draw(this->camera.view_matrix, this->perspective.projection_matrix);
 
+    /*
+        Objetos
+    */
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->fill("u_Texture", 0); // temporario
@@ -130,8 +145,14 @@ void Scene::draw()
         // exit(1);
     }
 
+    /*
+        Objetos de debug
+    */
     if (DEBUG_MODE)
     {
+        /*
+            Luzes
+        */
         for (auto light : this->lights)
         {
             light->draw(this->camera, this->perspective);

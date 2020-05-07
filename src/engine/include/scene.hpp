@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "scenario_item.hpp"
+#include "skybox_mesh.hpp"
 #include "light.hpp"
 #include "shader.hpp"
 #include <vector>
@@ -17,6 +18,7 @@ class Scene
 private:
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;
+    SkyboxMesh *skybox = nullptr;
 
     // std::vector<PostProcess*> post_processes;
 

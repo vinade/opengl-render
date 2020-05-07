@@ -14,7 +14,7 @@ void Perspective::set_default(Perspective *perspective)
     perspective->fovy = glm::radians(45.0);
     perspective->aspect = 1.0;
     perspective->near = 1.0;
-    perspective->far = 2000.0;
+    perspective->far = 8000.0;
 
     perspective->update_matrix();
 }
