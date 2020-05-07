@@ -1,6 +1,7 @@
 #version 460 core
 
 #define MAX_LIGHTS 4
+#define GAMMA 2.0
 
 struct LightSource
 {
@@ -56,6 +57,10 @@ vec3 calc_refraction(){
     return texture(u_Skybox, refraction).rgb * refraction_factor;
 }
 
+vec4 gamma_correction(vec4 fragment){
+    return vec4(pow(fragment.rgb, vec3(1.0/GAMMA)), fragment.a);
+}
+
 void main(){
     float diffuse_factor = 1.0;
     vec4 colorTex = texture(u_Texture, v_texCoord) * diffuse_factor;
@@ -66,5 +71,7 @@ void main(){
     }
 
     vec3 reflection_refraction = calc_reflection() + calc_refraction();
+
+    colorTex = gamma_correction(colorTex);
     color = vec4(phong_color, 1.0) * colorTex + vec4(reflection_refraction, 1.0);
 }
