@@ -10,6 +10,7 @@ void Scene::init()
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->setup("u_Texture", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Skybox", DATA_TYPE_INT);
     }
     else
     {
@@ -101,7 +102,8 @@ void Scene::draw()
     */
     if (this->ambient_shader->use_materials)
     {
-        this->ambient_shader->fill("u_Texture", 0); // temporario
+        this->ambient_shader->fill("u_Skybox", 0);  // temporario
+        this->ambient_shader->fill("u_Texture", 1); // temporario
     }
 
     if (this->ambient_shader->use_mvp)

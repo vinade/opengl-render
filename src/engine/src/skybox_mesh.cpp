@@ -78,6 +78,7 @@ void SkyboxMesh::load_cubemap(const std::string &texture_name)
 
 void SkyboxMesh::draw(const glm::mat4 &view_matrix, const glm::mat4 &projection_matrix)
 {
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture_id);
     this->shader->fill("u_Texture", 0);
     this->shader->fill("u_Model", this->model_matrix);
