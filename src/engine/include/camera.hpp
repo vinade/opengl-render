@@ -8,6 +8,7 @@ class Camera
 private:
     glm::vec3 m_position = {0.0f, 0.0f, 0.0f};
     glm::vec3 m_rotation = {0.0f, 0.0f, 0.0f};
+    glm::vec3 m_direction = {0.0f, 0.0f, -1.0f};
 
 public:
     glm::mat4 view_matrix;

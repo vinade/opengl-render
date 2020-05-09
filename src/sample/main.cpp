@@ -46,6 +46,7 @@ ScenarioItem cat_1;
 ScenarioItem rocks_1;
 ScenarioItem moon_1;
 ScenarioItem plant_1;
+ScenarioItem nanosuit_1;
 Scene scene;
 
 glm::vec3 color_light_debug(1.0f, 0.0f, 0.0f);
@@ -108,12 +109,18 @@ void gl_init()
     plant_1.set_position(glm::vec3(50.0f, 0.0f, -400.0f));
     plant_1.set_scale(150.0);
 
+    nanosuit_1.load_data_from_file("nano_suit/Nanosuit.obj");
+    nanosuit_1.set_position(glm::vec3(-50.0f, -50.0f, -700.0f));
+    nanosuit_1.set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
+    nanosuit_1.set_scale(200.0);
+
     scene.init();
     scene.add_light(light_0);
     scene.add_light(light_1);
     scene.add_scenario_item(cat_1);
     // scene.add_scenario_item(rocks_1);
     scene.add_scenario_item(moon_1);
+    scene.add_scenario_item(nanosuit_1);
     scene.add_scenario_item(plant_1);
 
     std::cerr << "[done]" << std::endl;
