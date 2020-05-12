@@ -11,6 +11,13 @@ void Scene::init()
     {
         this->ambient_shader->setup("u_Texture", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Skybox", DATA_TYPE_INT);
+
+        this->ambient_shader->setup("u_Material.diffuse_color", DATA_TYPE_VEC4);
+        this->ambient_shader->setup("u_Material.ambient_color", DATA_TYPE_VEC4);
+        this->ambient_shader->setup("u_Material.specular_color", DATA_TYPE_VEC4);
+        this->ambient_shader->setup("u_Material.emission_color", DATA_TYPE_VEC4);
+        this->ambient_shader->setup("u_Material.shininess", DATA_TYPE_FLOAT);
+        this->ambient_shader->setup("u_Material.shininess_strength", DATA_TYPE_FLOAT);
     }
     else
     {
@@ -142,9 +149,7 @@ void Scene::draw()
             this->ambient_shader->fill("u_Model", item->model_matrix);
         }
 
-        this->ambient_shader->exec();
-        item->draw();
-        // exit(1);
+        item->draw(this->ambient_shader);
     }
 
     /*

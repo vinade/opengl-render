@@ -6,6 +6,7 @@
 #include "texture.hpp"
 #include "vertex_array.hpp"
 #include "shader.hpp"
+#include "material.hpp"
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -21,6 +22,7 @@ public:
 	unsigned int vertex_count;
 	unsigned int index_count;
 	Shader *shader;
+	Material material;
 
 	Mesh(){};
 	Mesh(int _vertex_size) : vertex_size(_vertex_size){};
@@ -28,13 +30,12 @@ public:
 	float *vertex_buffer;
 	std::vector<std::vector<float>> vertex_data;
 	std::vector<unsigned int> index_data;
-	std::vector<Texture *> textures;
 
 	VertexArray *vao;
 	IndexBuffer *ibo;
 
 	void prepare(glm::vec3 &center, glm::vec3 &size);
-	void draw();
+	void draw(Shader *shader);
 };
 
 #endif

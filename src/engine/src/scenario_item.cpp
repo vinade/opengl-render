@@ -135,14 +135,10 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 	for (unsigned int n = 0; n < nd->mNumMeshes; n++)
 	{
 		const struct aiMesh *mesh = sc->mMeshes[nd->mMeshes[n]];
-		const aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
+		aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString texPath;
 
-		if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, 0, &texPath))
-		{
-			Texture *tex = new Texture(this->base_path + texPath.data, aiTextureType_DIFFUSE);
-			mesh_data.textures.push_back(tex);
-		}
+		mesh_data.material.load_from_aiMaterial(mtl, this->base_path);
 
 		for (unsigned int vi = 0; vi < mesh->mNumVertices; vi++)
 		{
@@ -252,12 +248,12 @@ void ScenarioItem::load_data_from_file(const std::string &file_path)
 	}
 }
 
-void ScenarioItem::draw()
+void ScenarioItem::draw(Shader *shader)
 {
 	this->update_model_matrix();
 	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
-		this->meshes[i].draw();
+		this->meshes[i].draw(shader);
 	}
 }
 

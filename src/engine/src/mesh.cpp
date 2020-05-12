@@ -68,11 +68,22 @@ void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
 }
 
-void Mesh::draw()
+void Mesh::draw(Shader *shader)
 {
-    if (this->textures.size() > 0)
+    if (shader->use_materials)
     {
-        this->textures[0]->bind();
+        shader->fill("u_Material.diffuse_color", this->material.diffuse_color);
+        shader->fill("u_Material.specular_color", this->material.specular_color);
+        shader->fill("u_Material.ambient_color", this->material.ambient_color);
+        shader->fill("u_Material.emission_color", this->material.emission_color);
+        shader->fill("u_Material.shininess", this->material.shininess);
+        shader->fill("u_Material.shininess_strength", this->material.shininess_strength);
+    }
+
+    shader->exec();
+    if (this->material.diffuse_texture_flag)
+    {
+        this->material.diffuse_texture->bind();
     }
     else
     {

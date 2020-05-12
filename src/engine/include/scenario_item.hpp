@@ -48,7 +48,7 @@ public:
 	ScenarioItem(){};
 
 	void load_data_from_file(const std::string &file_path);
-	void draw();
+	void draw(Shader *shader);
 
 	void update_model_matrix();
 	inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[1], this->m_position[2]); };
