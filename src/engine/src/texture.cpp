@@ -84,7 +84,6 @@ inline int Texture::get_channels() const
 	case aiTextureType_SPECULAR:
 	case aiTextureType_AMBIENT:
 	case aiTextureType_EMISSIVE:
-	case aiTextureType_NORMALS:
 		return 3;
 	case aiTextureType_OPACITY:
 	case aiTextureType_SHININESS:
@@ -92,6 +91,7 @@ inline int Texture::get_channels() const
 	case aiTextureType_LIGHTMAP:
 	case aiTextureType_REFLECTION:
 		return 1;
+	case aiTextureType_NORMALS:
 	case aiTextureType_NONE:
 	case aiTextureType_DIFFUSE:
 	case aiTextureType_UNKNOWN:
