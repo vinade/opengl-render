@@ -36,7 +36,7 @@ newmtl material_sand
 	Ks 0.3500 0.3500 0.3500
 	map_Ka sand.jpg
 	map_Kd sand.jpg
-	map_Ks sand_normal.jpg
+	map_Kn sand_normal.jpg
 
 newmtl material_moh
 	Ns 32

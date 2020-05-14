@@ -78,6 +78,9 @@ void Mesh::draw(Shader *shader)
         shader->fill("u_Material.emission_color", this->material.emission_color);
         shader->fill("u_Material.shininess", this->material.shininess);
         shader->fill("u_Material.shininess_strength", this->material.shininess_strength);
+
+        shader->fill("u_Material.diffuse_texture_flag", this->material.diffuse_textures.size() ? 1 : 0);
+        shader->fill("u_Material.normal_texture_flag", this->material.normal_textures.size() ? 1 : 0);
     }
 
     shader->exec();
@@ -88,6 +91,11 @@ void Mesh::draw(Shader *shader)
     else
     {
         Texture::fallback->bind();
+    }
+
+    if (this->material.normal_textures.size())
+    {
+        this->material.normal_textures[0]->bind();
     }
 
     this->vao->bind();

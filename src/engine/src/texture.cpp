@@ -73,37 +73,7 @@ Texture::~Texture()
 // see: http://assimp.sourceforge.net/lib_html/material_8h.html#a7dd415ff703a2cc53d1c22ddbbd7dde0
 inline int Texture::get_slot() const
 {
-	switch (this->type)
-	{
-	case aiTextureType_SPECULAR:
-		return 1;
-	case aiTextureType_AMBIENT:
-		return 2;
-	case aiTextureType_EMISSIVE:
-		return 3;
-	case aiTextureType_HEIGHT:
-		return 4;
-	case aiTextureType_NORMALS:
-		return 5;
-	case aiTextureType_SHININESS:
-		return 6;
-	case aiTextureType_OPACITY:
-		return 7;
-	case aiTextureType_DISPLACEMENT:
-		return 8;
-	case aiTextureType_LIGHTMAP:
-		return 9;
-	case aiTextureType_REFLECTION:
-		return 10;
-	case aiTextureType_UNKNOWN:
-		return 11;
-	case aiTextureType_NONE:
-	case aiTextureType_DIFFUSE:
-	default:
-		return 0;
-	}
-
-	return 0;
+	return Texture::get_type_slot(this->type);
 }
 
 inline int Texture::get_channels() const
@@ -156,7 +126,7 @@ void Texture::bind() const
 
 void Texture::bind(unsigned int slot) const
 {
-	glActiveTexture(GL_TEXTURE1 + slot);
+	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, this->id);
 }
 

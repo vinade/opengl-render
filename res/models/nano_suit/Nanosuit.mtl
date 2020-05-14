@@ -28,6 +28,7 @@ newmtl Material__59
 	Ke 0.0000 0.0000 0.0000
 	map_Ka NanoSuit_us.png
 	map_Kd NanoSuit_us.png
+	map_Kn NanoSuit_us_ddn.png
 
 newmtl noneeye_blue01
 	Ns 56.0000
@@ -90,6 +91,7 @@ newmtl helmet_002na01
 	Ke 0.0000 0.0000 0.0000
 	map_Ka Nanosuit_us_Helmet.png
 	map_Kd Nanosuit_us_Helmet.png
+	map_Kn Nanosuit_us_Helmet_ddn.png
 
 newmtl glasses_002n01
 	Ns 32.0000

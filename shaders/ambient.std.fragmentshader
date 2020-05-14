@@ -11,6 +11,9 @@ struct Material
     vec4 emission_color;
     float shininess;
     float shininess_strength;
+
+    int diffuse_texture_flag;
+    int normal_texture_flag;
 };
 
 struct LightSource
@@ -20,6 +23,13 @@ struct LightSource
     int type;
     vec3 position;
     vec4 color;
+};
+
+struct Textures
+{
+    samplerCube skybox;
+    sampler2D diffuse;
+    sampler2D normal;
 };
 
 in vec2 v_texCoord;
@@ -32,8 +42,7 @@ uniform vec4 u_Color;
 uniform vec3 u_Camera;
 uniform LightSource u_Lights[MAX_LIGHTS];
 uniform Material u_Material;
-uniform sampler2D u_Texture;
-uniform samplerCube u_Skybox;
+uniform Textures u_Textures;
 
 vec3 calc_phong(int i){
 
@@ -57,7 +66,7 @@ vec3 calc_reflection(){
     float reflection_factor = 0.0;
     vec3 direction = normalize(v_fragPos - u_Camera);
     vec3 reflection = reflect(direction, normalize(v_normal));
-    return texture(u_Skybox, reflection).rgb * reflection_factor;
+    return texture(u_Textures.skybox, reflection).rgb * reflection_factor;
 }
 
 vec3 calc_refraction(){
@@ -65,7 +74,7 @@ vec3 calc_refraction(){
     float refraction_ratio = 1.0 / 1.52;
     vec3 direction = normalize(v_fragPos - u_Camera);
     vec3 refraction = refract(direction, normalize(v_normal), refraction_ratio);
-    return texture(u_Skybox, refraction).rgb * refraction_factor;
+    return texture(u_Textures.skybox, refraction).rgb * refraction_factor;
 }
 
 vec4 gamma_correction(vec4 fragment){
@@ -74,7 +83,7 @@ vec4 gamma_correction(vec4 fragment){
 
 void main(){
     float diffuse_factor = 1.0;
-    vec4 colorTex = texture(u_Texture, v_texCoord) * diffuse_factor;
+    vec4 colorTex = texture(u_Textures.diffuse, v_texCoord) * diffuse_factor;
     vec3 phong_color = vec3(0.0, 0.0, 0.0);
 
     for (int i = 0; i < MAX_LIGHTS; i++){

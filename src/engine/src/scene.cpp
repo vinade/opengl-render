@@ -9,8 +9,9 @@ void Scene::init()
 
     if (this->ambient_shader->use_materials)
     {
-        this->ambient_shader->setup("u_Texture", DATA_TYPE_INT);
-        this->ambient_shader->setup("u_Skybox", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.skybox", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.diffuse", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.normal", DATA_TYPE_INT);
 
         this->ambient_shader->setup("u_Material.diffuse_color", DATA_TYPE_VEC4);
         this->ambient_shader->setup("u_Material.ambient_color", DATA_TYPE_VEC4);
@@ -18,6 +19,9 @@ void Scene::init()
         this->ambient_shader->setup("u_Material.emission_color", DATA_TYPE_VEC4);
         this->ambient_shader->setup("u_Material.shininess", DATA_TYPE_FLOAT);
         this->ambient_shader->setup("u_Material.shininess_strength", DATA_TYPE_FLOAT);
+
+        this->ambient_shader->setup("u_Material.diffuse_texture_flag", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Material.normal_texture_flag", DATA_TYPE_INT);
     }
     else
     {
@@ -109,8 +113,9 @@ void Scene::draw()
     */
     if (this->ambient_shader->use_materials)
     {
-        this->ambient_shader->fill("u_Skybox", 0);  // temporario
-        this->ambient_shader->fill("u_Texture", 1); // temporario
+        this->ambient_shader->fill("u_Textures.skybox", 0);
+        this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(aiTextureType_DIFFUSE));
+        this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(aiTextureType_NORMALS));
     }
 
     if (this->ambient_shader->use_mvp)

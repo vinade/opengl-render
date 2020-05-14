@@ -25,7 +25,7 @@ private:
 
 public:
 	aiTextureType type = aiTextureType_DIFFUSE;
-	static Texture* fallback;
+	static Texture *fallback;
 
 	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
 	Texture(const unsigned int tid);													   // verifica antes se em textures
@@ -37,6 +37,43 @@ public:
 
 	inline int get_width() const { return this->width; };
 	inline int get_height() const { return this->height; };
+
+	static inline int get_type_slot(aiTextureType type);
 };
+
+inline int Texture::get_type_slot(aiTextureType type)
+{
+	switch (type)
+	{
+	case aiTextureType_NONE:
+	case aiTextureType_DIFFUSE:
+	default:
+		return 1;
+	case aiTextureType_NORMALS:
+		return 2;
+	case aiTextureType_SPECULAR:
+		return 3;
+	case aiTextureType_SHININESS:
+		return 4;
+	case aiTextureType_REFLECTION:
+		return 5;
+	case aiTextureType_OPACITY:
+		return 6;
+	case aiTextureType_UNKNOWN:
+		return 7;
+	case aiTextureType_AMBIENT:
+		return 8;
+	case aiTextureType_LIGHTMAP:
+		return 9;
+	case aiTextureType_HEIGHT:
+		return 10;
+	case aiTextureType_EMISSIVE:
+		return 11;
+	case aiTextureType_DISPLACEMENT:
+		return 12;
+	}
+
+	return 0;
+}
 
 #endif

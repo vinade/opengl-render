@@ -23,7 +23,7 @@ void ScenarioItem::load_scene_from_file(const std::string &file_path)
 	}
 	file_stream.close();
 
-	this->scene = ScenarioItem::assimp_importer.ReadFile(complete_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
+	this->scene = ScenarioItem::assimp_importer.ReadFile(complete_path, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (!this->scene)
 	{
 		std::cerr << "[ScenarioItem] erro." << std::endl;
