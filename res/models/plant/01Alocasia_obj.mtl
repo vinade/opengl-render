@@ -12,6 +12,7 @@ newmtl material_leaf
 	Ks 0.3500 0.3500 0.3500
 	map_Ka leaf.jpg
 	map_Kd leaf.jpg
+	map_Kn leaf_normal.jpg
 
 newmtl material_gorshok
 	Ns 32
