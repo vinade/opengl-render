@@ -130,7 +130,7 @@ void ScenarioItem::debug_coords()
 */
 void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct aiNode *nd)
 {
-	Mesh mesh_data(8);
+	Mesh mesh_data;
 
 	for (unsigned int n = 0; n < nd->mNumMeshes; n++)
 	{
@@ -173,18 +173,13 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 			vertex.push_back(mesh->mNormals[vi].y);
 			vertex.push_back(mesh->mNormals[vi].z);
 
-			// if (mesh->HasTextureCoords(1)){
-			// 	vertex.push_back(mesh->mTextureCoords[1][vi].x);
-			// 	vertex.push_back(mesh->mTextureCoords[1][vi].y);
-			// }
+			vertex.push_back(mesh->mTangents[vi].x);
+			vertex.push_back(mesh->mTangents[vi].y);
+			vertex.push_back(mesh->mTangents[vi].z);
 
-			if (mesh->mColors[0] != NULL)
-			{
-				vertex.push_back(mesh->mColors[0][vi].r);
-				vertex.push_back(mesh->mColors[0][vi].g);
-				vertex.push_back(mesh->mColors[0][vi].b);
-				vertex.push_back(mesh->mColors[0][vi].a);
-			}
+			vertex.push_back(mesh->mBitangents[vi].x);
+			vertex.push_back(mesh->mBitangents[vi].y);
+			vertex.push_back(mesh->mBitangents[vi].z);
 
 			mesh_data.vertex_data.push_back(vertex);
 		}

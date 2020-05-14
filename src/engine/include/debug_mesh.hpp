@@ -10,7 +10,6 @@ private:
     static const unsigned int index_buffer_src[36];
 
 public:
-    unsigned int vertex_size = 3 * sizeof(float);
     unsigned int vertex_count = 24;
     unsigned int index_count = 36;
 

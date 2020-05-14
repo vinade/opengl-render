@@ -59,10 +59,12 @@ void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
     vbo_layout->push(DATA_TYPE_FLOAT, 3);
     vbo_layout->push(DATA_TYPE_FLOAT, 2);
     vbo_layout->push(DATA_TYPE_FLOAT, 3);
+    vbo_layout->push(DATA_TYPE_FLOAT, 3);
+    vbo_layout->push(DATA_TYPE_FLOAT, 3);
 
     this->flat_vertex_data(vbo_layout);
 
-    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * this->vertex_size);
+    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_stride());
 
     this->vao->add_buffer(vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);

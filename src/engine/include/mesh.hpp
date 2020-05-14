@@ -18,14 +18,12 @@ private:
 	void normalize(glm::vec3 &center, glm::vec3 &size);
 
 public:
-	unsigned int vertex_size = 8;
 	unsigned int vertex_count;
 	unsigned int index_count;
 	Shader *shader;
 	Material material;
 
 	Mesh(){};
-	Mesh(int _vertex_size) : vertex_size(_vertex_size){};
 
 	float *vertex_buffer;
 	std::vector<std::vector<float>> vertex_data;
