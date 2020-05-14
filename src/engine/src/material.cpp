@@ -34,21 +34,20 @@ enum PresetMaterial
     3 - normal
     4 - ao
 */
-void Material::get_texture(aiMaterial *amtl, aiTextureType texture_type, Texture *&texture, int &texture_flag)
+void Material::get_texture(aiMaterial *amtl, aiTextureType texture_type, std::vector<Texture *> &texture)
 {
-    int texture_index = 0;
     aiString texture_path; //contains filename of texture
+    int texture_count = amtl->GetTextureCount(texture_type);
 
-    if (amtl->GetTextureCount(texture_type))
+    for (int i = 0; i < texture_count; i++)
     {
         std::cerr << "TEXTURE:" << std::endl;
         std::cerr << "\t" << texture_type << std::endl;
 
-        if (AI_SUCCESS == amtl->GetTexture(texture_type, texture_index, &texture_path))
+        if (AI_SUCCESS == amtl->GetTexture(texture_type, i, &texture_path))
         {
             std::cerr << "\t" << base_path + texture_path.data << std::endl;
-            texture = new Texture(base_path + texture_path.data, texture_type);
-            texture_flag = 1;
+            texture.push_back(new Texture(base_path + texture_path.data, texture_type));
         }
     }
 }
@@ -74,10 +73,12 @@ void Material::load_from_aiMaterial(aiMaterial *amtl, std::string base_path)
 
     std::cerr << "material" << std::endl;
 
-    this->get_texture(amtl, aiTextureType_DIFFUSE, this->diffuse_texture, this->diffuse_texture_flag);
-    this->get_texture(amtl, aiTextureType_SPECULAR, this->specular_texture, this->specular_texture_flag);
-    this->get_texture(amtl, aiTextureType_REFLECTION, this->reflection_texture, this->reflection_texture_flag);
-    this->get_texture(amtl, aiTextureType_NORMALS, this->normal_texture, this->normal_texture_flag);
+    this->get_texture(amtl, aiTextureType_DIFFUSE, this->diffuse_textures);
+    this->get_texture(amtl, aiTextureType_SPECULAR, this->specular_textures);
+    this->get_texture(amtl, aiTextureType_REFLECTION, this->reflection_textures);
+    this->get_texture(amtl, aiTextureType_NORMALS, this->normal_textures);
+    this->get_texture(amtl, aiTextureType_HEIGHT, this->height_textures);
+    this->get_texture(amtl, aiTextureType_OPACITY, this->opacity_textures);
 
     if (AI_SUCCESS == aiGetMaterialColor(amtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse_color))
     {

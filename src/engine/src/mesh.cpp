@@ -81,9 +81,9 @@ void Mesh::draw(Shader *shader)
     }
 
     shader->exec();
-    if (this->material.diffuse_texture_flag)
+    if (this->material.diffuse_textures.size())
     {
-        this->material.diffuse_texture->bind();
+        this->material.diffuse_textures[0]->bind();
     }
     else
     {
