@@ -4,7 +4,12 @@
 #include <unordered_map>
 #include <assimp/material.h>
 
+#ifndef CMAKE_ROOT_DIR
+#define CMAKE_ROOT_DIR "./"
+#endif
+
 #define TEXTURE_CHANNELS 4
+#define TEXTURE_DEFAULT_FOLDER "./res/textures/"
 
 class Texture
 {
@@ -26,6 +31,7 @@ private:
 public:
 	aiTextureType type = aiTextureType_DIFFUSE;
 	static Texture *fallback;
+	static const std::string texture_folder;
 
 	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
 	Texture(const unsigned int tid);													   // verifica antes se em textures

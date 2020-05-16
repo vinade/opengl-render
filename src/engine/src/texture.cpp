@@ -15,9 +15,9 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 
 	this->type = tex_type;
 
-	if (Texture::sources.find(file_path) != Texture::sources.end())
+	if (Texture::sources.find(this->file_path) != Texture::sources.end())
 	{
-		unsigned int tid = Texture::sources[file_path];
+		unsigned int tid = Texture::sources[this->file_path];
 		this->load_from_tid(tid);
 		return;
 	}
@@ -26,11 +26,19 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 
 	unsigned char *local_buffer = nullptr;
 	local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
-
 	if (!this->width || !this->height)
 	{
-		std::cerr << "[Texture] Não foi possível carregar a textura: " << file_path << std::endl;
-		exit(1);
+		std::string original_file_path = this->file_path;
+
+		this->file_path = this->texture_folder + this->file_path;
+		local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
+
+		if (!this->width || !this->height)
+		{
+			std::cerr << "[Texture] Não foi possível carregar a textura: " << original_file_path << std::endl;
+			std::cerr << "\tfallback também falhou: " << this->file_path << std::endl;
+			exit(1);
+		}
 	}
 
 	glGenTextures(1, &this->id);
@@ -138,5 +146,6 @@ void Texture::unbind()
 std::unordered_map<unsigned int, Texture *> Texture::textures;
 std::unordered_map<std::string, unsigned int> Texture::sources;
 Texture *Texture::fallback = nullptr;
+const std::string Texture::texture_folder = std::string(CMAKE_ROOT_DIR TEXTURE_DEFAULT_FOLDER);
 
 #endif
