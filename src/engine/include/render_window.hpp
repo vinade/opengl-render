@@ -21,8 +21,6 @@ class RenderWindow
 
 private:
 	bool running = false;
-	int width;
-	int height;
 	int pos_x;
 	int pos_y;
 	int iArgc;
@@ -48,6 +46,9 @@ public:
 	ImGuiController *imgui_controller;
 #endif
 
+	static int width;
+	static int height;
+
 	RenderWindow();
 	~RenderWindow();
 	RenderWindow(int iArgc, char **cppArgv);
@@ -62,6 +63,8 @@ public:
 	void set_gl_init(void (*handler)());
 	void start();
 	void stop();
+
+	static void update_window_size_info(GLFWwindow *window, int width, int height);
 };
 
 #endif

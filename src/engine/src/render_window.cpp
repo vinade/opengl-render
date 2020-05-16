@@ -147,6 +147,7 @@ void RenderWindow::start()
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	glfwSetWindowSizeCallback(window, RenderWindow::update_window_size_info);
 
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK)
@@ -188,5 +189,14 @@ void RenderWindow::stop()
 {
 	this->running = false;
 }
+
+void RenderWindow::update_window_size_info(GLFWwindow *window, int width, int height)
+{
+	RenderWindow::width = width;
+	RenderWindow::height = height;
+}
+
+int RenderWindow::width = RENDER_WINDOW_WIDTH;
+int RenderWindow::height = RENDER_WINDOW_HEIGHT;
 
 #endif
