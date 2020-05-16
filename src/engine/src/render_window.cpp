@@ -2,9 +2,12 @@
 #define RENDER_WINDOW_CPP
 
 #include <iostream>
+#include <thread>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "render_window.hpp"
+#include "tile.hpp"
+#include "scene.hpp"
 
 RenderWindow::RenderWindow()
 {
@@ -98,6 +101,31 @@ void RenderWindow::set_gl_init(void (*handler)())
 	this->gl_init = handler;
 }
 
+void RenderWindow::set_preload(void (*handler)())
+{
+	this->preload = handler;
+}
+
+void RenderWindow::preload_wrapper()
+{
+	(*this->preload)();
+	this->preload_done = true;
+}
+
+void RenderWindow::setup_preloaded()
+{
+	if (Texture::to_setup.size())
+	{
+		Texture::setup_group();
+	}
+
+	if (Mesh::to_setup.size())
+	{
+		Mesh::setup_group();
+	}
+	this->setup_done = true;
+}
+
 #ifdef DEBUG_MODE_COMPILE
 void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 {
@@ -108,6 +136,8 @@ void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 
 void RenderWindow::start()
 {
+	Scene splash_screen_scene;
+	Tile splash_screen_logo;
 
 	if (this->running)
 	{
@@ -156,12 +186,22 @@ void RenderWindow::start()
 		exit(1);
 	}
 
+	// Inicializa a splash screen
+	splash_screen_logo.set("splash.png");
+	splash_screen_scene.init();
+	splash_screen_scene.add(splash_screen_logo);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 
 	if (this->gl_init != nullptr)
 	{
 		(*this->gl_init)();
+	}
+
+	if (this->preload != nullptr)
+	{
+		std::thread([this] { preload_wrapper(); }).detach();
 	}
 
 #ifdef DEBUG_MODE_COMPILE
@@ -174,11 +214,32 @@ void RenderWindow::start()
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		if (this->preload_done)
+		{
+			if (!this->setup_done)
+			{
+				// Termina a inicialização dos objetos que foram carregados fora da thread principal
+				// (não é possível chamar métodos do opengl fora da thread principal)
+				this->setup_preloaded();
+			}
+
 #ifdef DEBUG_MODE_COMPILE
-		this->render_handler_wrapper(window);
+			this->render_handler_wrapper(window);
 #else
-		this->render_handler();
+			this->render_handler();
 #endif
+		}
+		else
+		{
+			// Enquanto a thread de preload não termine, exibe uma splash screen
+			// para evitar deixar a thread principal ocupada.
+			// (evitando a mensagem de "não respondendo" do SO para o processo)
+
+			splash_screen_logo.set_size_in_pixels(256, 256);
+			splash_screen_logo.center_x();
+			splash_screen_logo.center_y();
+			splash_screen_scene.draw_tiles();
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

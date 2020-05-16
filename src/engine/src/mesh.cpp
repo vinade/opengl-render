@@ -51,8 +51,32 @@ void Mesh::normalize(glm::vec3 &center, glm::vec3 &size)
 
 void Mesh::prepare(glm::vec3 &center, glm::vec3 &size)
 {
+    this->prepare(center, size, false);
+}
 
+void Mesh::prepare(glm::vec3 &center, glm::vec3 &size, bool preload)
+{
     this->normalize(center, size);
+
+    if (!preload)
+    {
+        this->setup();
+    }
+    else
+    {
+        this->ready = false;
+        Mesh::to_setup.push_back(this);
+    }
+}
+
+void Mesh::setup()
+{
+
+    if (this->ready)
+    {
+        return;
+    }
+    this->ready = true;
 
     this->vao = new VertexArray();
     VertexBufferLayout *vbo_layout = new VertexBufferLayout();
@@ -104,5 +128,16 @@ void Mesh::draw(Shader *shader)
     this->ibo->bind();
     this->ibo->draw();
 }
+
+void Mesh::setup_group()
+{
+    for (auto item : Mesh::to_setup)
+    {
+        item->setup();
+    }
+    Mesh::to_setup.erase(Mesh::to_setup.begin(), Mesh::to_setup.end());
+}
+
+std::vector<Mesh *> Mesh::to_setup;
 
 #endif

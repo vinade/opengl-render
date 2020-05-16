@@ -46,8 +46,10 @@ void Material::get_texture(aiMaterial *amtl, aiTextureType texture_type, std::ve
 
         if (AI_SUCCESS == amtl->GetTexture(texture_type, i, &texture_path))
         {
+            Texture *aux_tex = new Texture(base_path + texture_path.data, texture_type);
             std::cerr << "\t" << base_path + texture_path.data << std::endl;
-            texture.push_back(new Texture(base_path + texture_path.data, texture_type));
+            std::cerr << "\t tid: " << aux_tex->id << std::endl;
+            texture.push_back(aux_tex);
         }
     }
 }

@@ -18,10 +18,13 @@ private:
 	void normalize(glm::vec3 &center, glm::vec3 &size);
 
 public:
+	bool ready = false;
 	unsigned int vertex_count;
 	unsigned int index_count;
 	Shader *shader;
 	Material material;
+
+	static std::vector<Mesh *> to_setup;
 
 	Mesh(){};
 
@@ -33,7 +36,11 @@ public:
 	IndexBuffer *ibo;
 
 	void prepare(glm::vec3 &center, glm::vec3 &size);
+	void prepare(glm::vec3 &center, glm::vec3 &size, bool preload);
 	void draw(Shader *shader);
+	void setup();
+
+	static void setup_group();
 };
 
 #endif

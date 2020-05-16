@@ -31,8 +31,8 @@ private:
 
 	void collect_vertex_data(const struct aiScene *sc, const struct aiNode *nd);
 	void load_scene_from_file(const std::string &file_path);
-	void load_material_textures(aiMaterial *material, aiTextureType tex_type);
-	void load_scene_textures();
+	void load_material_textures(aiMaterial *material, aiTextureType tex_type, bool preload);
+	void load_scene_textures(bool preload);
 	inline void get_min_max(aiVector3D &value, int i);
 	inline void calculate_coords();
 
@@ -48,6 +48,7 @@ public:
 	ScenarioItem(){};
 
 	void load_data_from_file(const std::string &file_path);
+	void load_data_from_file(const std::string &file_path, bool preload);
 	void draw(Shader *shader);
 
 	void update_model_matrix();

@@ -12,26 +12,39 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 																		 width(0),
 																		 bpp(0)
 {
+	this->load_texture(tex_type, false);
+}
+
+Texture::Texture(const std::string &file_path, aiTextureType tex_type, bool preload) : id(0),
+																					   file_path(file_path),
+																					   height(0),
+																					   width(0),
+																					   bpp(0)
+{
+	this->load_texture(tex_type, preload);
+}
+
+void Texture::load_texture(aiTextureType tex_type, bool preload)
+{
 
 	this->type = tex_type;
 
 	if (Texture::sources.find(this->file_path) != Texture::sources.end())
 	{
-		unsigned int tid = Texture::sources[this->file_path];
-		this->load_from_tid(tid);
+		Texture *tex_obj = Texture::sources[this->file_path];
+		this->load_from_texture(tex_obj);
 		return;
 	}
 
 	stbi_set_flip_vertically_on_load(1);
 
-	unsigned char *local_buffer = nullptr;
-	local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
+	this->local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
 	if (!this->width || !this->height)
 	{
 		std::string original_file_path = this->file_path;
 
 		this->file_path = this->texture_folder + this->file_path;
-		local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
+		this->local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
 
 		if (!this->width || !this->height)
 		{
@@ -41,24 +54,17 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 		}
 	}
 
-	glGenTextures(1, &this->id);
-	glBindTexture(GL_TEXTURE_2D, this->id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, local_buffer);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	if (local_buffer)
+	if (!preload)
 	{
-		stbi_image_free(local_buffer);
+		this->setup();
+	}
+	else
+	{
+		this->ready = false;
+		Texture::to_setup.push_back(this);
 	}
 
-	Texture::textures[this->id] = this;
-	Texture::sources[file_path] = this->id;
+	Texture::sources[file_path] = this;
 	std::cerr << "[Texture] carregado: " << file_path.c_str() << std::endl;
 	std::cerr << "\t" << this->width << "x" << this->height << std::endl;
 
@@ -66,11 +72,6 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 	{
 		Texture::fallback = this;
 	}
-}
-
-Texture::Texture(unsigned int tid)
-{
-	this->load_from_tid(tid);
 }
 
 Texture::~Texture()
@@ -121,9 +122,53 @@ void Texture::load_from_tid(unsigned int tid)
 	}
 
 	tex = Texture::textures[tid];
-	this->width = tex->get_width();
-	this->height = tex->get_height();
-	this->id = tid;
+	this->_width = &tex->width;
+	this->_height = &tex->height;
+	this->_id = &tex->id;
+}
+
+void Texture::load_from_texture(Texture *tex)
+{
+	if (tex == nullptr)
+	{
+		std::cerr << "[Texture] Pointeiro nulo " << std::endl;
+		return;
+	}
+
+	this->_width = &tex->width;
+	this->_height = &tex->height;
+	this->_id = &tex->id;
+}
+
+void Texture::setup()
+{
+
+	if (this->ready)
+	{
+		return;
+	}
+	this->ready = true;
+
+	glGenTextures(1, &this->id);
+	glBindTexture(GL_TEXTURE_2D, this->id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->local_buffer);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (this->local_buffer)
+	{
+		stbi_image_free(this->local_buffer);
+	}
+
+	Texture::textures[this->id] = this;
+	this->_id = &this->id;
+	this->_width = &this->width;
+	this->_height = &this->height;
 }
 
 void Texture::bind() const
@@ -135,7 +180,7 @@ void Texture::bind() const
 void Texture::bind(unsigned int slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, this->id);
+	glBindTexture(GL_TEXTURE_2D, this->get_id());
 }
 
 void Texture::unbind()
@@ -143,8 +188,18 @@ void Texture::unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Texture::setup_group()
+{
+	for (auto item : Texture::to_setup)
+	{
+		item->setup();
+	}
+	Texture::to_setup.erase(Texture::to_setup.begin(), Texture::to_setup.end());
+}
+
 std::unordered_map<unsigned int, Texture *> Texture::textures;
-std::unordered_map<std::string, unsigned int> Texture::sources;
+std::unordered_map<std::string, Texture *> Texture::sources;
+std::vector<Texture *> Texture::to_setup;
 Texture *Texture::fallback = nullptr;
 const std::string Texture::texture_folder = std::string(CMAKE_ROOT_DIR TEXTURE_DEFAULT_FOLDER);
 

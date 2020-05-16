@@ -11,7 +11,7 @@
 
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
-	// TODO: cache do objeto pelo file_path
+
 	std::string complete_path = ScenarioItem::models_folder + file_path;
 	std::ifstream file_stream(complete_path.c_str());
 
@@ -41,20 +41,18 @@ void ScenarioItem::load_scene_from_file(const std::string &file_path)
 	}
 }
 
-void ScenarioItem::load_material_textures(aiMaterial *material, aiTextureType tex_type)
+void ScenarioItem::load_material_textures(aiMaterial *material, aiTextureType tex_type, bool preload)
 {
 	int counter = material->GetTextureCount(tex_type);
 	for (int tex_index = 0; tex_index < counter; tex_index++)
 	{
 		aiString tex_path;
 		material->GetTexture(tex_type, tex_index, &tex_path);
-		new Texture(this->base_path + tex_path.data, tex_type);
-		// Texture *tex = new Texture(this->base_path + tex_path.data, tex_type);
-		// material->textures.push_back(tex);
+		new Texture(this->base_path + tex_path.data, tex_type, preload);
 	}
 }
 
-void ScenarioItem::load_scene_textures()
+void ScenarioItem::load_scene_textures(bool preload)
 {
 
 	if (!this->scene)
@@ -74,7 +72,7 @@ void ScenarioItem::load_scene_textures()
 	{
 		for (int tex_type_index = 0; tex_type_index < SCENARIO_ITEM_TEX_TYPE_COUNTER; tex_type_index++)
 		{
-			ScenarioItem::load_material_textures(this->scene->mMaterials[i], ScenarioItem::texture_types[tex_type_index]);
+			ScenarioItem::load_material_textures(this->scene->mMaterials[i], ScenarioItem::texture_types[tex_type_index], preload);
 		}
 	}
 }
@@ -123,11 +121,6 @@ void ScenarioItem::debug_coords()
 	std::cerr << "this->max.z: " << this->max.z << "\n\n";
 }
 
-/*
-	TODO:
-	ESTÁ ACEITANDO APENAS UMA TEXTURA, E IGNORANDO OS MATERIAIS
-
-*/
 void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct aiNode *nd)
 {
 	Mesh mesh_data;
@@ -230,8 +223,13 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 
 void ScenarioItem::load_data_from_file(const std::string &file_path)
 {
+	this->load_data_from_file(file_path, false);
+}
+
+void ScenarioItem::load_data_from_file(const std::string &file_path, bool preload)
+{
 	this->load_scene_from_file(file_path);
-	this->load_scene_textures();
+	this->load_scene_textures(preload);
 	this->collect_vertex_data(this->scene, this->scene->mRootNode);
 	this->calculate_coords(); // calcula o centro e tamanho do objeto
 
@@ -239,7 +237,7 @@ void ScenarioItem::load_data_from_file(const std::string &file_path)
 
 	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
-		this->meshes[i].prepare(this->center, this->size);
+		this->meshes[i].prepare(this->center, this->size, preload);
 	}
 }
 

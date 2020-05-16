@@ -2,6 +2,7 @@
 #define TEXTURE_HPP
 
 #include <unordered_map>
+#include <vector>
 #include <assimp/material.h>
 
 #ifndef CMAKE_ROOT_DIR
@@ -15,34 +16,45 @@ class Texture
 {
 
 private:
-	unsigned int id;
 	std::string file_path;
-	int height;
-	int width;
+	int *_height;
+	int *_width;
+	unsigned int *_id;
 	int bpp;
+	unsigned char *local_buffer = nullptr;
 
 	static std::unordered_map<unsigned int, Texture *> textures;
-	static std::unordered_map<std::string, unsigned int> sources;
+	static std::unordered_map<std::string, Texture *> sources;
 
 	void load_from_tid(unsigned int tid);
+	void load_from_texture(Texture *tex);
 	inline int get_slot() const;
 	inline int get_channels() const;
 
 public:
+	int height;
+	int width;
+	bool ready = false;
+	unsigned int id;
 	aiTextureType type = aiTextureType_DIFFUSE;
 	static Texture *fallback;
 	static const std::string texture_folder;
+	static std::vector<Texture *> to_setup;
 
+	Texture(const std::string &file_path, aiTextureType tex_type, bool preload);
 	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
-	Texture(const unsigned int tid);													   // verifica antes se em textures
 	~Texture();
 
+	void load_texture(aiTextureType tex_type, bool preload);
+	void setup();
 	void bind() const;
 	void bind(unsigned int slot) const;
 	static void unbind();
+	static void setup_group();
 
-	inline int get_width() const { return this->width; };
-	inline int get_height() const { return this->height; };
+	inline int get_width() const { return *this->_width; };
+	inline int get_height() const { return *this->_height; };
+	inline unsigned int get_id() const { return *this->_id; };
 
 	static inline int get_type_slot(aiTextureType type);
 };

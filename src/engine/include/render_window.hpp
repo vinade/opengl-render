@@ -27,7 +27,6 @@ private:
 	char **cppArgv;
 	std::string title;
 
-	void (*gl_init)();
 	void (*keyboard_handler)(unsigned char key, int x, int y);
 	void (*mouse_handler)(int button, int state, int x, int y);
 	void (*reshape_handler)(int width, int height);
@@ -46,6 +45,11 @@ public:
 	ImGuiController *imgui_controller;
 #endif
 
+	bool preload_done = false;
+	bool setup_done = false;
+	void (*gl_init)();
+	void (*preload)();
+
 	static int width;
 	static int height;
 
@@ -54,6 +58,7 @@ public:
 	RenderWindow(int iArgc, char **cppArgv);
 	RenderWindow(int iArgc, char **cppArgv, const std::string &title);
 
+	void preload_wrapper();
 	void set_pos(int x, int y);
 	void set_size(int width, int height);
 	void set_keyboard_handler(void (*handler)(unsigned char key, int x, int y));
@@ -61,6 +66,8 @@ public:
 	void set_reshape_handler(void (*handler)(int width, int height));
 	void set_render_handler(void (*handler)());
 	void set_gl_init(void (*handler)());
+	void set_preload(void (*handler)());
+	void setup_preloaded();
 	void start();
 	void stop();
 
