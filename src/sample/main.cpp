@@ -47,6 +47,7 @@ ScenarioItem moon_1;
 ScenarioItem plant_1;
 ScenarioItem nanosuit_1;
 Scene scene;
+RenderWindow *render;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
 glm::vec3 light_translation_debug(-80.0f, 40.0f, -200.0f);
@@ -68,6 +69,10 @@ void render_handler()
     moon_1.inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
     scene.draw();
+    // scene.draw(render->fbo_depth);
+    // render->fbo_depth->draw();
+    // scene.draw(render->fbo_color);
+    // render->fbo_color->draw();
 
     glFlush();
 }
@@ -119,7 +124,7 @@ void preload()
 
 int main()
 {
-    RenderWindow *render = new RenderWindow();
+    render = new RenderWindow();
 
 #ifdef DEBUG_MODE_COMPILE
     render->imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 1.0f);

@@ -58,6 +58,8 @@ void RenderWindow::init_RenderWindow(int iArgc, char **cppArgv, const std::strin
 	this->height = RENDER_WINDOW_HEIGHT;
 	this->pos_x = RENDER_WINDOW_POS_X;
 	this->pos_y = RENDER_WINDOW_POS_Y;
+	this->fbo_color = new FrameBuffer();
+	this->fbo_depth = new FrameBuffer(true);
 
 #ifdef DEBUG_MODE_COMPILE
 	this->imgui_controller = new ImGuiController();
@@ -109,6 +111,7 @@ void RenderWindow::set_preload(void (*handler)())
 void RenderWindow::preload_wrapper()
 {
 	(*this->preload)();
+
 	this->preload_done = true;
 }
 
@@ -191,6 +194,9 @@ void RenderWindow::start()
 	splash_screen_scene.init();
 	splash_screen_scene.add(splash_screen_logo);
 
+	this->fbo_color->set();
+	this->fbo_depth->set();
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 
@@ -211,7 +217,6 @@ void RenderWindow::start()
 	while (!glfwWindowShouldClose(window) && this->running)
 	{
 
-		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (this->preload_done)

@@ -112,6 +112,24 @@ void Scene::add(Tile *tile)
 
 void Scene::draw()
 {
+    this->draw(nullptr);
+}
+
+void Scene::draw(FrameBuffer *fbo)
+{
+
+    /*
+        Bind FrameBuffer
+    */
+    if (fbo == nullptr)
+    {
+        FrameBuffer::unbind();
+    }
+    else
+    {
+        fbo->bind();
+    }
+
     /*
         Skybox
     */

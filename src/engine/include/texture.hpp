@@ -37,6 +37,7 @@ public:
 	static const std::string texture_folder;
 	static std::vector<Texture *> to_setup;
 
+	Texture(unsigned int *id, int *width, int *height);
 	Texture(const std::string &file_path, aiTextureType tex_type, bool preload);
 	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
 	~Texture();

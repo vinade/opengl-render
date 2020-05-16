@@ -8,6 +8,7 @@
 #include "light.hpp"
 #include "tile.hpp"
 #include "shader.hpp"
+#include "frame_buffer.hpp"
 #include <vector>
 #include <algorithm>
 
@@ -56,6 +57,7 @@ public:
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };
 
     void draw();
+    void draw(FrameBuffer *fbo);
     void draw_tiles();
 
     template <typename T>

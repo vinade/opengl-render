@@ -2,6 +2,7 @@
 #define RENDER_WINDOW_HPP
 
 #include "debug_flags.hpp"
+#include "frame_buffer.hpp"
 #include <string>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
@@ -47,6 +48,8 @@ public:
 
 	bool preload_done = false;
 	bool setup_done = false;
+	FrameBuffer *fbo_color;
+	FrameBuffer *fbo_depth;
 	void (*gl_init)();
 	void (*preload)();
 

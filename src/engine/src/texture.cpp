@@ -25,6 +25,13 @@ Texture::Texture(const std::string &file_path, aiTextureType tex_type, bool prel
 	this->load_texture(tex_type, preload);
 }
 
+Texture::Texture(unsigned int *id, int *width, int *height)
+{
+	this->_width = width;
+	this->_height = height;
+	this->_id = id;
+}
+
 void Texture::load_texture(aiTextureType tex_type, bool preload)
 {
 
@@ -119,7 +126,7 @@ void Texture::load_from_tid(unsigned int tid)
 	if (Texture::textures.find(tid) == Texture::textures.end())
 	{
 		std::cerr << "[Texture] Id não encontrado: " << tid << std::endl;
-		return;
+		exit(1);
 	}
 
 	tex = Texture::textures[tid];
@@ -132,8 +139,8 @@ void Texture::load_from_texture(Texture *tex)
 {
 	if (tex == nullptr)
 	{
-		std::cerr << "[Texture] Pointeiro nulo " << std::endl;
-		return;
+		std::cerr << "[Texture] Ponteiro nulo " << std::endl;
+		exit(1);
 	}
 
 	this->_width = &tex->width;
