@@ -188,7 +188,7 @@ void Scene::draw(FrameBuffer *fbo)
     /*
         Objetos de debug
     */
-    if (DEBUG_MODE)
+    if (DEBUG_MODE && (fbo == nullptr))
     {
         /*
             Luzes
