@@ -40,6 +40,7 @@ MessageCallback(GLenum source,
     }
 }
 
+int frame_buffer_select = 0;
 Light light_0;
 Light light_1;
 ScenarioItem cat_1;
@@ -65,13 +66,21 @@ void render_handler()
 
     moon_1.inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
-    // scene.draw();
-
-    // scene.draw(render->fbo_depth);
-    // render->fbo_depth->draw();
-
-    scene.draw(render->fbo_color);
-    render->fbo_color->draw();
+    switch (frame_buffer_select)
+    {
+    default:
+    case 0:
+        scene.draw();
+        break;
+    case 1:
+        scene.draw(render->fbo_color);
+        render->fbo_color->draw();
+        break;
+    case 2:
+        scene.draw(render->fbo_depth);
+        render->fbo_depth->draw();
+        break;
+    }
 
     glFlush();
 }
@@ -134,6 +143,9 @@ int main()
     render->imgui_controller->observef("x", &light_translation_debug[0], -1000.0f, 1000.0f);
     render->imgui_controller->observef("y", &light_translation_debug[1], -1000.0f, 1000.0f);
     render->imgui_controller->observef("z", &light_translation_debug[2], -1000.0f, 1000.0f);
+
+    render->imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
+
 #endif
 
     render->set_preload(preload);
