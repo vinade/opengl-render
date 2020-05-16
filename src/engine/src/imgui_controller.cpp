@@ -89,6 +89,21 @@ void ImGuiController::display(GLFWwindow *window)
 			ImGui::SliderInt(item.title.c_str(), item.variable, item.min, item.max);
 		}
 
+		for (auto &item : this->radios)
+		{
+			ImGui::Text(item.title.c_str());
+
+			for (int i; i < item.values; i++)
+			{
+				ImGui::RadioButton(std::to_string(i).c_str(), item.variable, i);
+
+				if (i < item.values - 1)
+				{
+					ImGui::SameLine();
+				}
+			}
+		}
+
 		ImGui::End();
 	}
 
@@ -97,6 +112,18 @@ void ImGuiController::display(GLFWwindow *window)
 	glfwGetFramebufferSize(window, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ImGuiController::radio(const std::string &title, int *variable, int values)
+{
+	std::string observed_item_title(title);
+	struct imgui_radio item =
+		{
+			observed_item_title,
+			variable,
+			values};
+
+	this->radios.push_back(item);
 }
 
 void ImGuiController::observef(const std::string &title, float *variable, float min, float max)

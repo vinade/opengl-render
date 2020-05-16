@@ -15,12 +15,20 @@ struct imgui_item
 	T max;
 };
 
+struct imgui_radio
+{
+	std::string title;
+	int *variable;
+	int values;
+};
+
 class ImGuiController
 {
 
 private:
 	std::vector<struct imgui_item<float>> f_variables;
 	std::vector<struct imgui_item<int>> i_variables;
+	std::vector<struct imgui_radio> radios;
 
 public:
 	ImGuiController(){};
@@ -31,6 +39,7 @@ public:
 
 	void observef(const std::string &title, float *variable, float min, float max);
 	void observei(const std::string &title, int *variable, int min, int max);
+	void radio(const std::string &title, int *variable, int values);
 };
 
 #endif
