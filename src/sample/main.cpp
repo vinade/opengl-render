@@ -55,9 +55,6 @@ float light_ambient_debug = 0.2;
 
 void render_handler()
 {
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     scene.camera.update_view_matrix();
 
     light_0.set_position(light_translation_debug);
@@ -68,11 +65,13 @@ void render_handler()
 
     moon_1.inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
-    scene.draw();
+    // scene.draw();
+
     // scene.draw(render->fbo_depth);
     // render->fbo_depth->draw();
-    // scene.draw(render->fbo_color);
-    // render->fbo_color->draw();
+
+    scene.draw(render->fbo_color);
+    render->fbo_color->draw();
 
     glFlush();
 }

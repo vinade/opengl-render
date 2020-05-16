@@ -88,6 +88,7 @@ FrameBuffer::~FrameBuffer()
 void FrameBuffer::bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, this->id);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void FrameBuffer::draw()
@@ -102,6 +103,7 @@ void FrameBuffer::draw()
 void FrameBuffer::unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 #endif
