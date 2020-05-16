@@ -48,7 +48,7 @@ void RenderWindow::init_RenderWindow(int iArgc, char **cppArgv)
 
 void RenderWindow::init_RenderWindow(int iArgc, char **cppArgv, const std::string &title)
 {
-	this->title = title.c_str();
+	this->title = title;
 	this->iArgc = iArgc;
 	this->cppArgv = cppArgv;
 	this->width = RENDER_WINDOW_WIDTH;
@@ -137,7 +137,7 @@ void RenderWindow::start()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(this->width, this->height, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(this->width, this->height, this->title.c_str(), NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();

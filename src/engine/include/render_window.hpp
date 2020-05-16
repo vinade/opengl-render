@@ -25,7 +25,7 @@ private:
 	int pos_y;
 	int iArgc;
 	char **cppArgv;
-	const char *title;
+	std::string title;
 
 	void (*gl_init)();
 	void (*keyboard_handler)(unsigned char key, int x, int y);
