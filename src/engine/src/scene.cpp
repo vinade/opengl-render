@@ -49,7 +49,7 @@ void Scene::init()
     }
 }
 
-void Scene::add_light(Light *light)
+void Scene::add(Light *light)
 {
 
     if (this->lights.size() > SCENE_MAX_LIGHTS)
@@ -85,19 +85,29 @@ void Scene::add_light(Light *light)
     }
 }
 
-void Scene::add_light(Light &light)
+void Scene::add(Light &light)
 {
-    Scene::add_light((Light *)&light);
+    Scene::add((Light *)&light);
 }
 
-void Scene::add_scenario_item(ScenarioItem *scenario_item)
+void Scene::add(ScenarioItem *scenario_item)
 {
     Scene::add_once(this->scenario_items, scenario_item);
 }
 
-void Scene::add_scenario_item(ScenarioItem &scenario_item)
+void Scene::add(ScenarioItem &scenario_item)
 {
     Scene::add_once(this->scenario_items, (ScenarioItem *)&scenario_item);
+}
+
+void Scene::add(Tile &tile)
+{
+    Scene::add((Tile *)&tile);
+}
+
+void Scene::add(Tile *tile)
+{
+    Scene::add_once(this->tiles, tile);
 }
 
 void Scene::draw()
@@ -169,6 +179,14 @@ void Scene::draw()
         {
             light->draw(this->camera, this->perspective);
         }
+    }
+}
+
+void Scene::draw_tiles()
+{
+    for (auto tile : this->tiles)
+    {
+        tile->draw();
     }
 }
 #endif

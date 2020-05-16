@@ -6,6 +6,7 @@
 #include "scenario_item.hpp"
 #include "skybox_mesh.hpp"
 #include "light.hpp"
+#include "tile.hpp"
 #include "shader.hpp"
 #include <vector>
 #include <algorithm>
@@ -16,6 +17,7 @@ class Scene
 {
 
 private:
+    std::vector<Tile *> tiles;
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;
     SkyboxMesh *skybox = nullptr;
@@ -31,12 +33,15 @@ public:
 
     void init();
 
-    void add_light(Light *light);
-    void add_light(Light &light);
+    void add(Tile *tile);
+    void add(Tile &tile);
+
+    void add(Light *light);
+    void add(Light &light);
     // void remove_light(Light *light);
 
-    void add_scenario_item(ScenarioItem *scenario_item);
-    void add_scenario_item(ScenarioItem &scenario_item);
+    void add(ScenarioItem *scenario_item);
+    void add(ScenarioItem &scenario_item);
     // void remove_scenario_item(ScenarioItem *scenario_item);
 
     // void add_post_process(PostProcess *post_process);
@@ -51,6 +56,7 @@ public:
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };
 
     void draw();
+    void draw_tiles();
 
     template <typename T>
     static bool add_once(std::vector<T> &item_vector, const T &item);
