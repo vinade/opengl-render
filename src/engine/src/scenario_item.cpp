@@ -8,6 +8,7 @@
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 #include "scenario_item.hpp"
+#include "cmake_params.hpp"
 
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {

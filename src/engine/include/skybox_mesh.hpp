@@ -1,10 +1,6 @@
 #ifndef SKYBOX_MESH_HPP
 #define SKYBOX_MESH_HPP
 
-#ifndef CMAKE_ROOT_DIR
-#define CMAKE_ROOT_DIR "./"
-#endif
-
 #define SKYBOX_TEXTURES_FOLDER "./res/textures/skybox/"
 #define SKYBOX_DEFAULT_TEXTURE "yokohama"
 

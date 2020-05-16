@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include "stb/stb_image.h"
 #include "skybox_mesh.hpp"
+#include "cmake_params.hpp"
 
 SkyboxMesh::SkyboxMesh()
 {

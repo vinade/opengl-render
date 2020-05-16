@@ -5,10 +5,6 @@
 #include <vector>
 #include <assimp/material.h>
 
-#ifndef CMAKE_ROOT_DIR
-#define CMAKE_ROOT_DIR "./"
-#endif
-
 #define TEXTURE_CHANNELS 4
 #define TEXTURE_DEFAULT_FOLDER "./res/textures/"
 

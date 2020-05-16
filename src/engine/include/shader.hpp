@@ -8,10 +8,6 @@
 #include "debug_flags.hpp"
 #include "data_types.hpp"
 
-#ifndef CMAKE_ROOT_DIR
-#define CMAKE_ROOT_DIR "./"
-#endif
-
 #define SHADERS_FOLDER "./shaders/"
 #define SHADERS_VERTEX_EXT std::string(".vertexshader")
 #define SHADERS_FRAGMENT_EXT std::string(".fragmentshader")

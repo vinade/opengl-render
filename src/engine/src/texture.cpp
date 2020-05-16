@@ -5,6 +5,7 @@
 #include <iostream>
 #include "stb/stb_image.h"
 #include "texture.hpp"
+#include "cmake_params.hpp"
 
 Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 																		 file_path(file_path),

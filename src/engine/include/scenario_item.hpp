@@ -5,10 +5,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-#ifndef CMAKE_ROOT_DIR
-#define CMAKE_ROOT_DIR "./"
-#endif
-
 #define SCENARIO_ITEM_MODELS_FOLDER "./res/models/"
 #define SCENARIO_ITEM_TEX_TYPE_COUNTER 13
 

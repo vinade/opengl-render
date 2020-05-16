@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "shader.hpp"
+#include "cmake_params.hpp"
 
 Shader::Shader()
 {
