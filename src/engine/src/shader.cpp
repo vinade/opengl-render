@@ -225,7 +225,7 @@ void Shader::load(std::string shader_name)
 
         if (!frag_found)
         {
-            fragment_file_path = Shader::shaders_folder + SHADERS_DEFAULT_SHADER + SHADERS_VERTEX_EXT;
+            fragment_file_path = Shader::shaders_folder + SHADERS_DEFAULT_SHADER + SHADERS_FRAGMENT_EXT;
         }
     }
 
