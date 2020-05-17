@@ -12,30 +12,37 @@ class FrameBuffer
 {
 
 private:
+    bool ready = false;
     bool depth = false;
+
     unsigned int texture_id;
+
     int width;
     int height;
+    int channels;
 
     Tile tile;
     void *scene;
     Texture *texture;
 
 public:
+    float *data;
     unsigned int id;
     std::string shader_name;
     Shader *shader;
 
     FrameBuffer();
     FrameBuffer(bool depth);
-    void set();
-
     ~FrameBuffer();
 
-    void bind() const;
-    static void unbind();
-
+    void init(bool depth);
+    void set();
     void draw();
+    void update_data();
+    void save(const std::string &file_path);
+    void bind() const;
+
+    static void unbind();
 };
 
 #endif

@@ -8,16 +8,20 @@
 
 FrameBuffer::FrameBuffer()
 {
-    this->depth = false;
-    this->texture = new Texture(&this->texture_id, &this->width, &this->height);
-    this->shader_name = "fbo_color";
+    this->init(false);
 }
 
 FrameBuffer::FrameBuffer(bool depth)
 {
+    this->init(depth);
+}
+
+void FrameBuffer::init(bool depth)
+{
     this->depth = depth;
     this->texture = new Texture(&this->texture_id, &this->width, &this->height);
-    this->shader_name = "fbo_depth";
+    this->shader_name = depth ? "fbo_depth" : "fbo_color";
+    this->channels = depth ? 1 : 3;
 }
 
 void FrameBuffer::set()
@@ -38,6 +42,7 @@ void FrameBuffer::set()
 
     this->width = RenderWindow::width; // Tamanhos não atualizáveis
     this->height = RenderWindow::height;
+    this->data = (float *)malloc(this->width * this->height * this->channels * sizeof(float));
 
     glGenFramebuffers(1, &this->id);
     glBindFramebuffer(GL_FRAMEBUFFER, this->id);
@@ -77,12 +82,18 @@ void FrameBuffer::set()
     }
 
     FrameBuffer::unbind();
+
+    this->ready = true;
 }
 
 FrameBuffer::~FrameBuffer()
 {
-    glDeleteBuffers(1, &this->id);
-    glDeleteTextures(1, &this->texture_id);
+    if (this->ready)
+    {
+        glDeleteBuffers(1, &this->id);
+        glDeleteTextures(1, &this->texture_id);
+        free(this->data);
+    }
 }
 
 void FrameBuffer::bind() const
@@ -106,4 +117,59 @@ void FrameBuffer::unbind()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+void FrameBuffer::update_data()
+{
+    // torna o fbo ativo
+    glBindFramebuffer(GL_FRAMEBUFFER, this->id);
+
+    // usa o FBO ativo
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    if (!this->depth)
+    {
+        glReadPixels(0, 0, this->width, this->height, GL_RGB, GL_FLOAT, this->data);
+    }
+    else
+    {
+        glReadPixels(0, 0, this->width, this->height, GL_DEPTH_COMPONENT, GL_FLOAT, this->data);
+    }
+}
+
+void FrameBuffer::save(const std::string &file_path)
+{
+    FILE *output_image;
+    float *pixels = this->data;
+
+    this->update_data();
+
+    output_image = fopen(file_path.c_str(), "wt");
+    fprintf(output_image, "P3\n");
+    fprintf(output_image, "%d %d\n", this->width, this->height);
+    fprintf(output_image, "255\n");
+
+    for (int j = this->height - 1; j >= 0; j--)
+    {
+        for (int i = 0; i < this->width; i++)
+        {
+            int k;
+            unsigned int r, g, b;
+
+            k = (j * this->width) + i;
+            if (channels == 3)
+            {
+                k = k * 3;
+                r = static_cast<unsigned int>(pixels[k] * 255.0);
+                g = static_cast<unsigned int>(pixels[k + 1] * 255.0);
+                b = static_cast<unsigned int>(pixels[k + 2] * 255.0);
+            }
+            else
+            {
+                r = static_cast<unsigned int>(pixels[k] * 255.0);
+                g = r;
+                b = r;
+            }
+            fprintf(output_image, "%u %u %u ", r, g, b);
+        }
+        fprintf(output_image, "\n");
+    }
+}
 #endif
