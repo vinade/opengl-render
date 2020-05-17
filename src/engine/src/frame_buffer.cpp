@@ -35,8 +35,8 @@ void FrameBuffer::set()
     ((Scene *)this->scene)->init();
     ((Scene *)this->scene)->add(this->tile);
 
-    this->width = RenderWindow::width; // Tamanhos não atualizáveis
-    this->height = RenderWindow::height;
+    this->width = RenderWindow::context->width; // Tamanhos não atualizáveis
+    this->height = RenderWindow::context->height;
     this->data = (float *)malloc(this->width * this->height * this->channels * sizeof(float));
 
     bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
@@ -150,7 +150,7 @@ void FrameBuffer::setup()
 
     if (this->depth)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, RenderWindow::width, RenderWindow::height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, RenderWindow::context->width, RenderWindow::context->height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -159,7 +159,7 @@ void FrameBuffer::setup()
     }
     else
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, RenderWindow::width, RenderWindow::height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, RenderWindow::context->width, RenderWindow::context->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -169,7 +169,7 @@ void FrameBuffer::setup()
         GLuint depthrenderbuffer;
         glGenRenderbuffers(1, &depthrenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RenderWindow::width, RenderWindow::height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RenderWindow::context->width, RenderWindow::context->height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
     }
 

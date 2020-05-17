@@ -65,14 +65,14 @@ void Tile::set_position_in_percent(float x, float y)
 
 void Tile::set_size_in_pixels(float width, float height)
 {
-    this->tile_size.x = width / RenderWindow::width;
-    this->tile_size.y = height / RenderWindow::height;
+    this->tile_size.x = width / RenderWindow::context->width;
+    this->tile_size.y = height / RenderWindow::context->height;
 }
 
 void Tile::set_position_in_pixels(float x, float y)
 {
-    this->tile_position.x = x / RenderWindow::width;
-    this->tile_position.y = 1.0 - y / RenderWindow::height;
+    this->tile_position.x = x / RenderWindow::context->width;
+    this->tile_position.y = 1.0 - y / RenderWindow::context->height;
 }
 
 void Tile::center_x()

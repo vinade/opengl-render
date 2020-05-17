@@ -37,6 +37,12 @@ private:
 	void init_RenderWindow();
 	void init_RenderWindow(int iArgc, char **cppArgv);
 	void init_RenderWindow(int iArgc, char **cppArgv, const std::string &title);
+	void preload_wrapper();
+	void setup_preloaded();
+	bool preload_done = false;
+	bool setup_done = false;
+	void (*gl_init)();
+	void (*preload)();
 
 #ifdef DEBUG_MODE_COMPILE
 	void render_handler_wrapper(GLFWwindow *window);
@@ -47,22 +53,17 @@ public:
 	ImGuiController *imgui_controller;
 #endif
 
-	bool preload_done = false;
-	bool setup_done = false;
 	FrameBuffer *fbo_color;
 	FrameBuffer *fbo_depth;
-	void (*gl_init)();
-	void (*preload)();
 
-	static int width;
-	static int height;
+	int width;
+	int height;
 
 	RenderWindow();
 	~RenderWindow();
 	RenderWindow(int iArgc, char **cppArgv);
 	RenderWindow(int iArgc, char **cppArgv, const std::string &title);
 
-	void preload_wrapper();
 	void set_pos(int x, int y);
 	void set_size(int width, int height);
 	void set_keyboard_handler(void (*handler)(unsigned char key, int x, int y));
@@ -71,12 +72,12 @@ public:
 	void set_render_handler(void (*handler)());
 	void set_gl_init(void (*handler)());
 	void set_preload(void (*handler)());
-	void setup_preloaded();
 	void start();
 	void stop();
 
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
 	const static std::thread::id RENDER_THREAD_ID;
+	static RenderWindow *context;
 };
 
 #endif

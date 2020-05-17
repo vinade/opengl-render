@@ -179,6 +179,7 @@ void RenderWindow::start()
 	BasicScene splash_screen_scene;
 	Tile splash_screen_logo;
 
+	RenderWindow::context = this;
 	if (this->running)
 	{
 		std::cerr << "[RENDER_WINDOW] start() deve ser chamado apenas umas vez." << std::endl;
@@ -217,7 +218,7 @@ void RenderWindow::start()
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
-	glfwSetWindowSizeCallback(window, RenderWindow::update_window_size_info);
+	glfwSetWindowSizeCallback(window, update_window_size_info);
 
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK)
@@ -289,12 +290,11 @@ void RenderWindow::stop()
 
 void RenderWindow::update_window_size_info(GLFWwindow *window, int width, int height)
 {
-	RenderWindow::width = width;
-	RenderWindow::height = height;
+	RenderWindow::context->width = width;
+	RenderWindow::context->height = height;
 }
 
-int RenderWindow::width = RENDER_WINDOW_WIDTH;
-int RenderWindow::height = RENDER_WINDOW_HEIGHT;
+RenderWindow *RenderWindow::context = nullptr;
 const std::thread::id RenderWindow::RENDER_THREAD_ID = std::this_thread::get_id();
 
 #endif
