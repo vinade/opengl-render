@@ -110,6 +110,33 @@ void Scene::add(Tile *tile)
     Scene::add_once(this->tiles, tile);
 }
 
+void Scene::update_color_buffer(RenderWindow *render)
+{
+    this->draw_on_buffer(render->fbo_color);
+}
+
+void Scene::update_depth_buffer(RenderWindow *render)
+{
+    this->draw_on_buffer(render->fbo_depth);
+}
+
+void Scene::draw_on_buffer(FrameBuffer *fbo)
+{
+
+    if (fbo == nullptr)
+    {
+        std::cerr << "[Scene] draw_on_buffer() em um ponteiro nulo." << std::endl;
+        exit(1);
+    }
+
+    if (fbo->data == nullptr)
+    {
+        fbo->set();
+    }
+
+    this->draw(fbo);
+}
+
 void Scene::draw()
 {
     this->draw(nullptr);

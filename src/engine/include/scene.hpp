@@ -9,6 +9,7 @@
 #include "tile.hpp"
 #include "shader.hpp"
 #include "frame_buffer.hpp"
+#include "render_window.hpp"
 #include <vector>
 #include <algorithm>
 
@@ -23,6 +24,7 @@ private:
     std::vector<ScenarioItem *> scenario_items;
     SkyboxMesh *skybox = nullptr;
 
+    void draw_on_buffer(FrameBuffer *fbo);
     // std::vector<PostProcess*> post_processes;
 
     // FrameBufferObject* destination; // ou o unit id do fbo
@@ -59,6 +61,8 @@ public:
     void draw();
     void draw(FrameBuffer *fbo);
     void draw_tiles();
+    void update_color_buffer(RenderWindow *render);
+    void update_depth_buffer(RenderWindow *render);
 
     template <typename T>
     static bool add_once(std::vector<T> &item_vector, const T &item);

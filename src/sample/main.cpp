@@ -73,12 +73,12 @@ void render_handler()
         scene.draw();
         break;
     case 1:
-        scene.draw(render->fbo_color);
+        scene.update_color_buffer(render);
         render->fbo_color->draw();
         // render->fbo_color->save("teste.ppm");
         break;
     case 2:
-        scene.draw(render->fbo_depth);
+        scene.update_depth_buffer(render);
         render->fbo_depth->draw();
         // render->fbo_depth->save("teste.ppm");
         break;
