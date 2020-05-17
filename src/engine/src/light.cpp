@@ -26,7 +26,7 @@ void Light::set(const glm::vec4 &color, LightType type)
         return;
     }
 
-    this->set_scale(5.0);
+    this->set_scale(0.03);
     this->debug_mesh = new DebugMesh();
     this->debug_mesh->color = color;
     this->loaded = true;

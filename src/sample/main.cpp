@@ -51,7 +51,7 @@ Scene scene;
 RenderWindow *render;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
-glm::vec3 light_translation_debug(-80.0f, 40.0f, -200.0f);
+glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
 float light_ambient_debug = 0.2;
 
 void render_handler()
@@ -75,10 +75,12 @@ void render_handler()
     case 1:
         scene.draw(render->fbo_color);
         render->fbo_color->draw();
+        // render->fbo_color->save("teste.ppm");
         break;
     case 2:
         scene.draw(render->fbo_depth);
         render->fbo_depth->draw();
+        // render->fbo_depth->save("teste.ppm");
         break;
     }
 
@@ -107,27 +109,27 @@ void preload()
 {
     scene.camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    light_1.set_position(glm::vec3(100.0, 50.0, -300.0));
+    light_1.set_position(glm::vec3(0.5, 0.5, -2.0));
     light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
     light_1.set_ambient(0.0);
 
     cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj", true);
-    cat_1.set_position(glm::vec3(0.0f, -50.0f, -400.0f));
+    cat_1.set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
     cat_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
-    cat_1.set_scale(100.0);
+    cat_1.set_scale(1.0);
 
     moon_1.load_data_from_file("moon_1/Moon 2K.obj", true);
-    moon_1.set_position(glm::vec3(-200.0f, 200.0f, -800.0f));
-    moon_1.set_scale(200.0);
+    moon_1.set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
+    moon_1.set_scale(2.0);
 
     plant_1.load_data_from_file("plant/01Alocasia_obj.obj", true);
-    plant_1.set_position(glm::vec3(50.0f, 0.0f, -400.0f));
-    plant_1.set_scale(150.0);
+    plant_1.set_position(glm::vec3(1.0f, 0.0f, -4.0f));
+    plant_1.set_scale(1.5);
 
     nanosuit_1.load_data_from_file("nano_suit/Nanosuit.obj", true);
-    nanosuit_1.set_position(glm::vec3(-50.0f, -50.0f, -300.0f));
+    nanosuit_1.set_position(glm::vec3(0.0f, 0.0f, -5.0f));
     nanosuit_1.set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
-    nanosuit_1.set_scale(200.0);
+    nanosuit_1.set_scale(2.0);
 }
 
 int main()
@@ -140,9 +142,9 @@ int main()
     render->imgui_controller->observef("G", &color_light_debug[1], 0.0f, 1.0f);
     render->imgui_controller->observef("B", &color_light_debug[2], 0.0f, 1.0f);
 
-    render->imgui_controller->observef("x", &light_translation_debug[0], -1000.0f, 1000.0f);
-    render->imgui_controller->observef("y", &light_translation_debug[1], -1000.0f, 1000.0f);
-    render->imgui_controller->observef("z", &light_translation_debug[2], -1000.0f, 1000.0f);
+    render->imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
+    render->imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);
+    render->imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
 
     render->imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
 
