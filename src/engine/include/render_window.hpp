@@ -4,6 +4,7 @@
 #include "debug_flags.hpp"
 #include "frame_buffer.hpp"
 #include <string>
+#include <thread>
 
 #define RENDER_WINDOW_OPENGL_VERSION_MAJOR 4
 #define RENDER_WINDOW_OPENGL_VERSION_MINOR 6
@@ -75,6 +76,7 @@ public:
 	void stop();
 
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
+	const static std::thread::id RENDER_THREAD_ID;
 };
 
 #endif

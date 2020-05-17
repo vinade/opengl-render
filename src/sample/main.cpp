@@ -113,20 +113,20 @@ void preload()
     light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
     light_1.set_ambient(0.0);
 
-    cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj", true);
+    cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
     cat_1.set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
     cat_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
     cat_1.set_scale(1.0);
 
-    moon_1.load_data_from_file("moon_1/Moon 2K.obj", true);
+    moon_1.load_data_from_file("moon_1/Moon 2K.obj");
     moon_1.set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
     moon_1.set_scale(2.0);
 
-    plant_1.load_data_from_file("plant/01Alocasia_obj.obj", true);
+    plant_1.load_data_from_file("plant/01Alocasia_obj.obj");
     plant_1.set_position(glm::vec3(1.0f, 0.0f, -4.0f));
     plant_1.set_scale(1.5);
 
-    nanosuit_1.load_data_from_file("nano_suit/Nanosuit.obj", true);
+    nanosuit_1.load_data_from_file("nano_suit/Nanosuit.obj");
     nanosuit_1.set_position(glm::vec3(0.0f, 0.0f, -5.0f));
     nanosuit_1.set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
     nanosuit_1.set_scale(2.0);

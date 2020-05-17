@@ -264,5 +264,6 @@ void RenderWindow::update_window_size_info(GLFWwindow *window, int width, int he
 
 int RenderWindow::width = RENDER_WINDOW_WIDTH;
 int RenderWindow::height = RENDER_WINDOW_HEIGHT;
+const std::thread::id RenderWindow::RENDER_THREAD_ID = std::this_thread::get_id();
 
 #endif

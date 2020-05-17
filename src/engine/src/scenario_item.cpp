@@ -7,8 +7,9 @@
 #include <assimp/postprocess.h>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
-#include "scenario_item.hpp"
 #include "cmake_params.hpp"
+#include "scenario_item.hpp"
+#include "render_window.hpp"
 
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
@@ -224,7 +225,8 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 
 void ScenarioItem::load_data_from_file(const std::string &file_path)
 {
-	this->load_data_from_file(file_path, false);
+	bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+	this->load_data_from_file(file_path, preload);
 }
 
 void ScenarioItem::load_data_from_file(const std::string &file_path, bool preload)
