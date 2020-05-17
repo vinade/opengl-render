@@ -35,7 +35,6 @@ public:
 	aiTextureType type = aiTextureType_DIFFUSE;
 	static Texture *fallback;
 	static const std::string texture_folder;
-	static std::vector<Texture *> to_setup;
 
 	Texture(unsigned int *id, int *width, int *height);
 	Texture(const std::string &file_path, aiTextureType tex_type, bool preload);
@@ -47,7 +46,6 @@ public:
 	void bind() const;
 	void bind(unsigned int slot) const;
 	static void unbind();
-	static void setup_group();
 
 	inline int get_width() const { return *this->_width; };
 	inline int get_height() const { return *this->_height; };

@@ -72,15 +72,15 @@ public:
     bool use_materials = true;
     std::string name;
 
-    static std::vector<Shader *> to_setup;
-
     Shader();
     Shader(ShaderType shader_type);
     Shader(std::string shader_name);
     Shader(std::string shader_name, ShaderType shader_type);
     ~Shader();
 
+    void setup();
     void setup(std::string name, UniformType type);
+
     template <class T>
     void fill(std::string name, T *value);
     template <class T>
@@ -93,7 +93,6 @@ public:
     static Shader *get_shader(std::string shader_name);
     static Shader *get_shader(std::string shader_name, ShaderType shader_type);
     static void stop_all();
-    static void setup_group();
     static void list_opengl_errors(const char *file, int line);
 };
 

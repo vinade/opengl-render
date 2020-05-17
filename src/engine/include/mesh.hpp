@@ -24,8 +24,6 @@ public:
 	Shader *shader;
 	Material material;
 
-	static std::vector<Mesh *> to_setup;
-
 	Mesh(){};
 
 	float *vertex_buffer;
@@ -39,8 +37,6 @@ public:
 	void prepare(glm::vec3 &center, glm::vec3 &size, bool preload);
 	void draw(Shader *shader);
 	void setup();
-
-	static void setup_group();
 };
 
 #endif

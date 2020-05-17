@@ -2,6 +2,8 @@
 #define LIGHT_HPP
 
 #include "debug_mesh.hpp"
+#include "perspective.hpp"
+#include "camera.hpp"
 #include "scenario_item.hpp"
 
 enum LightType

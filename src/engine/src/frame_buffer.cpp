@@ -5,7 +5,6 @@
 #include "render_window.hpp"
 #include "frame_buffer.hpp"
 #include "scene.hpp"
-#include "render_window.hpp"
 
 FrameBuffer::FrameBuffer()
 {
@@ -39,10 +38,9 @@ void FrameBuffer::set()
     this->height = RenderWindow::context->height;
     this->data = (float *)malloc(this->width * this->height * this->channels * sizeof(float));
 
-    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
-    if (preload)
+    if (!RenderWindow::is_render_thread())
     {
-        FrameBuffer::to_setup.push_back(this);
+        RenderWindow::context->to_setup(this);
         return;
     }
 
@@ -183,16 +181,5 @@ void FrameBuffer::setup()
 
     this->ready = true;
 }
-
-void FrameBuffer::setup_group()
-{
-    for (auto item : FrameBuffer::to_setup)
-    {
-        item->setup();
-    }
-    FrameBuffer::to_setup.erase(FrameBuffer::to_setup.begin(), FrameBuffer::to_setup.end());
-}
-
-std::vector<FrameBuffer *> FrameBuffer::to_setup;
 
 #endif

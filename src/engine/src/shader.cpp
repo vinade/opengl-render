@@ -38,13 +38,12 @@ void Shader::init(ShaderType shader_type)
 
 void Shader::init(std::string shader_name, ShaderType shader_type)
 {
-    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
     this->init(shader_type);
     this->name = shader_name;
 
-    if (preload)
+    if (!RenderWindow::is_render_thread())
     {
-        Shader::to_setup.push_back(this);
+        RenderWindow::context->to_setup(this);
         return;
     }
 
@@ -426,16 +425,11 @@ void Shader::stop_all()
     glUseProgram(0);
 }
 
-void Shader::setup_group()
+void Shader::setup()
 {
-    for (auto item : Shader::to_setup)
-    {
-        item->load(item->name);
-    }
-    Shader::to_setup.erase(Shader::to_setup.begin(), Shader::to_setup.end());
+    this->load(this->name);
 }
 
-std::vector<Shader *> Shader::to_setup;
 std::unordered_map<std::string, Shader *> Shader::loaded_shaders;
 const std::string Shader::shaders_folder = std::string(CMAKE_ROOT_DIR SHADERS_FOLDER);
 

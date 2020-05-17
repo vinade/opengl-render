@@ -6,6 +6,7 @@
 #include "stb/stb_image.h"
 #include "texture.hpp"
 #include "cmake_params.hpp"
+#include "render_window.hpp"
 
 Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
 																		 file_path(file_path),
@@ -62,14 +63,14 @@ void Texture::load_texture(aiTextureType tex_type, bool preload)
 		}
 	}
 
-	if (!preload)
+	if (RenderWindow::is_render_thread())
 	{
 		this->setup();
 	}
 	else
 	{
 		this->ready = false;
-		Texture::to_setup.push_back(this);
+		RenderWindow::context->to_setup(this);
 	}
 
 	Texture::sources[file_path] = this;
@@ -196,18 +197,8 @@ void Texture::unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::setup_group()
-{
-	for (auto item : Texture::to_setup)
-	{
-		item->setup();
-	}
-	Texture::to_setup.erase(Texture::to_setup.begin(), Texture::to_setup.end());
-}
-
 std::unordered_map<unsigned int, Texture *> Texture::textures;
 std::unordered_map<std::string, Texture *> Texture::sources;
-std::vector<Texture *> Texture::to_setup;
 Texture *Texture::fallback = nullptr;
 const std::string Texture::texture_folder = std::string(CMAKE_ROOT_DIR TEXTURE_DEFAULT_FOLDER);
 

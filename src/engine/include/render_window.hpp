@@ -2,7 +2,10 @@
 #define RENDER_WINDOW_HPP
 
 #include "debug_flags.hpp"
+#include "app_utils.hpp"
 #include "frame_buffer.hpp"
+#include "light.hpp"
+#include "scene.hpp"
 #include <string>
 #include <thread>
 
@@ -44,6 +47,14 @@ private:
 	void (*gl_init)();
 	void (*preload)();
 
+	/* setup list */
+	std::vector<Shader *> shader_setup_list;
+	std::vector<TileMesh *> tile_mesh_setup_list;
+	std::vector<Mesh *> mesh_setup_list;
+	std::vector<Texture *> texture_setup_list;
+	std::vector<Scene *> scene_setup_list;
+	std::vector<FrameBuffer *> frame_buffer_setup_list;
+
 #ifdef DEBUG_MODE_COMPILE
 	void render_handler_wrapper(GLFWwindow *window);
 #endif
@@ -58,6 +69,9 @@ public:
 
 	int width;
 	int height;
+
+	const static std::thread::id RENDER_THREAD_ID;
+	static RenderWindow *context;
 
 	RenderWindow();
 	~RenderWindow();
@@ -75,9 +89,33 @@ public:
 	void start();
 	void stop();
 
+	void to_setup(Shader *shader) { AppUtils::add_once(this->shader_setup_list, shader); };
+	void to_setup(TileMesh *tile_mesh) { AppUtils::add_once(this->tile_mesh_setup_list, tile_mesh); };
+	void to_setup(Texture *texture) { AppUtils::add_once(this->texture_setup_list, texture); };
+	void to_setup(Mesh *mesh) { AppUtils::add_once(this->mesh_setup_list, mesh); };
+	void to_setup(Scene *scene) { AppUtils::add_once(this->scene_setup_list, scene); };
+	void to_setup(FrameBuffer *frame_buffer) { AppUtils::add_once(this->frame_buffer_setup_list, frame_buffer); };
+
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
-	const static std::thread::id RENDER_THREAD_ID;
-	static RenderWindow *context;
+	inline static bool is_render_thread();
+
+	template <typename T>
+	static void call_setup(T &obj_list);
 };
+
+template <typename T>
+void RenderWindow::call_setup(T &obj_list)
+{
+	for (auto item : obj_list)
+	{
+		item->setup();
+	}
+	obj_list.erase(obj_list.begin(), obj_list.end());
+}
+
+inline bool RenderWindow::is_render_thread()
+{
+	return (std::this_thread::get_id() == RenderWindow::RENDER_THREAD_ID);
+}
 
 #endif

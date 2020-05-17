@@ -30,7 +30,6 @@ public:
     unsigned int id;
     std::string shader_name;
     Shader *shader;
-    static std::vector<FrameBuffer *> to_setup;
 
     FrameBuffer();
     FrameBuffer(bool depth);
@@ -44,7 +43,6 @@ public:
     void bind() const;
     void setup();
 
-    static void setup_group();
     static void unbind();
 };
 

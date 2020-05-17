@@ -37,12 +37,11 @@ TileMesh::TileMesh(Texture *texture_obj, const std::string &shader_name)
 
 void TileMesh::init(const std::string &shader_name)
 {
-    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
 
-    if (preload)
+    if (!RenderWindow::is_render_thread())
     {
         this->shader_name = shader_name;
-        TileMesh::to_setup.push_back(this);
+        RenderWindow::context->to_setup(this);
         return;
     }
 
@@ -76,17 +75,6 @@ void TileMesh::setup()
 {
     this->init(this->shader_name);
 }
-
-void TileMesh::setup_group()
-{
-    for (auto item : TileMesh::to_setup)
-    {
-        item->setup();
-    }
-    TileMesh::to_setup.erase(TileMesh::to_setup.begin(), TileMesh::to_setup.end());
-}
-
-std::vector<TileMesh *> TileMesh::to_setup;
 
 const float TileMesh::vertex_buffer_src2[16] = {
     -1.0, -1.0, 0.0, 0.0,

@@ -225,7 +225,7 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 
 void ScenarioItem::load_data_from_file(const std::string &file_path)
 {
-	bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+	bool preload = !RenderWindow::is_render_thread();
 	this->load_data_from_file(file_path, preload);
 }
 

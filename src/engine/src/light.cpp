@@ -1,8 +1,6 @@
 #ifndef LIGHT_CPP
 #define LIGHT_CPP
 
-#include "perspective.hpp"
-#include "camera.hpp"
 #include "light.hpp"
 
 void Light::set()

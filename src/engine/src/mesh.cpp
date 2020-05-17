@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "mesh.hpp"
+#include "render_window.hpp"
 
 void Mesh::flat_vertex_data(VertexBufferLayout *vbo_layout)
 {
@@ -65,7 +66,7 @@ void Mesh::prepare(glm::vec3 &center, glm::vec3 &size, bool preload)
     else
     {
         this->ready = false;
-        Mesh::to_setup.push_back(this);
+        RenderWindow::context->to_setup(this);
     }
 }
 
@@ -128,16 +129,5 @@ void Mesh::draw(Shader *shader)
     this->ibo->bind();
     this->ibo->draw();
 }
-
-void Mesh::setup_group()
-{
-    for (auto item : Mesh::to_setup)
-    {
-        item->setup();
-    }
-    Mesh::to_setup.erase(Mesh::to_setup.begin(), Mesh::to_setup.end());
-}
-
-std::vector<Mesh *> Mesh::to_setup;
 
 #endif

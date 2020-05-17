@@ -9,11 +9,12 @@
 #include "tile.hpp"
 #include "shader.hpp"
 #include "frame_buffer.hpp"
-#include "render_window.hpp"
 #include <vector>
 #include <algorithm>
 
 #define SCENE_MAX_LIGHTS 4
+
+class RenderWindow; // resolvendo a dependência circular
 
 class Scene
 {
@@ -34,7 +35,6 @@ public:
     Camera camera;
     Perspective perspective;
     Shader *ambient_shader;
-    static std::vector<Scene *> to_setup;
 
     void init();
     void init(bool init_lights);
@@ -54,10 +54,6 @@ public:
     // void add_post_process(PostProcess &post_process);
     // void remove_post_process(PostProcess *post_process);
 
-    // void add_framebuffer(FrameBufferObject *fbo);
-    // void add_framebuffer(FrameBufferObject &fbo);
-    // void remove_framebuffer(FrameBufferObject *fbo);
-
     inline unsigned int count_lights() { return this->lights.size(); };
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };
 
@@ -68,7 +64,6 @@ public:
     void update_depth_buffer(RenderWindow *render);
     void setup();
     void setup_lights();
-    static void setup_group();
 };
 
 #endif

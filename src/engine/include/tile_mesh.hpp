@@ -18,8 +18,6 @@ public:
     std::string shader_name;
     Texture *texture = nullptr;
 
-    static std::vector<TileMesh *> to_setup;
-
     TileMesh();
     TileMesh(const std::string &texture_path);
     TileMesh(const std::string &texture_path, const std::string &shader_name);
@@ -29,8 +27,6 @@ public:
     void init(const std::string &shader_name);
     void draw(const glm::mat4 &model_matrix);
     void setup();
-
-    static void setup_group();
 };
 
 #endif

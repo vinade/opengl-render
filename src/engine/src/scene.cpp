@@ -13,10 +13,9 @@ void Scene::init()
 
 void Scene::init(bool init_lights)
 {
-    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
-    if (preload)
+    if (!RenderWindow::is_render_thread())
     {
-        AppUtils::add_once(Scene::to_setup, this);
+        RenderWindow::context->to_setup(this);
         return;
     }
 
@@ -80,10 +79,9 @@ void Scene::add(Light *light)
 
     if (AppUtils::add_once(this->lights, light))
     {
-        bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
-        if (preload)
+        if (!RenderWindow::is_render_thread())
         {
-            AppUtils::add_once(Scene::to_setup, this);
+            RenderWindow::context->to_setup(this);
             return;
         }
 
@@ -288,14 +286,4 @@ void Scene::setup()
     this->init(true);
 }
 
-void Scene::setup_group()
-{
-    for (auto item : Scene::to_setup)
-    {
-        item->setup();
-    }
-    Scene::to_setup.erase(Scene::to_setup.begin(), Scene::to_setup.end());
-}
-
-std::vector<Scene *> Scene::to_setup;
 #endif

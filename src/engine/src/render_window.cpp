@@ -127,40 +127,22 @@ void RenderWindow::setup_preloaded()
 {
 	std::cerr << "Setup..." << std::endl;
 
-	if (Shader::to_setup.size())
-	{
-		Shader::setup_group();
-	}
+	RenderWindow::call_setup(this->shader_setup_list);
 	std::cerr << "\tShaders ready." << std::endl;
 
-	if (Texture::to_setup.size())
-	{
-		Texture::setup_group();
-	}
+	RenderWindow::call_setup(this->texture_setup_list);
 	std::cerr << "\tTextures ready." << std::endl;
 
-	if (TileMesh::to_setup.size())
-	{
-		TileMesh::setup_group();
-	}
+	RenderWindow::call_setup(this->tile_mesh_setup_list);
 	std::cerr << "\tTileMeshes ready." << std::endl;
 
-	if (Mesh::to_setup.size())
-	{
-		Mesh::setup_group();
-	}
+	RenderWindow::call_setup(this->mesh_setup_list);
 	std::cerr << "\tMeshes ready." << std::endl;
 
-	if (Scene::to_setup.size())
-	{
-		Scene::setup_group();
-	}
+	RenderWindow::call_setup(this->scene_setup_list);
 	std::cerr << "Scene ready." << std::endl;
 
-	if (FrameBuffer::to_setup.size())
-	{
-		FrameBuffer::setup_group();
-	}
+	RenderWindow::call_setup(this->frame_buffer_setup_list);
 	std::cerr << "\tFrameBuffers ready." << std::endl;
 
 	this->setup_done = true;

@@ -1,6 +1,9 @@
 #ifndef APP_UTILS_HPP
 #define APP_UTILS_HPP
 
+#include <vector>
+#include <algorithm>
+
 class AppUtils
 {
 public:
