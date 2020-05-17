@@ -5,7 +5,6 @@
 #include "frame_buffer.hpp"
 #include "render_window.hpp"
 #include <vector>
-#include <algorithm>
 
 class BasicScene
 {

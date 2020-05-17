@@ -10,7 +10,6 @@
 #include "shader.hpp"
 #include "frame_buffer.hpp"
 #include <vector>
-#include <algorithm>
 
 #define SCENE_MAX_LIGHTS 4
 

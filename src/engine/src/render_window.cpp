@@ -140,7 +140,7 @@ void RenderWindow::setup_preloaded()
 	std::cerr << "\tMeshes ready." << std::endl;
 
 	RenderWindow::call_setup(this->scene_setup_list);
-	std::cerr << "Scene ready." << std::endl;
+	std::cerr << "\tScene ready." << std::endl;
 
 	RenderWindow::call_setup(this->frame_buffer_setup_list);
 	std::cerr << "\tFrameBuffers ready." << std::endl;
