@@ -41,13 +41,13 @@ MessageCallback(GLenum source,
 }
 
 int frame_buffer_select = 0;
-Light light_0;
-Light light_1;
-ScenarioItem cat_1;
-ScenarioItem moon_1;
-ScenarioItem plant_1;
-ScenarioItem nanosuit_1;
-Scene scene;
+Light *light_0;
+Light *light_1;
+ScenarioItem *cat_1;
+ScenarioItem *moon_1;
+ScenarioItem *plant_1;
+ScenarioItem *nanosuit_1;
+Scene *scene = nullptr;
 RenderWindow *render;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
@@ -56,29 +56,35 @@ float light_ambient_debug = 0.2;
 
 void render_handler()
 {
-    scene.camera.update_view_matrix();
+    if (scene == nullptr)
+    {
+        std::cerr << "well... =/\n";
+        exit(1);
+    }
 
-    light_0.set_position(light_translation_debug);
-    light_0.set_color(glm::vec4(color_light_debug, 1.0));
-    light_0.set_ambient(light_ambient_debug);
+    scene->camera.update_view_matrix();
 
-    light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+    light_0->set_position(light_translation_debug);
+    light_0->set_color(glm::vec4(color_light_debug, 1.0));
+    light_0->set_ambient(light_ambient_debug);
 
-    moon_1.inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
+    light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+
+    moon_1->inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
     switch (frame_buffer_select)
     {
     default:
     case 0:
-        scene.draw();
+        scene->draw();
         break;
     case 1:
-        scene.update_color_buffer(render);
+        scene->update_color_buffer(render);
         render->fbo_color->draw();
         // render->fbo_color->save("teste.ppm");
         break;
     case 2:
-        scene.update_depth_buffer(render);
+        scene->update_depth_buffer(render);
         render->fbo_depth->draw();
         // render->fbo_depth->save("teste.ppm");
         break;
@@ -94,42 +100,51 @@ void gl_init()
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
 
-    scene.init();
-    scene.add(light_0);
-    scene.add(light_1);
-    scene.add(cat_1);
-    scene.add(moon_1);
-    scene.add(nanosuit_1);
-    scene.add(plant_1);
-
     std::cerr << "[done]" << std::endl;
 }
 
 void preload()
 {
-    scene.camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    light_1.set_position(glm::vec3(0.5, 0.5, -2.0));
-    light_1.set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
-    light_1.set_ambient(0.0);
+    scene = new Scene();
 
-    cat_1.load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
-    cat_1.set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
-    cat_1.set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
-    cat_1.set_scale(1.0);
+    light_0 = new Light();
+    light_1 = new Light();
+    cat_1 = new ScenarioItem();
+    moon_1 = new ScenarioItem();
+    plant_1 = new ScenarioItem();
+    nanosuit_1 = new ScenarioItem();
 
-    moon_1.load_data_from_file("moon_1/Moon 2K.obj");
-    moon_1.set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
-    moon_1.set_scale(2.0);
+    // scene->init();
+    scene->add(light_0);
+    scene->add(light_1);
+    scene->add(cat_1);
+    scene->add(moon_1);
+    scene->add(nanosuit_1);
+    scene->add(plant_1);
+    scene->camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    plant_1.load_data_from_file("plant/01Alocasia_obj.obj");
-    plant_1.set_position(glm::vec3(1.0f, 0.0f, -4.0f));
-    plant_1.set_scale(1.5);
+    light_1->set_position(glm::vec3(0.5, 0.5, -2.0));
+    light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+    light_1->set_ambient(0.0);
 
-    nanosuit_1.load_data_from_file("nano_suit/Nanosuit.obj");
-    nanosuit_1.set_position(glm::vec3(0.0f, 0.0f, -5.0f));
-    nanosuit_1.set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
-    nanosuit_1.set_scale(2.0);
+    cat_1->load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
+    cat_1->set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
+    cat_1->set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
+    cat_1->set_scale(1.0);
+
+    moon_1->load_data_from_file("moon_1/Moon 2K.obj");
+    moon_1->set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
+    moon_1->set_scale(2.0);
+
+    plant_1->load_data_from_file("plant/01Alocasia_obj.obj");
+    plant_1->set_position(glm::vec3(1.0f, 0.0f, -4.0f));
+    plant_1->set_scale(1.5);
+
+    nanosuit_1->load_data_from_file("nano_suit/Nanosuit.obj");
+    nanosuit_1->set_position(glm::vec3(0.0f, 0.0f, -5.0f));
+    nanosuit_1->set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
+    nanosuit_1->set_scale(2.0);
 }
 
 int main()

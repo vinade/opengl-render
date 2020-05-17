@@ -25,6 +25,7 @@ private:
     SkyboxMesh *skybox = nullptr;
 
     void draw_on_buffer(FrameBuffer *fbo);
+    void setup_light(int i);
     // std::vector<PostProcess*> post_processes;
 
     // FrameBufferObject* destination; // ou o unit id do fbo
@@ -33,8 +34,10 @@ public:
     Camera camera;
     Perspective perspective;
     Shader *ambient_shader;
+    static std::vector<Scene *> to_setup;
 
     void init();
+    void init(bool init_lights);
 
     void add(Tile *tile);
     void add(Tile &tile);
@@ -63,6 +66,9 @@ public:
     void draw_tiles();
     void update_color_buffer(RenderWindow *render);
     void update_depth_buffer(RenderWindow *render);
+    void setup();
+    void setup_lights();
+    static void setup_group();
 
     template <typename T>
     static bool add_once(std::vector<T> &item_vector, const T &item);

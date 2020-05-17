@@ -5,6 +5,7 @@
 #include "render_window.hpp"
 #include "frame_buffer.hpp"
 #include "scene.hpp"
+#include "render_window.hpp"
 
 FrameBuffer::FrameBuffer()
 {
@@ -26,15 +27,9 @@ void FrameBuffer::init(bool depth)
 
 void FrameBuffer::set()
 {
-    /*
-        TODO: setup do shader
-    */
     this->shader = new Shader(this->shader_name);
 
     this->tile.set(this->texture);
-    this->tile.tile_mesh->shader = this->shader;
-    this->shader->setup("u_Model", DATA_TYPE_MAT4);
-    this->shader->setup("u_Texture", DATA_TYPE_INT);
 
     this->scene = (void *)new Scene();
     ((Scene *)this->scene)->init();
@@ -44,46 +39,14 @@ void FrameBuffer::set()
     this->height = RenderWindow::height;
     this->data = (float *)malloc(this->width * this->height * this->channels * sizeof(float));
 
-    glGenFramebuffers(1, &this->id);
-    glBindFramebuffer(GL_FRAMEBUFFER, this->id);
-
-    glGenTextures(1, &this->texture_id);
-    glBindTexture(GL_TEXTURE_2D, this->texture_id);
-
-    if (this->depth)
+    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+    if (preload)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, RenderWindow::width, RenderWindow::height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->texture_id, 0);
-    }
-    else
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, RenderWindow::width, RenderWindow::height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->texture_id, 0);
-
-        GLuint depthrenderbuffer;
-        glGenRenderbuffers(1, &depthrenderbuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RenderWindow::width, RenderWindow::height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+        FrameBuffer::to_setup.push_back(this);
+        return;
     }
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cerr << "[FrameBufferObject] Erro ao criar o framebuffer" << std::endl;
-        exit(1);
-    }
-
-    FrameBuffer::unbind();
-
-    this->ready = true;
+    this->setup();
 }
 
 FrameBuffer::~FrameBuffer()
@@ -172,4 +135,64 @@ void FrameBuffer::save(const std::string &file_path)
         fprintf(output_image, "\n");
     }
 }
+
+void FrameBuffer::setup()
+{
+    this->tile.tile_mesh->shader = this->shader;
+    this->shader->setup("u_Model", DATA_TYPE_MAT4);
+    this->shader->setup("u_Texture", DATA_TYPE_INT);
+
+    glGenFramebuffers(1, &this->id);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->id);
+
+    glGenTextures(1, &this->texture_id);
+    glBindTexture(GL_TEXTURE_2D, this->texture_id);
+
+    if (this->depth)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, RenderWindow::width, RenderWindow::height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->texture_id, 0);
+    }
+    else
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, RenderWindow::width, RenderWindow::height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->texture_id, 0);
+
+        GLuint depthrenderbuffer;
+        glGenRenderbuffers(1, &depthrenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RenderWindow::width, RenderWindow::height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+    }
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::cerr << "[FrameBufferObject] Erro ao criar o framebuffer" << std::endl;
+        exit(1);
+    }
+
+    FrameBuffer::unbind();
+
+    this->ready = true;
+}
+
+void FrameBuffer::setup_group()
+{
+    for (auto item : FrameBuffer::to_setup)
+    {
+        item->setup();
+    }
+    FrameBuffer::to_setup.erase(FrameBuffer::to_setup.begin(), FrameBuffer::to_setup.end());
+}
+
+std::vector<FrameBuffer *> FrameBuffer::to_setup;
+
 #endif

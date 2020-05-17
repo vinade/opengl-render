@@ -2,9 +2,23 @@
 #define SCENE_CPP
 
 #include "scene.hpp"
+#include <thread>
+#include "render_window.hpp"
 
 void Scene::init()
 {
+    this->init(true);
+}
+
+void Scene::init(bool init_lights)
+{
+    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+    if (preload)
+    {
+        Scene::add_once(Scene::to_setup, this); // TODO: colocar o add_once em um utils.h
+        return;
+    }
+
     this->ambient_shader = Shader::get_shader("ambient.std", SHADER_TYPE_SCENE);
 
     if (this->ambient_shader->use_materials)
@@ -47,6 +61,11 @@ void Scene::init()
         this->skybox->set_scale(5000.0);
         // this->skybox->set_position(glm::vec3(0.0f, -50.0f, -200.0f));
     }
+
+    if (init_lights)
+    {
+        this->setup_lights();
+    }
 }
 
 void Scene::add(Light *light)
@@ -60,34 +79,63 @@ void Scene::add(Light *light)
 
     if (Scene::add_once(this->lights, light))
     {
-        if (!this->ambient_shader->use_ligths)
+        bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+        if (preload)
+        {
+            Scene::add_once(Scene::to_setup, this);
+            return;
+        }
+
+        if (!this->ambient_shader->use_lights)
         {
             std::cerr << "[Scene] Ambient shader deveria ter use_lights == true." << std::endl;
             return;
         }
 
-        unsigned int i = this->lights.size() - 1;
-        std::string prefix = "u_Lights[" + std::to_string(i) + "].";
-
-        std::string light_type = prefix + "type";
-        std::string light_ambient = prefix + "ambient";
-        std::string light_color = prefix + "color";
-        std::string light_position = prefix + "position";
-
-        // std::string light_direction = prefix + "direction";  // TODO
-        // std::string light_direction_angle = prefix + "angle";  // angulo de abertura da luz direcional
-
-        this->ambient_shader->setup(light_ambient, DATA_TYPE_FLOAT);
-        this->ambient_shader->setup(light_type, DATA_TYPE_INT);
-        this->ambient_shader->setup(light_color, DATA_TYPE_VEC4);
-        this->ambient_shader->setup(light_position, DATA_TYPE_VEC3);
-        this->ambient_shader->setup("u_Camera", DATA_TYPE_VEC3);
+        int i = this->lights.size() - 1;
+        this->setup_light(i);
     }
 }
 
 void Scene::add(Light &light)
 {
     Scene::add((Light *)&light);
+}
+
+void Scene::setup_lights()
+{
+
+    if (!this->ambient_shader->use_lights)
+    {
+        std::cerr << "[Scene] Ambient shader deveria ter use_lights == true." << std::endl;
+        return;
+    }
+
+    if (this->lights.size())
+    {
+        this->ambient_shader->setup("u_Camera", DATA_TYPE_VEC3);
+    }
+
+    int lights_count = this->lights.size();
+    for (int i = 0; i < lights_count; i++)
+    {
+        this->setup_light(i);
+    }
+}
+
+void Scene::setup_light(int i)
+{
+    std::string prefix = "u_Lights[" + std::to_string(i) + "].";
+
+    std::string light_type = prefix + "type";
+    std::string light_ambient = prefix + "ambient";
+    std::string light_color = prefix + "color";
+    std::string light_position = prefix + "position";
+
+    this->ambient_shader->setup(light_ambient, DATA_TYPE_FLOAT);
+    this->ambient_shader->setup(light_type, DATA_TYPE_INT);
+    this->ambient_shader->setup(light_color, DATA_TYPE_VEC4);
+    this->ambient_shader->setup(light_position, DATA_TYPE_VEC3);
 }
 
 void Scene::add(ScenarioItem *scenario_item)
@@ -179,7 +227,7 @@ void Scene::draw(FrameBuffer *fbo)
         this->ambient_shader->fill("u_Projection", this->perspective.projection_matrix);
     }
 
-    if (this->ambient_shader->use_ligths)
+    if (this->ambient_shader->use_lights)
     {
 
         unsigned int light_size = this->lights.size();
@@ -191,7 +239,6 @@ void Scene::draw(FrameBuffer *fbo)
             std::string light_type = prefix + "type";
             std::string light_color = prefix + "color";
             std::string light_position = prefix + "position";
-
             this->ambient_shader->fill(light_ambient, this->lights[i]->ambient);
             this->ambient_shader->fill(light_type, this->lights[i]->type);
             this->ambient_shader->fill(light_color, this->lights[i]->color);
@@ -234,4 +281,20 @@ void Scene::draw_tiles()
         tile->draw();
     }
 }
+
+void Scene::setup()
+{
+    this->init(true);
+}
+
+void Scene::setup_group()
+{
+    for (auto item : Scene::to_setup)
+    {
+        item->setup();
+    }
+    Scene::to_setup.erase(Scene::to_setup.begin(), Scene::to_setup.end());
+}
+
+std::vector<Scene *> Scene::to_setup;
 #endif

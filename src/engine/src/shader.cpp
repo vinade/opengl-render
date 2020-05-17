@@ -6,8 +6,9 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "shader.hpp"
 #include "cmake_params.hpp"
+#include "shader.hpp"
+#include "render_window.hpp"
 
 Shader::Shader()
 {
@@ -31,13 +32,22 @@ Shader::Shader(std::string shader_name, ShaderType shader_type)
 
 void Shader::init(ShaderType shader_type)
 {
-    this->loaded = GL_FALSE;
+    this->loaded = false;
     this->set_shader_type(shader_type);
 }
 
 void Shader::init(std::string shader_name, ShaderType shader_type)
 {
+    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
     this->init(shader_type);
+    this->name = shader_name;
+
+    if (preload)
+    {
+        Shader::to_setup.push_back(this);
+        return;
+    }
+
     this->load(shader_name);
 }
 
@@ -78,18 +88,18 @@ void Shader::set_shader_type(ShaderType shader_type)
     switch (shader_type)
     {
     case SHADER_TYPE_OTHER:
-        this->use_ligths = false;
+        this->use_lights = false;
         this->use_mvp = false;
         this->use_materials = false;
         break;
     case SHADER_TYPE_POST_PROCESSING:
-        this->use_ligths = false;
+        this->use_lights = false;
         this->use_mvp = false;
         this->use_materials = false;
         break;
     case SHADER_TYPE_SCENE:
     default:
-        this->use_ligths = true;
+        this->use_lights = true;
         this->use_mvp = true;
         this->use_materials = true;
         break;
@@ -272,7 +282,7 @@ void Shader::load(std::string shader_name)
     // glDetachShader(program_id, vertex_shader_id);
     // glDetachShader(program_id, fragment_shader_id);
 
-    this->loaded = GL_TRUE;
+    this->loaded = true;
     this->program_id = program_id;
     this->name = shader_name;
 
@@ -416,6 +426,16 @@ void Shader::stop_all()
     glUseProgram(0);
 }
 
+void Shader::setup_group()
+{
+    for (auto item : Shader::to_setup)
+    {
+        item->load(item->name);
+    }
+    Shader::to_setup.erase(Shader::to_setup.begin(), Shader::to_setup.end());
+}
+
+std::vector<Shader *> Shader::to_setup;
 std::unordered_map<std::string, Shader *> Shader::loaded_shaders;
 const std::string Shader::shaders_folder = std::string(CMAKE_ROOT_DIR SHADERS_FOLDER);
 

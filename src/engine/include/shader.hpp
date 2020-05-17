@@ -55,7 +55,7 @@ class Shader
 {
 
 private:
-    unsigned int loaded;
+    bool loaded;
     unsigned int program_id;
     std::unordered_map<std::string, BaseUniformItem *> items;
 
@@ -65,12 +65,14 @@ private:
     unsigned int compile(std::string file_path, unsigned int type);
     void init(ShaderType shader_type);
     void init(std::string shader_name, ShaderType shader_type);
-    std::string name;
 
 public:
-    bool use_ligths = true;
+    bool use_lights = true;
     bool use_mvp = true;
     bool use_materials = true;
+    std::string name;
+
+    static std::vector<Shader *> to_setup;
 
     Shader();
     Shader(ShaderType shader_type);
@@ -91,6 +93,7 @@ public:
     static Shader *get_shader(std::string shader_name);
     static Shader *get_shader(std::string shader_name, ShaderType shader_type);
     static void stop_all();
+    static void setup_group();
     static void list_opengl_errors(const char *file, int line);
 };
 

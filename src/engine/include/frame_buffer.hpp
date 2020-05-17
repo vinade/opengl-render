@@ -4,9 +4,9 @@
 #define FRAME_BUFFER_OFF 0
 
 #include "texture.hpp"
-// #include "scene.hpp"
 #include "tile.hpp"
 #include "shader.hpp"
+#include <vector>
 
 class FrameBuffer
 {
@@ -30,6 +30,7 @@ public:
     unsigned int id;
     std::string shader_name;
     Shader *shader;
+    static std::vector<FrameBuffer *> to_setup;
 
     FrameBuffer();
     FrameBuffer(bool depth);
@@ -41,7 +42,9 @@ public:
     void update_data();
     void save(const std::string &file_path);
     void bind() const;
+    void setup();
 
+    static void setup_group();
     static void unbind();
 };
 

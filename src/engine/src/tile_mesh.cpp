@@ -2,6 +2,8 @@
 #define TILE_MESH_CPP
 
 #include "tile_mesh.hpp"
+#include "render_window.hpp"
+#include <thread>
 
 TileMesh::TileMesh()
 {
@@ -35,6 +37,15 @@ TileMesh::TileMesh(Texture *texture_obj, const std::string &shader_name)
 
 void TileMesh::init(const std::string &shader_name)
 {
+    bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
+
+    if (preload)
+    {
+        this->shader_name = shader_name;
+        TileMesh::to_setup.push_back(this);
+        return;
+    }
+
     this->shader = Shader::get_shader(shader_name, SHADER_TYPE_OTHER);
     this->shader->setup("u_Texture", DATA_TYPE_INT);
     this->shader->setup("u_Model", DATA_TYPE_MAT4);
@@ -60,6 +71,22 @@ void TileMesh::draw(const glm::mat4 &model_matrix)
     this->ibo->bind();
     this->ibo->draw();
 }
+
+void TileMesh::setup()
+{
+    this->init(this->shader_name);
+}
+
+void TileMesh::setup_group()
+{
+    for (auto item : TileMesh::to_setup)
+    {
+        item->setup();
+    }
+    TileMesh::to_setup.erase(TileMesh::to_setup.begin(), TileMesh::to_setup.end());
+}
+
+std::vector<TileMesh *> TileMesh::to_setup;
 
 const float TileMesh::vertex_buffer_src2[16] = {
     -1.0, -1.0, 0.0, 0.0,

@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include "render_window.hpp"
 #include "tile.hpp"
+#include "basic_scene.hpp"
 #include "scene.hpp"
 
 RenderWindow::RenderWindow()
@@ -110,22 +111,58 @@ void RenderWindow::set_preload(void (*handler)())
 
 void RenderWindow::preload_wrapper()
 {
-	(*this->preload)();
+
+	this->fbo_color->set();
+	this->fbo_depth->set();
+
+	if (this->preload != nullptr)
+	{
+		(*this->preload)();
+	}
 
 	this->preload_done = true;
 }
 
 void RenderWindow::setup_preloaded()
 {
+	std::cerr << "Setup..." << std::endl;
+
+	if (Shader::to_setup.size())
+	{
+		Shader::setup_group();
+	}
+	std::cerr << "\tShaders ready." << std::endl;
+
 	if (Texture::to_setup.size())
 	{
 		Texture::setup_group();
 	}
+	std::cerr << "\tTextures ready." << std::endl;
+
+	if (TileMesh::to_setup.size())
+	{
+		TileMesh::setup_group();
+	}
+	std::cerr << "\tTileMeshes ready." << std::endl;
 
 	if (Mesh::to_setup.size())
 	{
 		Mesh::setup_group();
 	}
+	std::cerr << "\tMeshes ready." << std::endl;
+
+	if (Scene::to_setup.size())
+	{
+		Scene::setup_group();
+	}
+	std::cerr << "Scene ready." << std::endl;
+
+	if (FrameBuffer::to_setup.size())
+	{
+		FrameBuffer::setup_group();
+	}
+	std::cerr << "\tFrameBuffers ready." << std::endl;
+
 	this->setup_done = true;
 }
 
@@ -139,7 +176,7 @@ void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 
 void RenderWindow::start()
 {
-	Scene splash_screen_scene;
+	BasicScene splash_screen_scene;
 	Tile splash_screen_logo;
 
 	if (this->running)
@@ -190,12 +227,8 @@ void RenderWindow::start()
 	}
 
 	// Inicializa a splash screen
-	splash_screen_logo.set("splash.png");
-	splash_screen_scene.init();
+	splash_screen_logo.set("splash.png"); // TODO: está carregando o skybox em algum momento.
 	splash_screen_scene.add(splash_screen_logo);
-
-	this->fbo_color->set();
-	this->fbo_depth->set();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
@@ -205,10 +238,8 @@ void RenderWindow::start()
 		(*this->gl_init)();
 	}
 
-	if (this->preload != nullptr)
-	{
-		std::thread([this] { preload_wrapper(); }).detach();
-	}
+	// Chama o preloader
+	std::thread([this] { preload_wrapper(); }).detach();
 
 #ifdef DEBUG_MODE_COMPILE
 	this->imgui_controller->init(window);
@@ -217,10 +248,9 @@ void RenderWindow::start()
 	while (!glfwWindowShouldClose(window) && this->running)
 	{
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		if (this->preload_done)
 		{
+
 			if (!this->setup_done)
 			{
 				// Termina a inicialização dos objetos que foram carregados fora da thread principal
@@ -228,6 +258,7 @@ void RenderWindow::start()
 				this->setup_preloaded();
 			}
 
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #ifdef DEBUG_MODE_COMPILE
 			this->render_handler_wrapper(window);
 #else
