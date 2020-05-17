@@ -69,31 +69,6 @@ public:
     void setup();
     void setup_lights();
     static void setup_group();
-
-    template <typename T>
-    static bool add_once(std::vector<T> &item_vector, const T &item);
-
-    template <typename T>
-    static bool has_item(const std::vector<T> &item_vector, const T &item);
 };
-
-template <typename T>
-bool Scene::has_item(const std::vector<T> &item_vector, const T &item)
-{
-    auto it = std::find(item_vector.begin(), item_vector.end(), item);
-    return (it != item_vector.end());
-}
-
-template <typename T>
-bool Scene::add_once(std::vector<T> &item_vector, const T &item)
-{
-    if (Scene::has_item(item_vector, item))
-    {
-        return false;
-    }
-
-    item_vector.push_back(item);
-    return true;
-}
 
 #endif

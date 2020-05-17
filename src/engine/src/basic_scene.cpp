@@ -2,6 +2,7 @@
 #define BASIC_SCENE_CPP
 
 #include "basic_scene.hpp"
+#include "app_utils.hpp"
 
 void BasicScene::add(Tile &tile)
 {
@@ -10,7 +11,7 @@ void BasicScene::add(Tile &tile)
 
 void BasicScene::add(Tile *tile)
 {
-    BasicScene::add_once(this->tiles, tile);
+    AppUtils::add_once(this->tiles, tile);
 }
 
 void BasicScene::update_color_buffer(RenderWindow *render)

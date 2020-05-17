@@ -4,6 +4,7 @@
 #include "scene.hpp"
 #include <thread>
 #include "render_window.hpp"
+#include "app_utils.hpp"
 
 void Scene::init()
 {
@@ -15,7 +16,7 @@ void Scene::init(bool init_lights)
     bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
     if (preload)
     {
-        Scene::add_once(Scene::to_setup, this); // TODO: colocar o add_once em um utils.h
+        AppUtils::add_once(Scene::to_setup, this);
         return;
     }
 
@@ -77,12 +78,12 @@ void Scene::add(Light *light)
         return;
     }
 
-    if (Scene::add_once(this->lights, light))
+    if (AppUtils::add_once(this->lights, light))
     {
         bool preload = (std::this_thread::get_id() != RenderWindow::RENDER_THREAD_ID);
         if (preload)
         {
-            Scene::add_once(Scene::to_setup, this);
+            AppUtils::add_once(Scene::to_setup, this);
             return;
         }
 
@@ -140,12 +141,12 @@ void Scene::setup_light(int i)
 
 void Scene::add(ScenarioItem *scenario_item)
 {
-    Scene::add_once(this->scenario_items, scenario_item);
+    AppUtils::add_once(this->scenario_items, scenario_item);
 }
 
 void Scene::add(ScenarioItem &scenario_item)
 {
-    Scene::add_once(this->scenario_items, (ScenarioItem *)&scenario_item);
+    AppUtils::add_once(this->scenario_items, (ScenarioItem *)&scenario_item);
 }
 
 void Scene::add(Tile &tile)
@@ -155,7 +156,7 @@ void Scene::add(Tile &tile)
 
 void Scene::add(Tile *tile)
 {
-    Scene::add_once(this->tiles, tile);
+    AppUtils::add_once(this->tiles, tile);
 }
 
 void Scene::update_color_buffer(RenderWindow *render)
