@@ -216,13 +216,14 @@ void RenderWindow::start()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 
+	// Chama o preloader
+	std::thread([this] { preload_wrapper(); }).detach();
+
+	// chama o inicializador do opengl
 	if (this->gl_init != nullptr)
 	{
 		(*this->gl_init)();
 	}
-
-	// Chama o preloader
-	std::thread([this] { preload_wrapper(); }).detach();
 
 #ifdef DEBUG_MODE_COMPILE
 	this->imgui_controller->init(window);
