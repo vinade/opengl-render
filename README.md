@@ -7,7 +7,7 @@ O projeto é dividido em 3 grandes partes.
 ```sh
 $ mkdir build
 $ cd build
-build$ cmake ..
+build$ cmake ../src
 build$ make
 ```
 
