@@ -133,7 +133,7 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 		aiMaterial *mtl = sc->mMaterials[mesh->mMaterialIndex];
 		aiString texPath;
 
-		mesh_data.material.load_from_aiMaterial(mtl, this->base_path);
+		mesh_data.material = Material::create_from_aiMaterial(mtl, this->base_path);
 
 		for (unsigned int vi = 0; vi < mesh->mNumVertices; vi++)
 		{

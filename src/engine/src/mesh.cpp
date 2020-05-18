@@ -6,6 +6,18 @@
 #include "mesh.hpp"
 #include "render_window.hpp"
 
+Mesh::Mesh()
+{
+
+    if (!Material::materials.size())
+    {
+        std::cerr << "[Mesh] Criando material de fallback." << std::endl;
+        Material::materials.push_back(new Material());
+    }
+
+    this->material = Material::materials[0];
+}
+
 void Mesh::flat_vertex_data(VertexBufferLayout *vbo_layout)
 {
     int stride = vbo_layout->get_stride();
@@ -99,30 +111,30 @@ void Mesh::draw(Shader *shader)
 {
     if (shader->use_materials)
     {
-        shader->fill("u_Material.diffuse_color", this->material.diffuse_color);
-        shader->fill("u_Material.specular_color", this->material.specular_color);
-        shader->fill("u_Material.ambient_color", this->material.ambient_color);
-        shader->fill("u_Material.emission_color", this->material.emission_color);
-        shader->fill("u_Material.shininess", this->material.shininess);
-        shader->fill("u_Material.shininess_strength", this->material.shininess_strength);
+        shader->fill("u_Material.diffuse_color", this->material->diffuse_color);
+        shader->fill("u_Material.specular_color", this->material->specular_color);
+        shader->fill("u_Material.ambient_color", this->material->ambient_color);
+        shader->fill("u_Material.emission_color", this->material->emission_color);
+        shader->fill("u_Material.shininess", this->material->shininess);
+        shader->fill("u_Material.shininess_strength", this->material->shininess_strength);
 
-        shader->fill("u_Material.diffuse_texture_flag", this->material.diffuse_textures.size() ? 1 : 0);
-        shader->fill("u_Material.normal_texture_flag", this->material.normal_textures.size() ? 1 : 0);
+        shader->fill("u_Material.diffuse_texture_flag", this->material->diffuse_textures.size() ? 1 : 0);
+        shader->fill("u_Material.normal_texture_flag", this->material->normal_textures.size() ? 1 : 0);
     }
 
     shader->exec();
-    if (this->material.diffuse_textures.size())
+    if (this->material->diffuse_textures.size())
     {
-        this->material.diffuse_textures[0]->bind();
+        this->material->diffuse_textures[0]->bind();
     }
     else
     {
         Texture::fallback->bind();
     }
 
-    if (this->material.normal_textures.size())
+    if (this->material->normal_textures.size())
     {
-        this->material.normal_textures[0]->bind();
+        this->material->normal_textures[0]->bind();
     }
 
     this->vao->bind();

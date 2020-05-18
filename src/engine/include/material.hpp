@@ -38,6 +38,9 @@ public:
 
     void load_from_aiMaterial(aiMaterial *amtl, std::string base_path);
     void get_texture(aiMaterial *amtl, aiTextureType texture_type, std::vector<Texture *> &texture);
+
+    static Material *create_from_aiMaterial(aiMaterial *amtl, std::string base_path);
+    static std::vector<Material *> materials;
 };
 
 #endif

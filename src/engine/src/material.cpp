@@ -137,4 +137,15 @@ void Material::load_from_aiMaterial(aiMaterial *amtl, std::string base_path)
     std::cerr << "shininess_strength:" << this->shininess_strength << std::endl;
 }
 
+Material *Material::create_from_aiMaterial(aiMaterial *amtl, std::string base_path)
+{
+    Material *mtl = new Material();
+    mtl->load_from_aiMaterial(amtl, base_path);
+
+    Material::materials.push_back(mtl); // registra o material
+
+    return mtl;
+}
+
+std::vector<Material *> Material::materials;
 #endif

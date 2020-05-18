@@ -20,8 +20,6 @@ class Scene
 
 private:
     std::vector<Tile *> tiles;
-    std::vector<Light *> lights;
-    std::vector<ScenarioItem *> scenario_items;
     SkyboxMesh *skybox = nullptr;
 
     void draw_on_buffer(FrameBuffer *fbo);
@@ -31,6 +29,9 @@ private:
     // FrameBufferObject* destination; // ou o unit id do fbo
 
 public:
+    std::vector<Light *> lights;
+    std::vector<ScenarioItem *> scenario_items;
+
     Camera camera;
     Perspective perspective;
     Shader *ambient_shader;

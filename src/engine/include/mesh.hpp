@@ -22,9 +22,9 @@ public:
 	unsigned int vertex_count;
 	unsigned int index_count;
 	Shader *shader;
-	Material material;
+	Material *material;
 
-	Mesh(){};
+	Mesh();
 
 	float *vertex_buffer;
 	std::vector<std::vector<float>> vertex_data;
