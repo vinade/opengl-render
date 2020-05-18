@@ -104,6 +104,14 @@ void ImGuiController::display(GLFWwindow *window)
 			}
 		}
 
+		for (auto &item : this->buttons)
+		{
+			if (ImGui::Button(item.title.c_str()))
+			{
+				(*item.fn)();
+			}
+		}
+
 		ImGui::End();
 	}
 
@@ -124,6 +132,17 @@ void ImGuiController::radio(const std::string &title, int *variable, int values)
 			values};
 
 	this->radios.push_back(item);
+}
+
+void ImGuiController::button(const std::string &title, void (*fn)())
+{
+	std::string observed_item_title(title);
+	struct imgui_button item =
+		{
+			observed_item_title,
+			fn};
+
+	this->buttons.push_back(item);
 }
 
 void ImGuiController::observef(const std::string &title, float *variable, float min, float max)
