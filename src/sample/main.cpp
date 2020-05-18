@@ -11,6 +11,8 @@
 #include "scene.hpp"
 
 #include <stdio.h>
+#include <cstdlib>
+#include <ctime>
 
 #define UNUSED(x) (void)(x)
 void GLAPIENTRY
@@ -56,11 +58,6 @@ float light_ambient_debug = 0.2;
 
 void render_handler()
 {
-    if (scene == nullptr)
-    {
-        std::cerr << "well... =/\n";
-        exit(1);
-    }
 
     scene->camera.update_view_matrix();
 
@@ -147,8 +144,22 @@ void preload()
     nanosuit_1->set_scale(2.0);
 }
 
+void shuffle_materials()
+{
+
+    for (auto si : scene->scenario_items)
+    {
+        for (auto &m : si->meshes)
+        {
+            m.material = Material::materials[std::rand() % Material::materials.size()];
+        }
+    }
+}
+
 int main()
 {
+    std::srand(std::time(nullptr));
+
     render = new RenderWindow();
 
 #ifdef DEBUG_MODE_COMPILE
@@ -162,6 +173,7 @@ int main()
     render->imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
 
     render->imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
+    render->imgui_controller->button("Shuffle materials", shuffle_materials);
 
 #endif
 
