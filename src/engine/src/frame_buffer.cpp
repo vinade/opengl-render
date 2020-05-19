@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include "render_window.hpp"
 #include "frame_buffer.hpp"
-#include "scene.hpp"
+#include "basic_scene.hpp"
 
 FrameBuffer::FrameBuffer()
 {
@@ -30,9 +30,8 @@ void FrameBuffer::set()
 
     this->tile.set(this->texture);
 
-    this->scene = (void *)new Scene();
-    ((Scene *)this->scene)->init();
-    ((Scene *)this->scene)->add(this->tile);
+    this->scene = (void *)new BasicScene();
+    ((BasicScene *)this->scene)->add(this->tile);
 
     this->width = RenderWindow::context->width; // Tamanhos não atualizáveis
     this->height = RenderWindow::context->height;
@@ -69,7 +68,7 @@ void FrameBuffer::draw()
 
     this->tile.center_x();
     this->tile.center_y();
-    ((Scene *)this->scene)->draw_tiles();
+    ((BasicScene *)this->scene)->draw_tiles();
 }
 
 void FrameBuffer::unbind()
