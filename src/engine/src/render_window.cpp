@@ -9,6 +9,7 @@
 #include "tile.hpp"
 #include "basic_scene.hpp"
 #include "scene.hpp"
+#include "engine.hpp"
 
 RenderWindow::RenderWindow()
 {
@@ -79,16 +80,6 @@ void RenderWindow::set_size(int width, int height)
 	this->height = height;
 }
 
-void RenderWindow::set_keyboard_handler(void (*handler)(int key, int scancode, int action, int mods))
-{
-	this->keyboard_handler = handler;
-}
-
-void RenderWindow::set_mouse_handler(void (*handler)(int button))
-{
-	this->mouse_handler = handler;
-}
-
 void RenderWindow::set_reshape_handler(void (*handler)(int width, int height))
 {
 	this->reshape_handler = handler;
@@ -156,14 +147,6 @@ void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 }
 #endif
 
-void RenderWindow::init_multiple_keys_state()
-{
-	for (auto item : this->multiple_keys_allowed)
-	{
-		this->multiple_keys_state[item] = false;
-	}
-}
-
 void RenderWindow::start()
 {
 	BasicScene splash_screen_scene;
@@ -185,7 +168,7 @@ void RenderWindow::start()
 
 	this->running = true;
 
-	this->init_multiple_keys_state();
+	Engine::context->init_multiple_keys_state();
 
 	GLFWwindow *window;
 
@@ -211,8 +194,8 @@ void RenderWindow::start()
 	/* Make the window's context current */
 	glfwMakeContextCurrent(this->window);
 	glfwSetWindowSizeCallback(this->window, RenderWindow::update_window_size_info);
-	glfwSetCursorPosCallback(this->window, RenderWindow::cursor_position_callback);
-	glfwSetKeyCallback(this->window, RenderWindow::key_callback);
+	glfwSetCursorPosCallback(this->window, Engine::cursor_position_callback);
+	glfwSetKeyCallback(this->window, Engine::key_callback);
 
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK)
@@ -288,75 +271,10 @@ void RenderWindow::stop()
 	this->running = false;
 }
 
-void RenderWindow::set_cursor_mode(bool enabled)
-{
-	int value = enabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
-	glfwSetInputMode(this->window, GLFW_CURSOR, value);
-	this->cursor_enabled = enabled;
-}
-
-void RenderWindow::switch_cursor_mode()
-{
-	this->set_cursor_mode(!this->cursor_enabled);
-}
-
 void RenderWindow::update_window_size_info(GLFWwindow *window, int width, int height)
 {
 	RenderWindow::context->width = width;
 	RenderWindow::context->height = height;
-}
-
-void RenderWindow::cursor_position_callback(GLFWwindow *window, double x, double y)
-{
-	RenderWindow::delta_mouse.x = x - RenderWindow::mouse.x;
-	RenderWindow::delta_mouse.y = y - RenderWindow::mouse.y;
-
-	RenderWindow::mouse.x = x;
-	RenderWindow::mouse.y = y;
-
-	if (RenderWindow::context->mouse_handler != nullptr)
-	{
-		if (RenderWindow::delta_mouse.x || RenderWindow::delta_mouse.y)
-		{
-			(*RenderWindow::context->mouse_handler)(0);
-		}
-	}
-}
-
-void RenderWindow::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
-	if (RenderWindow::context->keyboard_handler != nullptr)
-	{
-		if ((action == GLFW_RELEASE) || (action == GLFW_PRESS))
-		{
-			if (AppUtils::has_item(RenderWindow::context->multiple_keys_allowed, key))
-			{
-				RenderWindow::context->multiple_keys_state[key] = (action == GLFW_PRESS);
-			}
-		}
-
-		(*RenderWindow::context->keyboard_handler)(key, scancode, action, mods);
-	}
-}
-
-bool RenderWindow::check_key(const int const_key, int key, int action)
-{
-	if (action == GLFW_RELEASE)
-	{
-		return false;
-	}
-
-	if (const_key == key)
-	{
-		return true;
-	}
-
-	if (!AppUtils::has_item(RenderWindow::context->multiple_keys_allowed, const_key))
-	{
-		return false;
-	}
-
-	return RenderWindow::context->multiple_keys_state[const_key];
 }
 
 void GLAPIENTRY RenderWindow::gl_debug_callback(GLenum source, GLenum type,
@@ -382,8 +300,6 @@ void GLAPIENTRY RenderWindow::gl_debug_callback(GLenum source, GLenum type,
 	}
 }
 
-glm::vec2 RenderWindow::mouse;
-glm::vec2 RenderWindow::delta_mouse;
 RenderWindow *RenderWindow::context = nullptr;
 const std::thread::id RenderWindow::RENDER_THREAD_ID = std::this_thread::get_id();
 

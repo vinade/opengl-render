@@ -32,8 +32,6 @@ private:
 	char **cppArgv;
 	std::string title;
 
-	void (*keyboard_handler)(int key, int scancode, int action, int mods);
-	void (*mouse_handler)(int button);
 	void (*reshape_handler)(int width, int height);
 	void (*render_handler)();
 
@@ -72,21 +70,9 @@ public:
 	GLFWwindow *window;
 	int width;
 	int height;
-	bool cursor_enabled = true;
-	const std::vector<int> multiple_keys_allowed = {
-		GLFW_KEY_A,
-		GLFW_KEY_D,
-		GLFW_KEY_S,
-		GLFW_KEY_W,
-		GLFW_KEY_Q,
-		GLFW_KEY_E,
-	};
-	std::unordered_map<int, bool> multiple_keys_state;
 
 	const static std::thread::id RENDER_THREAD_ID;
 	static RenderWindow *context;
-	static glm::vec2 mouse;
-	static glm::vec2 delta_mouse;
 
 	RenderWindow();
 	~RenderWindow();
@@ -95,8 +81,6 @@ public:
 
 	void set_pos(int x, int y);
 	void set_size(int width, int height);
-	void set_keyboard_handler(void (*handler)(int key, int scancode, int action, int mods));
-	void set_mouse_handler(void (*handler)(int button));
 	void set_reshape_handler(void (*handler)(int width, int height));
 	void set_render_handler(void (*handler)());
 	void set_gl_init(void (*handler)());
@@ -111,13 +95,7 @@ public:
 	void to_setup(Scene *scene) { AppUtils::add_once(this->scene_setup_list, scene); };
 	void to_setup(FrameBuffer *frame_buffer) { AppUtils::add_once(this->frame_buffer_setup_list, frame_buffer); };
 
-	void set_cursor_mode(bool enabled);
-	void switch_cursor_mode();
-
-	static bool check_key(const int const_key, int key, int action);
-	static void cursor_position_callback(GLFWwindow *window, double x, double y);
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
-	static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 	static void GLAPIENTRY gl_debug_callback(GLenum source, GLenum type,
 											 GLuint id, GLenum severity,
 											 GLsizei length, const GLchar *message,

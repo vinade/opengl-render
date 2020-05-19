@@ -128,22 +128,22 @@ void shuffle_direction()
 
 void mouse_handler(int button)
 {
-    if (RenderWindow::context->cursor_enabled)
+    if (Engine::context->cursor_enabled)
     {
         return;
     }
 
-    if (RenderWindow::delta_mouse.x || RenderWindow::delta_mouse.y)
+    if (Engine::delta_mouse.x || Engine::delta_mouse.y)
     {
-        if (RenderWindow::delta_mouse.x)
+        if (Engine::delta_mouse.x)
         {
-            scene->camera.rotate(0.01 * -RenderWindow::delta_mouse.x, glm::vec3(0.0f, 1.0f, 0.0f));
+            scene->camera.rotate(0.01 * -Engine::delta_mouse.x, glm::vec3(0.0f, 1.0f, 0.0f));
         }
 
-        if (RenderWindow::delta_mouse.y)
+        if (Engine::delta_mouse.y)
         {
             glm::vec3 normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
-            scene->camera.rotate(0.01 * -RenderWindow::delta_mouse.y, normal_vector);
+            scene->camera.rotate(0.01 * -Engine::delta_mouse.y, normal_vector);
         }
     }
 
@@ -157,34 +157,34 @@ void keyboard_handler(int key, int scancode, int action, int mods)
     {
         float speed = 0.05;
 
-        if (RenderWindow::check_key(GLFW_KEY_W, key, action))
+        if (Engine::check_key(GLFW_KEY_W, key, action))
         {
             scene->camera.translate(speed);
         }
 
-        if (RenderWindow::check_key(GLFW_KEY_S, key, action))
+        if (Engine::check_key(GLFW_KEY_S, key, action))
         {
             scene->camera.translate(-speed);
         }
 
-        if (RenderWindow::check_key(GLFW_KEY_A, key, action))
+        if (Engine::check_key(GLFW_KEY_A, key, action))
         {
             normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
             scene->camera.translate(-speed, normal_vector);
         }
 
-        if (RenderWindow::check_key(GLFW_KEY_D, key, action))
+        if (Engine::check_key(GLFW_KEY_D, key, action))
         {
             normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
             scene->camera.translate(speed, normal_vector);
         }
 
-        if (RenderWindow::check_key(GLFW_KEY_Q, key, action))
+        if (Engine::check_key(GLFW_KEY_Q, key, action))
         {
             scene->camera.rotate_up(-speed); // teste
         }
 
-        if (RenderWindow::check_key(GLFW_KEY_E, key, action))
+        if (Engine::check_key(GLFW_KEY_E, key, action))
         {
             scene->camera.rotate_up(speed); // teste
         }
@@ -194,7 +194,7 @@ void keyboard_handler(int key, int scancode, int action, int mods)
             switch (key)
             {
             case GLFW_KEY_ESCAPE:
-                RenderWindow::context->switch_cursor_mode();
+                Engine::context->switch_cursor_mode();
                 break;
             default:
                 break;
@@ -224,11 +224,11 @@ int main()
 
 #endif
 
-    engine.render.set_keyboard_handler(keyboard_handler);
-    engine.render.set_mouse_handler(mouse_handler);
-    engine.render.set_preload(preload);
-    engine.render.set_render_handler(render_handler);
-    engine.render.start();
+    engine.set_keyboard_handler(keyboard_handler);
+    engine.set_mouse_handler(mouse_handler);
+    engine.set_preload(preload);
+    engine.set_render_handler(render_handler);
+    engine.start();
 
     return 0;
 }
