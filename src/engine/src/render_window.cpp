@@ -221,6 +221,11 @@ void RenderWindow::start()
 		exit(1);
 	}
 
+#ifdef DEBUG_MODE
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(RenderWindow::gl_debug_callback, 0);
+#endif
+
 	// Inicializa a splash screen
 	splash_screen_logo.set("splash.png"); // TODO: está carregando o skybox em algum momento.
 	splash_screen_scene.add(splash_screen_logo);
@@ -352,6 +357,29 @@ bool RenderWindow::check_key(const int const_key, int key, int action)
 	}
 
 	return RenderWindow::context->multiple_keys_state[const_key];
+}
+
+void GLAPIENTRY RenderWindow::gl_debug_callback(GLenum source, GLenum type,
+												GLuint id, GLenum severity,
+												GLsizei length, const GLchar *message,
+												const void *userParam)
+{
+	if ((type == GL_DEBUG_TYPE_ERROR) || DEBUG_MODE)
+	{
+		UNUSED(source);
+		UNUSED(id);
+		UNUSED(length);
+		UNUSED(userParam);
+
+		fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+				(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+				type, severity, message);
+	}
+
+	if (type == GL_DEBUG_TYPE_ERROR)
+	{
+		exit(1);
+	}
 }
 
 glm::vec2 RenderWindow::mouse;

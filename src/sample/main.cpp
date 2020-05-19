@@ -1,5 +1,4 @@
 #include <debug_flags.hpp>
-#include "render_window.hpp"
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "vertex_buffer.hpp"
@@ -9,39 +8,12 @@
 #include "scenario_item.hpp"
 #include "light.hpp"
 #include "scene.hpp"
+#include "engine.hpp"
 
 #include <stdio.h>
 #include <cstdlib>
 #include <ctime>
 #include <glm/gtx/rotate_vector.hpp>
-
-#define UNUSED(x) (void)(x)
-void GLAPIENTRY
-MessageCallback(GLenum source,
-                GLenum type,
-                GLuint id,
-                GLenum severity,
-                GLsizei length,
-                const GLchar *message,
-                const void *userParam)
-{
-    if ((type == GL_DEBUG_TYPE_ERROR) || DEBUG_MODE)
-    {
-        UNUSED(source);
-        UNUSED(id);
-        UNUSED(length);
-        UNUSED(userParam);
-
-        fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-                (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-                type, severity, message);
-    }
-
-    if (type == GL_DEBUG_TYPE_ERROR)
-    {
-        exit(1);
-    }
-}
 
 int frame_buffer_select = 0;
 Light *light_0;
@@ -51,7 +23,7 @@ ScenarioItem *moon_1;
 ScenarioItem *plant_1;
 ScenarioItem *nanosuit_1;
 Scene *scene = nullptr;
-RenderWindow *render;
+Engine engine;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
 glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
@@ -75,28 +47,18 @@ void render_handler()
         scene->draw();
         break;
     case 1:
-        scene->update_color_buffer(render);
-        render->fbo_color->draw();
+        scene->update_color_buffer(&engine.render);
+        engine.render.fbo_color->draw();
         // render->fbo_color->save("teste.ppm");
         break;
     case 2:
-        scene->update_depth_buffer(render);
-        render->fbo_depth->draw();
+        scene->update_depth_buffer(&engine.render);
+        engine.render.fbo_depth->draw();
         // render->fbo_depth->save("teste.ppm");
         break;
     }
 
     glFlush();
-}
-
-void gl_init()
-{
-
-    /* initialize flags */
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
-
-    std::cerr << "[done]" << std::endl;
 }
 
 void preload()
@@ -245,32 +207,28 @@ void keyboard_handler(int key, int scancode, int action, int mods)
 
 int main()
 {
-    std::srand(std::time(nullptr));
-
-    render = new RenderWindow();
 
 #ifdef DEBUG_MODE_COMPILE
-    render->imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 1.0f);
-    render->imgui_controller->observef("R", &color_light_debug[0], 0.0f, 1.0f);
-    render->imgui_controller->observef("G", &color_light_debug[1], 0.0f, 1.0f);
-    render->imgui_controller->observef("B", &color_light_debug[2], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("R", &color_light_debug[0], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("G", &color_light_debug[1], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("B", &color_light_debug[2], 0.0f, 1.0f);
 
-    render->imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
-    render->imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);
-    render->imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
+    engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
+    engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);
+    engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
 
-    render->imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
-    render->imgui_controller->button("Shuffle materials", shuffle_materials);
-    render->imgui_controller->button("point to objects", shuffle_direction);
+    engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
+    engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);
+    engine.render.imgui_controller->button("point to objects", shuffle_direction);
 
 #endif
 
-    render->set_keyboard_handler(keyboard_handler);
-    render->set_mouse_handler(mouse_handler);
-    render->set_preload(preload);
-    render->set_gl_init(gl_init);
-    render->set_render_handler(render_handler);
-    render->start();
+    engine.render.set_keyboard_handler(keyboard_handler);
+    engine.render.set_mouse_handler(mouse_handler);
+    engine.render.set_preload(preload);
+    engine.render.set_render_handler(render_handler);
+    engine.render.start();
 
     return 0;
 }

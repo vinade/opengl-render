@@ -4,6 +4,10 @@
 #include <vector>
 #include <algorithm>
 
+#ifndef UNUSED
+#define UNUSED(x) (void)(x)
+#endif
+
 class AppUtils
 {
 public:

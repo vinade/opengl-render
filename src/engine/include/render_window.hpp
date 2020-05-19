@@ -118,6 +118,11 @@ public:
 	static void cursor_position_callback(GLFWwindow *window, double x, double y);
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
 	static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+	static void GLAPIENTRY gl_debug_callback(GLenum source, GLenum type,
+											 GLuint id, GLenum severity,
+											 GLsizei length, const GLchar *message,
+											 const void *userParam);
+
 	inline static bool is_render_thread();
 
 	template <typename T>
