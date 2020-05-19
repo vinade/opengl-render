@@ -3,6 +3,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "camera.hpp"
+#include <cmath>
+#include <glm/gtx/rotate_vector.hpp>
 
 void Camera::set_position(const glm::vec3 &position)
 {
@@ -11,19 +13,44 @@ void Camera::set_position(const glm::vec3 &position)
     this->m_position[2] = position[2];
 }
 
-void Camera::set_rotation(const glm::vec3 &rotation)
+void Camera::rotate(float amount, const glm::vec3 &axis)
 {
-    this->m_rotation[0] = rotation[0];
-    this->m_rotation[1] = rotation[1];
-    this->m_rotation[2] = rotation[2];
+    this->m_direction = glm::rotate(this->m_direction, amount, axis);
+}
+
+// Teste
+void Camera::rotate_up(float amount)
+{
+    glm::vec3 normal_vector = glm::cross(this->m_direction, this->m_up);
+    glm::vec3 normal_up = glm::cross(this->m_direction, -normal_vector);
+    this->m_up = glm::rotate(normal_up, amount, this->m_direction);
+}
+
+void Camera::translate(float amount)
+{
+    this->m_position = this->m_position + amount * this->m_direction;
+}
+
+void Camera::translate(float amount, const glm::vec3 &direction)
+{
+    this->m_position = this->m_position + amount * direction;
+}
+
+void Camera::translate(const glm::vec3 &direction)
+{
+    this->m_position = this->m_position + direction;
 }
 
 void Camera::update_view_matrix()
 {
-    this->view_matrix = glm::translate(glm::mat4(1.0f), this->m_position);
-    this->view_matrix = glm::rotate(this->view_matrix, glm::radians(this->m_rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));
-    this->view_matrix = glm::rotate(this->view_matrix, glm::radians(this->m_rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));
-    this->view_matrix = glm::rotate(this->view_matrix, glm::radians(this->m_rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));
+    this->view_matrix = glm::lookAt(this->m_position, this->m_position + this->m_direction, this->m_up);
+}
+
+void Camera::point_to(ScenarioItem *item)
+{
+    glm::vec3 item_position = item->get_position();
+    this->m_direction = item_position - this->m_position;
+    this->m_direction = glm::normalize(this->m_direction);
 }
 
 #endif

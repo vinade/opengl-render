@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <ctime>
+#include <glm/gtx/rotate_vector.hpp>
 
 #define UNUSED(x) (void)(x)
 void GLAPIENTRY
@@ -58,8 +59,6 @@ float light_ambient_debug = 0.2;
 
 void render_handler()
 {
-
-    scene->camera.update_view_matrix();
 
     light_0->set_position(light_translation_debug);
     light_0->set_color(glm::vec4(color_light_debug, 1.0));
@@ -120,6 +119,7 @@ void preload()
     scene->add(nanosuit_1);
     scene->add(plant_1);
     scene->camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
+    scene->camera.update_view_matrix();
 
     light_1->set_position(glm::vec3(0.5, 0.5, -2.0));
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
@@ -156,6 +156,93 @@ void shuffle_materials()
     }
 }
 
+void shuffle_direction()
+{
+    int i = std::rand() % scene->scenario_items.size();
+    ScenarioItem *si = scene->scenario_items[i];
+    scene->camera.point_to(si);
+    scene->camera.update_view_matrix();
+}
+
+void mouse_handler(int button)
+{
+    if (RenderWindow::context->cursor_enabled)
+    {
+        return;
+    }
+
+    if (RenderWindow::delta_mouse.x || RenderWindow::delta_mouse.y)
+    {
+        if (RenderWindow::delta_mouse.x)
+        {
+            scene->camera.rotate(0.01 * -RenderWindow::delta_mouse.x, glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+
+        if (RenderWindow::delta_mouse.y)
+        {
+            glm::vec3 normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
+            scene->camera.rotate(0.01 * -RenderWindow::delta_mouse.y, normal_vector);
+        }
+    }
+
+    scene->camera.update_view_matrix();
+}
+
+void keyboard_handler(int key, int scancode, int action, int mods)
+{
+    glm::vec3 normal_vector;
+    if ((action == GLFW_PRESS) || (action == GLFW_REPEAT))
+    {
+        float speed = 0.05;
+
+        if (RenderWindow::check_key(GLFW_KEY_W, key, action))
+        {
+            scene->camera.translate(speed);
+        }
+
+        if (RenderWindow::check_key(GLFW_KEY_S, key, action))
+        {
+            scene->camera.translate(-speed);
+        }
+
+        if (RenderWindow::check_key(GLFW_KEY_A, key, action))
+        {
+            normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
+            scene->camera.translate(-speed, normal_vector);
+        }
+
+        if (RenderWindow::check_key(GLFW_KEY_D, key, action))
+        {
+            normal_vector = glm::cross(scene->camera.get_direction(), scene->camera.get_up());
+            scene->camera.translate(speed, normal_vector);
+        }
+
+        if (RenderWindow::check_key(GLFW_KEY_Q, key, action))
+        {
+            scene->camera.rotate_up(-speed); // teste
+        }
+
+        if (RenderWindow::check_key(GLFW_KEY_E, key, action))
+        {
+            scene->camera.rotate_up(speed); // teste
+        }
+
+        if (action == GLFW_PRESS)
+        {
+            switch (key)
+            {
+            case GLFW_KEY_ESCAPE:
+                RenderWindow::context->switch_cursor_mode();
+                break;
+            default:
+                break;
+            }
+        }
+
+        scene->camera.update_view_matrix();
+    }
+}
+
 int main()
 {
     std::srand(std::time(nullptr));
@@ -174,9 +261,12 @@ int main()
 
     render->imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
     render->imgui_controller->button("Shuffle materials", shuffle_materials);
+    render->imgui_controller->button("point to objects", shuffle_direction);
 
 #endif
 
+    render->set_keyboard_handler(keyboard_handler);
+    render->set_mouse_handler(mouse_handler);
     render->set_preload(preload);
     render->set_gl_init(gl_init);
     render->set_render_handler(render_handler);
