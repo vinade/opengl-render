@@ -164,17 +164,31 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 				vertex.push_back(mesh->mTextureCoords[0][vi].y);
 			}
 
-			vertex.push_back(mesh->mNormals[vi].x);
-			vertex.push_back(mesh->mNormals[vi].y);
-			vertex.push_back(mesh->mNormals[vi].z);
+			if (!mesh->HasNormals())
+			{
+				// std::cerr << "[ScearioItem] Objeto sem Normais" << std::endl;
+				// exit(1);
 
-			vertex.push_back(mesh->mTangents[vi].x);
-			vertex.push_back(mesh->mTangents[vi].y);
-			vertex.push_back(mesh->mTangents[vi].z);
+				for (int i = 0; i < 9; i++)
+				{
+					// fallback temporario
+					vertex.push_back(0.0);
+				}
+			}
+			else
+			{
+				vertex.push_back(mesh->mNormals[vi].x);
+				vertex.push_back(mesh->mNormals[vi].y);
+				vertex.push_back(mesh->mNormals[vi].z);
 
-			vertex.push_back(mesh->mBitangents[vi].x);
-			vertex.push_back(mesh->mBitangents[vi].y);
-			vertex.push_back(mesh->mBitangents[vi].z);
+				vertex.push_back(mesh->mTangents[vi].x);
+				vertex.push_back(mesh->mTangents[vi].y);
+				vertex.push_back(mesh->mTangents[vi].z);
+
+				vertex.push_back(mesh->mBitangents[vi].x);
+				vertex.push_back(mesh->mBitangents[vi].y);
+				vertex.push_back(mesh->mBitangents[vi].z);
+			}
 
 			mesh_data.vertex_data.push_back(vertex);
 		}
@@ -203,8 +217,10 @@ void ScenarioItem::collect_vertex_data(const struct aiScene *sc, const struct ai
 				break;
 			// default: // GL_POLYGON
 			default:
-				std::cerr << "[ScenarioItem] número de lados não suportados: " << face->mNumIndices << std::endl;
-				exit(1);
+				fi = mesh->mNumFaces; // fallback temporário
+
+				// std::cerr << "[ScenarioItem] número de lados não suportados: " << face->mNumIndices << std::endl;
+				// exit(1);
 			}
 		}
 	}

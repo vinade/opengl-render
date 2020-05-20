@@ -87,7 +87,18 @@ void preload()
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
     light_1->set_ambient(0.0);
 
+    // cat_1->load_data_from_file("bricks/brick01a.obj");
+    // cat_1->load_data_from_file("bricks/brick01b.obj");
+    // cat_1->load_data_from_file("bricks/brick01c.obj");
+    // cat_1->load_data_from_file("bricks/brick01d.obj");
+    // cat_1->load_data_from_file("bricks/brick01e.obj");
+    // cat_1->load_data_from_file("bricks/brick01f.obj");
+    // cat_1->load_data_from_file("bricks/brick01g.obj");
+    // cat_1->load_data_from_file("plant_2/potted_plant_obj.obj");
+    // cat_1->load_data_from_file("airgun_1/Air_Gun-Wavefront OBJ.obj");
+    // cat_1->load_data_from_file("cobblestones_1/cobblestones.obj");
     cat_1->load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
+
     cat_1->set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
     cat_1->set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
     cat_1->set_scale(1.0);
@@ -96,7 +107,7 @@ void preload()
     moon_1->set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
     moon_1->set_scale(2.0);
 
-    plant_1->load_data_from_file("plant/01Alocasia_obj.obj");
+    plant_1->load_data_from_file("plant_1/01Alocasia_obj.obj");
     plant_1->set_position(glm::vec3(1.0f, 0.0f, -4.0f));
     plant_1->set_scale(1.5);
 
