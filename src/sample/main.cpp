@@ -9,6 +9,7 @@
 #include "light.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
+#include "material_loader.hpp"
 
 #include <stdio.h>
 #include <cstdlib>
@@ -115,6 +116,12 @@ void preload()
     nanosuit_1->set_position(glm::vec3(0.0f, 0.0f, -5.0f));
     nanosuit_1->set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
     nanosuit_1->set_scale(2.0);
+
+    MaterialLoader::load_materials({
+        "leather_1",
+        "metal_1",
+        "alien_1",
+    });
 }
 
 void shuffle_materials()

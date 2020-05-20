@@ -16,6 +16,7 @@ public:
     glm::vec4 specular_color = {1.0, 1.0, 1.0, 1.0};
     glm::vec4 ambient_color = {1.0, 1.0, 1.0, 1.0};
     glm::vec4 emission_color = {1.0, 1.0, 1.0, 1.0};
+    glm::vec4 material_color = {1.0, 1.0, 1.0, 1.0};
 
     std::vector<Texture *> diffuse_textures;
     std::vector<Texture *> normal_textures;

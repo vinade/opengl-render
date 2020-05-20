@@ -1,7 +1,7 @@
 #ifndef SKYBOX_MESH_HPP
 #define SKYBOX_MESH_HPP
 
-#define SKYBOX_TEXTURES_FOLDER "./res/textures/skybox/"
+#define SKYBOX_TEXTURES_FOLDER "./res/textures/skybox_1/"
 #define SKYBOX_DEFAULT_TEXTURE "yokohama"
 
 #include "mesh.hpp"

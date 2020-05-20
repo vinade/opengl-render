@@ -1,0 +1,10 @@
+{
+    "shininess": 20.0,
+    "color": {
+        "r": 0.5,
+        "g": 0.2,
+        "b": 0.1
+    },
+    "albedo": "leather_1/Leather_005_baseColor.jpg",
+    "normal": "leather_1/Leather_005_normal.jpg"
+}

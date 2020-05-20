@@ -1,0 +1,10 @@
+{
+    "shininess": 20.0,
+    "color": {
+        "r": 0.5,
+        "g": 0.2,
+        "b": 0.1
+    },
+    "albedo": "alien_1/Abstract_Organic_002_COLOR.jpg",
+    "normal": "alien_1/Abstract_Organic_002_NORM.jpg"
+}
