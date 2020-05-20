@@ -10,6 +10,7 @@
 #include "cmake_params.hpp"
 #include "scenario_item.hpp"
 #include "render_window.hpp"
+#include "material_loader.hpp"
 
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
@@ -335,6 +336,20 @@ void ScenarioItem::inc_scale(float scale)
 	this->m_scale[0] = this->m_scale[0] + scale;
 	this->m_scale[1] = this->m_scale[1] + scale;
 	this->m_scale[2] = this->m_scale[2] + scale;
+}
+
+void ScenarioItem::set_material(const std::string &material_name)
+{
+	Material *mtl = MaterialLoader::get_material(material_name);
+	this->set_material(mtl);
+}
+
+void ScenarioItem::set_material(Material *mtl)
+{
+	for (auto &mesh : this->meshes)
+	{
+		mesh.material = mtl;
+	}
 }
 
 aiTextureType ScenarioItem::texture_types[SCENARIO_ITEM_TEX_TYPE_COUNTER] = {

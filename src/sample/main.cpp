@@ -122,6 +122,9 @@ void preload()
         "metal_1",
         "alien_1",
     });
+
+    moon_1->meshes[0].material = MaterialLoader::get_material("leather_1");
+    nanosuit_1->set_material("alien_1");
 }
 
 void shuffle_materials()

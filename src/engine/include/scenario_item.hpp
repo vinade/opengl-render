@@ -60,6 +60,9 @@ public:
 	void inc_scale(const glm::vec3 scale);
 	void inc_scale(float scale);
 
+	void set_material(const std::string& material_name);
+	void set_material(Material* mtl);
+
 	void debug_coords();
 };
 
