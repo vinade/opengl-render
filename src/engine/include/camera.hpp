@@ -11,7 +11,7 @@ private:
 
 public:
     glm::vec3 m_up = {0.0f, 1.0f, 0.0f};
-    glm::vec3 m_direction = {1.0f, 0.0f, 0.0f};
+    glm::vec3 m_direction = {0.0f, 0.0f, -1.0f};
     glm::mat4 view_matrix;
 
     Camera(){};
