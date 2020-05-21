@@ -25,12 +25,13 @@ void SkyboxMesh::init(const std::string &texture_path)
     this->shader = Shader::get_shader("skybox", SHADER_TYPE_OTHER);
     this->shader->use_mvp = true;
 
-    // esse bloco será desnecessário, ficará como responsabilidade da cena.
     this->shader->setup("u_Texture", DATA_TYPE_INT);
     this->shader->setup("u_Model", DATA_TYPE_MAT4);
     this->shader->setup("u_View", DATA_TYPE_MAT4);
     this->shader->setup("u_Projection", DATA_TYPE_MAT4);
-    // fim do bloco
+    this->shader->setup("u_Projection", DATA_TYPE_MAT4);
+    this->shader->setup("u_AmbientLight.ambient", DATA_TYPE_FLOAT);
+    this->shader->setup("u_AmbientLight.color", DATA_TYPE_VEC4);
 
     this->vao = new VertexArray();
 
@@ -85,6 +86,13 @@ void SkyboxMesh::draw(const glm::mat4 &view_matrix, const glm::mat4 &projection_
     this->shader->fill("u_Model", this->model_matrix);
     this->shader->fill("u_View", view_matrix);
     this->shader->fill("u_Projection", projection_matrix);
+
+    if (this->light != nullptr)
+    {
+        this->shader->fill("u_AmbientLight.ambient", this->light->ambient);
+        this->shader->fill("u_AmbientLight.color", this->light->color);
+    }
+
     this->shader->exec();
     this->vao->bind();
     this->ibo->bind();

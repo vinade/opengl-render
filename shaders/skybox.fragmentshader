@@ -1,13 +1,24 @@
 #version 460 core
 
+struct LightSource
+{
+    float ambient;
+    float strength;
+    int type;
+    vec3 position;
+    vec4 color;
+};
+
 in vec3 v_skyboxCoord;
 
 out vec4 color;
 
 uniform samplerCube u_Texture;
+uniform LightSource u_AmbientLight;
 
 void main(){
 	vec4 colorTex = texture(u_Texture, v_skyboxCoord);
-    color = colorTex;
-    //color = vec4(0.0, 1.0, 0.0, 1.0);
+    float lum = (colorTex.r + colorTex.g + colorTex.b) / 3.0;
+    lum = lum * u_AmbientLight.ambient * 5.0;
+    color = colorTex + lum * u_AmbientLight.color;
 }

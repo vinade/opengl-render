@@ -28,7 +28,7 @@ Engine engine;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
 glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
-float light_ambient_debug = 0.2;
+float light_ambient_debug = 0.1;
 
 void render_handler()
 {

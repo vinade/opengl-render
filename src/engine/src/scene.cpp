@@ -66,6 +66,11 @@ void Scene::init(bool init_lights)
         this->skybox = new SkyboxMesh();
         this->skybox->set_scale(5000.0);
         // this->skybox->set_position(glm::vec3(0.0f, -50.0f, -200.0f));
+
+        if ((this->skybox->light == nullptr) && (this->lights.size()))
+        {
+            this->skybox->light = this->lights[0];
+        }
     }
 
     if (init_lights)
@@ -76,6 +81,14 @@ void Scene::init(bool init_lights)
 
 void Scene::add(Light *light)
 {
+
+    if (this->skybox != nullptr)
+    {
+        if (this->skybox->light == nullptr)
+        {
+            this->skybox->light = light;
+        }
+    }
 
     if (this->lights.size() > SCENE_MAX_LIGHTS)
     {

@@ -5,6 +5,7 @@
 #define SKYBOX_DEFAULT_TEXTURE "yokohama"
 
 #include "mesh.hpp"
+#include "light.hpp"
 #include <glm/glm.hpp>
 
 class SkyboxMesh : public Mesh
@@ -22,6 +23,7 @@ private:
 public:
     static const std::string skybox_textures_folder;
     static const std::vector<std::string> faces;
+    Light *light = nullptr;
 
     unsigned int vertex_size = 3 * sizeof(float);
     unsigned int vertex_count = 24;
