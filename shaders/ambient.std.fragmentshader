@@ -111,8 +111,7 @@ vec3 get_normal(){
     return normal_vector;
 }
 
-vec3 calc_reflection(vec3 normal_vector){
-    float reflection_factor = 0.0;
+vec3 calc_reflection(vec3 normal_vector, float reflection_factor){
     vec3 direction = normalize(vs.frag_pos - u_Camera);
     vec3 reflection = reflect(direction, normal_vector);
     return texture(u_Textures.skybox, reflection).rgb * reflection_factor;
@@ -181,6 +180,7 @@ float calculateAttenuation(LightSource l) {
 
 void main(){
     vec3 Lo = vec3(0.0);
+    float reflection = get_reflection();
     vec3 albedo = get_albedo();
     float metallic = get_metallic();
     float roughness = get_roughness();
@@ -189,7 +189,12 @@ void main(){
     vec3 V = normalize(u_Camera - vs.frag_pos);
     vec3 F0 = u_Lights[0].color.rgb * u_Lights[0].ambient;
 
+    // repensar a influência do reflexo na cor
+    // talvez pensar em níveis de saturacão do reflexo
+    albedo = albedo * (1.0 - reflection) + calc_reflection(N, reflection);
+
     F0 = mix(F0, albedo, metallic);
+
 
     for (int i = 0; i < MAX_LIGHTS; i++){
 
@@ -221,4 +226,5 @@ void main(){
     vec3 color_value = ambient + Lo;
     color_value = gamma_correction(color_value);
     color = vec4(color_value, 1.0);
+    // color = vec4(calc_reflection(N, reflection), 1.0);
 }
