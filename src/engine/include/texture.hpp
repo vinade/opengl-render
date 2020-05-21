@@ -8,6 +8,18 @@
 #define TEXTURE_CHANNELS 4
 #define TEXTURE_DEFAULT_FOLDER "./res/textures/"
 
+enum TextureType
+{
+	TEXTURE_DIFFUSE,
+	TEXTURE_NORMAL,
+	TEXTURE_METALLIC,
+	TEXTURE_ROUGHNESS,
+	TEXTURE_AMBIENT_OCLUSION,
+	TEXTURE_REFLECTION,
+	TEXTURE_DISPLACEMENT,
+	TEXTURE_OTHER
+};
+
 class Texture
 {
 
@@ -32,16 +44,16 @@ public:
 	int width;
 	bool ready = false;
 	unsigned int id;
-	aiTextureType type = aiTextureType_DIFFUSE;
+	TextureType type = TEXTURE_DIFFUSE;
 	static Texture *fallback;
 	static const std::string texture_folder;
 
 	Texture(unsigned int *id, int *width, int *height);
-	Texture(const std::string &file_path, aiTextureType tex_type, bool preload);
-	Texture(const std::string &file_path, aiTextureType tex_type = aiTextureType_DIFFUSE); // verifica antes se já existe em Texture::sources
+	Texture(const std::string &file_path, TextureType tex_type, bool preload);
+	Texture(const std::string &file_path, TextureType tex_type = TEXTURE_DIFFUSE); // verifica antes se já existe em Texture::sources
 	~Texture();
 
-	void load_texture(aiTextureType tex_type, bool preload);
+	void load_texture(TextureType tex_type, bool preload);
 	void setup();
 	void bind() const;
 	void bind(unsigned int slot) const;
@@ -50,40 +62,32 @@ public:
 	inline int get_width() const { return *this->_width; };
 	inline int get_height() const { return *this->_height; };
 	inline unsigned int get_id() const { return *this->_id; };
+	static TextureType to_texture_type(aiTextureType type);
 
-	static inline int get_type_slot(aiTextureType type);
+	static inline int get_type_slot(TextureType type);
 };
 
-inline int Texture::get_type_slot(aiTextureType type)
+inline int Texture::get_type_slot(TextureType type)
 {
 	switch (type)
 	{
-	case aiTextureType_NONE:
-	case aiTextureType_DIFFUSE:
+	case TEXTURE_DIFFUSE:
 	default:
 		return 1;
-	case aiTextureType_NORMALS:
+	case TEXTURE_NORMAL:
 		return 2;
-	case aiTextureType_SPECULAR:
+	case TEXTURE_METALLIC:
 		return 3;
-	case aiTextureType_SHININESS:
+	case TEXTURE_ROUGHNESS:
 		return 4;
-	case aiTextureType_REFLECTION:
+	case TEXTURE_AMBIENT_OCLUSION:
 		return 5;
-	case aiTextureType_OPACITY:
+	case TEXTURE_REFLECTION:
 		return 6;
-	case aiTextureType_UNKNOWN:
+	case TEXTURE_DISPLACEMENT:
 		return 7;
-	case aiTextureType_AMBIENT:
+	case TEXTURE_OTHER:
 		return 8;
-	case aiTextureType_LIGHTMAP:
-		return 9;
-	case aiTextureType_HEIGHT:
-		return 10;
-	case aiTextureType_EMISSIVE:
-		return 11;
-	case aiTextureType_DISPLACEMENT:
-		return 12;
 	}
 
 	return 0;

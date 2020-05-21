@@ -76,7 +76,7 @@ void preload()
 
     // scene->init();
     scene->add(light_0);
-    scene->add(light_1);
+    // scene->add(light_1);
     scene->add(cat_1);
     scene->add(moon_1);
     scene->add(nanosuit_1);
@@ -121,10 +121,12 @@ void preload()
         "leather_1",
         "metal_1",
         "alien_1",
+        "metal_6",
     });
 
-    moon_1->meshes[0].material = MaterialLoader::get_material("leather_1");
-    nanosuit_1->set_material("alien_1");
+    // moon_1->set_material("metal_1");
+    moon_1->set_material("simple_gold_1");
+    // nanosuit_1->meshes[0].material = MaterialLoader::get_material("leather_1");
 }
 
 void shuffle_materials()

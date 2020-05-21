@@ -1,8 +1,8 @@
 {
-    "albedo": "metal_1/Metal_001_basecolor.png",
-    "metallic": "metal_1/Metal_001_metallic.png",
-    "normal": "metal_1/Metal_001_normal.png",
-    "roughness": "metal_1/Metal_001_roughness.png",
-    "displacement": "metal_1/Metal_001_height.png",
-    "ambient_occlusion": "metal_1/Metal_001_ambientOcclusion.png"
+    "albedo_map": "metal_1/Metal_001_basecolor.png",
+    "metallic_map": "metal_1/Metal_001_metallic.png",
+    "normal_map": "metal_1/Metal_001_normal.png",
+    "roughness_map": "metal_1/Metal_001_roughness.png",
+    "displacement_map": "metal_1/Metal_001_height.png",
+    "ambient_occlusion_map": "metal_1/Metal_001_ambientOcclusion.png"
 }

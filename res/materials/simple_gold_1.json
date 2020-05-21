@@ -1,0 +1,12 @@
+{
+    "material_color": {
+        "r": 0.7,
+        "g": 0.6,
+        "b": 0.1
+    },
+    "metallic_map": "metal_1/Metal_001_metallic.png",
+    "normal_map": "metal_1/Metal_001_normal.png",
+    "roughness_map": "metal_1/Metal_001_roughness.png",
+    "displacement_map": "metal_1/Metal_001_height.png",
+    "ambient_occlusion_map": "metal_1/Metal_001_ambientOcclusion.png"
+}

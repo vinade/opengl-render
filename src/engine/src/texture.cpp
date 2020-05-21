@@ -8,20 +8,20 @@
 #include "cmake_params.hpp"
 #include "render_window.hpp"
 
-Texture::Texture(const std::string &file_path, aiTextureType tex_type) : id(0),
-																		 file_path(file_path),
-																		 height(0),
-																		 width(0),
-																		 bpp(0)
+Texture::Texture(const std::string &file_path, TextureType tex_type) : id(0),
+																	   file_path(file_path),
+																	   height(0),
+																	   width(0),
+																	   bpp(0)
 {
 	this->load_texture(tex_type, false);
 }
 
-Texture::Texture(const std::string &file_path, aiTextureType tex_type, bool preload) : id(0),
-																					   file_path(file_path),
-																					   height(0),
-																					   width(0),
-																					   bpp(0)
+Texture::Texture(const std::string &file_path, TextureType tex_type, bool preload) : id(0),
+																					 file_path(file_path),
+																					 height(0),
+																					 width(0),
+																					 bpp(0)
 {
 	this->load_texture(tex_type, preload);
 }
@@ -33,7 +33,7 @@ Texture::Texture(unsigned int *id, int *width, int *height)
 	this->_id = id;
 }
 
-void Texture::load_texture(aiTextureType tex_type, bool preload)
+void Texture::load_texture(TextureType tex_type, bool preload)
 {
 
 	this->type = tex_type;
@@ -98,21 +98,14 @@ inline int Texture::get_channels() const
 {
 	switch (this->type)
 	{
-	case aiTextureType_DISPLACEMENT:
-	case aiTextureType_SPECULAR:
-	case aiTextureType_AMBIENT:
-	case aiTextureType_EMISSIVE:
-		return 3;
-	case aiTextureType_OPACITY:
-	case aiTextureType_SHININESS:
-	case aiTextureType_HEIGHT:
-	case aiTextureType_LIGHTMAP:
-	case aiTextureType_REFLECTION:
-		return 1;
-	case aiTextureType_NORMALS:
-	case aiTextureType_NONE:
-	case aiTextureType_DIFFUSE:
-	case aiTextureType_UNKNOWN:
+		// return 1;
+	case TEXTURE_AMBIENT_OCLUSION:
+	case TEXTURE_DISPLACEMENT:
+	case TEXTURE_REFLECTION:
+	case TEXTURE_ROUGHNESS:
+	case TEXTURE_METALLIC: // TODO: verificar o numero de canais da imagem dos mapas que precisam de apenas 1 canal
+	case TEXTURE_DIFFUSE:
+	case TEXTURE_NORMAL:
 	default:
 		return 4;
 	}
@@ -195,6 +188,37 @@ void Texture::bind(unsigned int slot) const
 void Texture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+TextureType Texture::to_texture_type(aiTextureType type)
+{
+	switch (type)
+	{
+	case aiTextureType_AMBIENT:
+	case aiTextureType_EMISSIVE:
+		return TEXTURE_OTHER;
+	case aiTextureType_OPACITY:
+		return TEXTURE_METALLIC;
+	case aiTextureType_SPECULAR:
+	case aiTextureType_SHININESS:
+		return TEXTURE_ROUGHNESS;
+	case aiTextureType_DISPLACEMENT:
+	case aiTextureType_HEIGHT:
+		return TEXTURE_DISPLACEMENT;
+	case aiTextureType_LIGHTMAP:
+		return TEXTURE_AMBIENT_OCLUSION;
+	case aiTextureType_REFLECTION:
+		return TEXTURE_REFLECTION;
+	case aiTextureType_NORMALS:
+		return TEXTURE_NORMAL;
+	case aiTextureType_NONE:
+	case aiTextureType_UNKNOWN:
+	case aiTextureType_DIFFUSE:
+	default:
+		return TEXTURE_DIFFUSE;
+	}
+
+	return TEXTURE_DIFFUSE;
 }
 
 std::unordered_map<unsigned int, Texture *> Texture::textures;

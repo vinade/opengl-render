@@ -1,0 +1,6 @@
+{
+    "albedo_map": "metal_6/rustediron2_basecolor.png",
+    "metallic_map": "metal_6/rustediron2_metallic.png",
+    "normal_map": "metal_6/rustediron2_normal.png",
+    "roughness_map": "metal_6/rustediron2_roughness.png"
+}

@@ -46,7 +46,7 @@ void Material::get_texture(aiMaterial *amtl, aiTextureType texture_type, std::ve
 
         if (AI_SUCCESS == amtl->GetTexture(texture_type, i, &texture_path))
         {
-            Texture *aux_tex = new Texture(base_path + texture_path.data, texture_type);
+            Texture *aux_tex = new Texture(base_path + texture_path.data, Texture::to_texture_type(texture_type));
             std::cerr << "\t" << base_path + texture_path.data << std::endl;
             std::cerr << "\t tid: " << aux_tex->id << std::endl;
             texture.push_back(aux_tex);
@@ -76,11 +76,14 @@ void Material::load_from_aiMaterial(aiMaterial *amtl, std::string base_path)
     std::cerr << "material" << std::endl;
 
     this->get_texture(amtl, aiTextureType_DIFFUSE, this->diffuse_textures);
-    this->get_texture(amtl, aiTextureType_SPECULAR, this->specular_textures);
     this->get_texture(amtl, aiTextureType_REFLECTION, this->reflection_textures);
     this->get_texture(amtl, aiTextureType_NORMALS, this->normal_textures);
+    // TODO: shininess, shininess_strength  -> metallic, roughness
+    this->get_texture(amtl, aiTextureType_OPACITY, this->metallic_textures);
+    this->get_texture(amtl, aiTextureType_SPECULAR, this->roughness_textures);
+
+    // TODO: displacement map
     this->get_texture(amtl, aiTextureType_HEIGHT, this->height_textures);
-    this->get_texture(amtl, aiTextureType_OPACITY, this->opacity_textures);
 
     if (AI_SUCCESS == aiGetMaterialColor(amtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse_color))
     {
@@ -89,52 +92,22 @@ void Material::load_from_aiMaterial(aiMaterial *amtl, std::string base_path)
         std::cerr << "\t" << diffuse_color[1] << std::endl;
         std::cerr << "\t" << diffuse_color[2] << std::endl;
         std::cerr << "\t" << diffuse_color[3] << std::endl;
-        this->diffuse_color = glm::vec4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]);
-    }
-
-    if (AI_SUCCESS == aiGetMaterialColor(amtl, AI_MATKEY_COLOR_SPECULAR, &specular_color))
-    {
-        std::cerr << "specular_color:" << std::endl;
-        std::cerr << "\t" << specular_color[0] << std::endl;
-        std::cerr << "\t" << specular_color[1] << std::endl;
-        std::cerr << "\t" << specular_color[2] << std::endl;
-        std::cerr << "\t" << specular_color[3] << std::endl;
-        this->specular_color = glm::vec4(specular_color[0], specular_color[1], specular_color[2], specular_color[3]);
-    }
-
-    if (AI_SUCCESS == aiGetMaterialColor(amtl, AI_MATKEY_COLOR_AMBIENT, &ambient_color))
-    {
-        std::cerr << "ambient_color:" << std::endl;
-        std::cerr << "\t" << ambient_color[0] << std::endl;
-        std::cerr << "\t" << ambient_color[1] << std::endl;
-        std::cerr << "\t" << ambient_color[2] << std::endl;
-        std::cerr << "\t" << ambient_color[3] << std::endl;
-        this->ambient_color = glm::vec4(ambient_color[0], ambient_color[1], ambient_color[2], ambient_color[3]);
-    }
-
-    if (AI_SUCCESS == aiGetMaterialColor(amtl, AI_MATKEY_COLOR_EMISSIVE, &emission_color))
-    {
-        std::cerr << "emission_color:" << std::endl;
-        std::cerr << "\t" << emission_color[0] << std::endl;
-        std::cerr << "\t" << emission_color[1] << std::endl;
-        std::cerr << "\t" << emission_color[2] << std::endl;
-        std::cerr << "\t" << emission_color[3] << std::endl;
-        this->emission_color = glm::vec4(emission_color[0], emission_color[1], emission_color[2], emission_color[3]);
+        this->color = glm::vec4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]);
     }
 
     max = 1;
     if (AI_SUCCESS == aiGetMaterialFloatArray(amtl, AI_MATKEY_SHININESS, &shininess, &max))
     {
-        this->shininess = shininess;
+        // TODO: shininess, shininess_strength  -> metallic, roughness
+        // this->shininess = shininess;
     }
 
     max = 1;
     if (AI_SUCCESS == aiGetMaterialFloatArray(amtl, AI_MATKEY_SHININESS_STRENGTH, &strength, &max))
     {
-        this->shininess_strength = strength;
+        // TODO: shininess, shininess_strength  -> metallic, roughness
+        // this->shininess_strength = strength;
     }
-    std::cerr << "shininess:" << this->shininess << std::endl;
-    std::cerr << "shininess_strength:" << this->shininess_strength << std::endl;
 }
 
 Material *Material::create_from_aiMaterial(aiMaterial *amtl, std::string base_path)

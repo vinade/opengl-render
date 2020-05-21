@@ -26,16 +26,22 @@ void Scene::init(bool init_lights)
         this->ambient_shader->setup("u_Textures.skybox", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.diffuse", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.normal", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.ambient_occlusion", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.metallic", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.roughness", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.reflection", DATA_TYPE_INT);
 
-        this->ambient_shader->setup("u_Material.diffuse_color", DATA_TYPE_VEC4);
-        this->ambient_shader->setup("u_Material.ambient_color", DATA_TYPE_VEC4);
-        this->ambient_shader->setup("u_Material.specular_color", DATA_TYPE_VEC4);
-        this->ambient_shader->setup("u_Material.emission_color", DATA_TYPE_VEC4);
-        this->ambient_shader->setup("u_Material.shininess", DATA_TYPE_FLOAT);
-        this->ambient_shader->setup("u_Material.shininess_strength", DATA_TYPE_FLOAT);
+        this->ambient_shader->setup("u_Material.color", DATA_TYPE_VEC4);
+        this->ambient_shader->setup("u_Material.metallic", DATA_TYPE_FLOAT);
+        this->ambient_shader->setup("u_Material.roughness", DATA_TYPE_FLOAT);
+        this->ambient_shader->setup("u_Material.reflection", DATA_TYPE_FLOAT);
 
         this->ambient_shader->setup("u_Material.diffuse_texture_flag", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Material.normal_texture_flag", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Material.ambient_occlusion_texture_flag", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Material.metallic_texture_flag", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Material.roughness_texture_flag", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Material.reflection_texture_flag", DATA_TYPE_INT);
     }
     else
     {
@@ -216,8 +222,12 @@ void Scene::draw(FrameBuffer *fbo)
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->fill("u_Textures.skybox", 0);
-        this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(aiTextureType_DIFFUSE));
-        this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(aiTextureType_NORMALS));
+        this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(TEXTURE_DIFFUSE));
+        this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(TEXTURE_NORMAL));
+        this->ambient_shader->fill("u_Textures.metallic", Texture::get_type_slot(TEXTURE_METALLIC));
+        this->ambient_shader->fill("u_Textures.roughness", Texture::get_type_slot(TEXTURE_ROUGHNESS));
+        this->ambient_shader->fill("u_Textures.ambient_occlusion", Texture::get_type_slot(TEXTURE_AMBIENT_OCLUSION));
+        this->ambient_shader->fill("u_Textures.reflection", Texture::get_type_slot(TEXTURE_REFLECTION));
     }
 
     if (this->ambient_shader->use_mvp)

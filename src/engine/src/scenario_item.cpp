@@ -51,7 +51,13 @@ void ScenarioItem::load_material_textures(aiMaterial *material, aiTextureType te
 	{
 		aiString tex_path;
 		material->GetTexture(tex_type, tex_index, &tex_path);
-		new Texture(this->base_path + tex_path.data, tex_type, preload);
+		// new Texture(this->base_path + tex_path.data, tex_type, preload);
+		/*
+
+			TODO: fazer um DE-PARA dos tipos de textura do assimp para os da engine
+
+		*/
+		new Texture(this->base_path + tex_path.data, Texture::to_texture_type(tex_type), preload); // temporario
 	}
 }
 

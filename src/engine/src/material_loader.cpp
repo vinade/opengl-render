@@ -1,7 +1,6 @@
 #ifndef MATERIAL_LOADER_CPP
 #define MATERIAL_LOADER_CPP
 
-#include <rapidjson/document.h>
 #include <iostream>
 #include <fstream>
 #include "material_loader.hpp"
@@ -49,17 +48,12 @@ Material *MaterialLoader::get_material(const std::string &file_path)
 
     Material *mtl = new Material();
 
-    if (data.HasMember("albedo"))
-    {
-        std::string texture = data["albedo"].GetString();
-        mtl->diffuse_textures.push_back(new Texture(texture));
-    }
-
-    if (data.HasMember("normal"))
-    {
-        std::string texture = data["normal"].GetString();
-        mtl->normal_textures.push_back(new Texture(texture, aiTextureType_NORMALS));
-    }
+    MaterialLoader::set(data, "albedo_map", mtl->diffuse_textures, TEXTURE_DIFFUSE);
+    MaterialLoader::set(data, "normal_map", mtl->normal_textures, TEXTURE_NORMAL);
+    MaterialLoader::set(data, "metallic_map", mtl->metallic_textures, TEXTURE_METALLIC);
+    MaterialLoader::set(data, "roughness_map", mtl->roughness_textures, TEXTURE_ROUGHNESS);
+    MaterialLoader::set(data, "ambient_occlusion_map", mtl->ambient_occlusion_textures, TEXTURE_AMBIENT_OCLUSION);
+    MaterialLoader::set(data, "reflection_map", mtl->reflection_textures, TEXTURE_REFLECTION);
 
     if (data.HasMember("material_color"))
     {
@@ -67,22 +61,42 @@ Material *MaterialLoader::get_material(const std::string &file_path)
         float r = color["r"].GetFloat();
         float g = color["g"].GetFloat();
         float b = color["b"].GetFloat();
-        float a = color["a"].GetFloat();
+        float a = 1.0;
 
-        mtl->material_color = glm::vec4(r, g, b, a);
+        if (color.HasMember("a"))
+        {
+            a = color["a"].GetFloat();
+        }
+
+        mtl->color = glm::vec4(r, g, b, a);
     }
 
-    if (data.HasMember("shininess"))
-    {
-        float shininess = data["shininess"].GetFloat();
-        mtl->shininess = shininess;
-    }
+    MaterialLoader::set(data, "metallic", mtl->metallic);
+    MaterialLoader::set(data, "roughness", mtl->roughness);
+    MaterialLoader::set(data, "reflection", mtl->reflection);
 
     /* Registra o material */
     MaterialLoader::pure_materials[file_path] = mtl;
     Material::materials.push_back(mtl);
 
     return mtl;
+}
+
+void MaterialLoader::set(rapidjson::Value &data, const char *key, float &component)
+{
+    if (data.HasMember(key))
+    {
+        component = data[key].GetFloat();
+    }
+}
+
+void MaterialLoader::set(rapidjson::Value &data, const char *key, std::vector<Texture *> &texture_list, TextureType texture_type)
+{
+    if (data.HasMember(key))
+    {
+        Texture *tex = new Texture(data[key].GetString(), texture_type);
+        texture_list.push_back(tex);
+    }
 }
 
 const std::string MaterialLoader::materials_folder = std::string(CMAKE_ROOT_DIR MATERIAL_LOADER_FOLDER);

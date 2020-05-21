@@ -111,15 +111,17 @@ void Mesh::draw(Shader *shader)
 {
     if (shader->use_materials)
     {
-        shader->fill("u_Material.diffuse_color", this->material->diffuse_color);
-        shader->fill("u_Material.specular_color", this->material->specular_color);
-        shader->fill("u_Material.ambient_color", this->material->ambient_color);
-        shader->fill("u_Material.emission_color", this->material->emission_color);
-        shader->fill("u_Material.shininess", this->material->shininess);
-        shader->fill("u_Material.shininess_strength", this->material->shininess_strength);
+        shader->fill("u_Material.color", this->material->color);
+        shader->fill("u_Material.metallic", this->material->metallic);
+        shader->fill("u_Material.roughness", this->material->roughness);
+        shader->fill("u_Material.reflection", this->material->reflection);
 
         shader->fill("u_Material.diffuse_texture_flag", this->material->diffuse_textures.size() ? 1 : 0);
         shader->fill("u_Material.normal_texture_flag", this->material->normal_textures.size() ? 1 : 0);
+        shader->fill("u_Material.ambient_occlusion_texture_flag", this->material->ambient_occlusion_textures.size() ? 1 : 0);
+        shader->fill("u_Material.metallic_texture_flag", this->material->metallic_textures.size() ? 1 : 0);
+        shader->fill("u_Material.roughness_texture_flag", this->material->roughness_textures.size() ? 1 : 0);
+        shader->fill("u_Material.reflection_texture_flag", this->material->reflection_textures.size() ? 1 : 0);
     }
 
     shader->exec();
@@ -135,6 +137,26 @@ void Mesh::draw(Shader *shader)
     if (this->material->normal_textures.size())
     {
         this->material->normal_textures[0]->bind();
+    }
+
+    if (this->material->ambient_occlusion_textures.size())
+    {
+        this->material->ambient_occlusion_textures[0]->bind();
+    }
+
+    if (this->material->metallic_textures.size())
+    {
+        this->material->metallic_textures[0]->bind();
+    }
+
+    if (this->material->roughness_textures.size())
+    {
+        this->material->roughness_textures[0]->bind();
+    }
+
+    if (this->material->reflection_textures.size())
+    {
+        this->material->reflection_textures[0]->bind();
     }
 
     this->vao->bind();

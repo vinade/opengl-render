@@ -1,10 +1,7 @@
 {
-    "shininess": 20.0,
-    "color": {
-        "r": 0.5,
-        "g": 0.2,
-        "b": 0.1
-    },
-    "albedo": "leather_1/Leather_005_baseColor.jpg",
-    "normal": "leather_1/Leather_005_normal.jpg"
+    "albedo_map": "leather_1/Leather_005_baseColor.jpg",
+    "normal_map": "leather_1/Leather_005_normal.jpg",
+    "roughness_map": "leather_1/Leather_005_roughness.jpg",
+    "ambient_occlusion_map": "leather_1/Leather_005_ambientOcclusion.jpg",
+    "displacement_map": "leather_1/Leather_005_height.png"
 }
