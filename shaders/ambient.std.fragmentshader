@@ -1,7 +1,7 @@
 #version 460 core
 
 #define MAX_LIGHTS 4
-#define GAMMA 2.0
+#define GAMMA 1.4
 #define PI 3.14159265
 
 struct Material
@@ -164,7 +164,8 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
-    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+    // return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 2.0);
 } 
 
 float calculateAttenuation(LightSource l) {
@@ -222,7 +223,7 @@ void main(){
 
     }
 
-    vec3 ambient = vec3(0.03) * u_Lights[0].ambient * albedo * ao;
+    vec3 ambient = u_Lights[0].ambient * albedo * ao;
     vec3 color_value = ambient + Lo;
     color_value = gamma_correction(color_value);
     color = vec4(color_value, 1.0);

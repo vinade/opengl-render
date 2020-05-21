@@ -19,6 +19,6 @@ uniform LightSource u_AmbientLight;
 void main(){
 	vec4 colorTex = texture(u_Texture, v_skyboxCoord);
     float lum = (colorTex.r + colorTex.g + colorTex.b) / 3.0;
-    lum = lum * u_AmbientLight.ambient * 5.0;
+    lum = lum * u_AmbientLight.ambient * 1.0;
     color = colorTex + lum * u_AmbientLight.color;
 }
