@@ -5,6 +5,8 @@
 #include <vector>
 #include <assimp/material.h>
 
+#define TEXTURE_MIPMAPS 4
+#define TEXTURE_ANISOTROPIC 4.0
 #define TEXTURE_CHANNELS 4
 #define TEXTURE_DEFAULT_FOLDER "./res/textures/"
 
