@@ -225,7 +225,7 @@ void main(){
 
     }
 
-    vec3 ambient = u_Lights[0].ambient * albedo * ao;
+    vec3 ambient = u_Lights[0].ambient * u_Lights[0].color.rgb * albedo * ao;
     vec3 color_value = ambient + Lo;
     color_value = gamma_correction(color_value);
     color = vec4(color_value, 1.0);

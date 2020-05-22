@@ -122,10 +122,10 @@ void preload()
         "metal_1",
         "alien_1",
         "metal_6",
+        "simple_gold_1",
     });
 
     // moon_1->set_material("metal_1");
-    moon_1->set_material("simple_gold_1");
     // nanosuit_1->meshes[0].material = MaterialLoader::get_material("leather_1");
 }
 
@@ -232,7 +232,7 @@ int main()
 {
 
 #ifdef DEBUG_MODE_COMPILE
-    engine.render.imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 10.0f);
     engine.render.imgui_controller->observef("R", &color_light_debug[0], 0.0f, 1.0f);
     engine.render.imgui_controller->observef("G", &color_light_debug[1], 0.0f, 1.0f);
     engine.render.imgui_controller->observef("B", &color_light_debug[2], 0.0f, 1.0f);
