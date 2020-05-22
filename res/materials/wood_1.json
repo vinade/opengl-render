@@ -1,0 +1,8 @@
+{
+    "albedo_map": "wood_1/Wood_Gate_Fortified_002_basecolor.jpg",
+    "metallic_map": "wood_1/Wood_Gate_Fortified_002_metallic.jpg",
+    "normal_map": "wood_1/Wood_Gate_Fortified_002_normal.jpg",
+    "roughness_map": "wood_1/Wood_Gate_Fortified_002_roughness.jpg",
+    "displacement_map": "wood_1/Wood_Gate_Fortified_002_height.png",
+    "ambient_occlusion_map": "wood_1/Wood_Gate_Fortified_002_ambientOcclusion.jpg"
+}
