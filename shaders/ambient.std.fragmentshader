@@ -206,7 +206,7 @@ void main(){
 
         float cosTheta = max(dot(N, L), 0.0);
         float attenuation = calculateAttenuation(u_Lights[i]);
-        vec3 radiance = u_Lights[i].color.xyz * attenuation * cosTheta;
+        vec3 radiance = u_Lights[i].color.xyz * attenuation * cosTheta * u_Lights[i].strength;
 
         float D = GGX_Distribution(N, H, roughness * roughness);
         float G = GeometrySmith(V, N, H, roughness);

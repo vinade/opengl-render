@@ -29,6 +29,7 @@ Engine engine;
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
 glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
 float light_ambient_debug = 0.1;
+float light_strength_debug = 1.0;
 
 void render_handler()
 {
@@ -36,6 +37,7 @@ void render_handler()
     light_0->set_position(light_translation_debug);
     light_0->set_color(glm::vec4(color_light_debug, 1.0));
     light_0->set_ambient(light_ambient_debug);
+    light_0->set_strength(light_strength_debug);
 
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
@@ -232,10 +234,11 @@ int main()
 {
 
 #ifdef DEBUG_MODE_COMPILE
-    engine.render.imgui_controller->observef("ambient", &light_ambient_debug, 0.0f, 10.0f);
-    engine.render.imgui_controller->observef("R", &color_light_debug[0], 0.0f, 1.0f);
-    engine.render.imgui_controller->observef("G", &color_light_debug[1], 0.0f, 1.0f);
-    engine.render.imgui_controller->observef("B", &color_light_debug[2], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("L0.ambient", &light_ambient_debug, 0.0f, 10.0f);
+    engine.render.imgui_controller->observef("L0.strength", &light_strength_debug, 0.0f, 20.0f);
+    engine.render.imgui_controller->observef("L0.R", &color_light_debug[0], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("L0.G", &color_light_debug[1], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("L0.B", &color_light_debug[2], 0.0f, 1.0f);
 
     engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
     engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);

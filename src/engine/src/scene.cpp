@@ -149,11 +149,13 @@ void Scene::setup_light(int i)
     std::string light_ambient = prefix + "ambient";
     std::string light_color = prefix + "color";
     std::string light_position = prefix + "position";
+    std::string light_strength = prefix + "strength";
 
     this->ambient_shader->setup(light_ambient, DATA_TYPE_FLOAT);
     this->ambient_shader->setup(light_type, DATA_TYPE_INT);
     this->ambient_shader->setup(light_color, DATA_TYPE_VEC4);
     this->ambient_shader->setup(light_position, DATA_TYPE_VEC3);
+    this->ambient_shader->setup(light_strength, DATA_TYPE_FLOAT);
 }
 
 void Scene::add(ScenarioItem *scenario_item)
@@ -261,10 +263,12 @@ void Scene::draw(FrameBuffer *fbo)
             std::string light_type = prefix + "type";
             std::string light_color = prefix + "color";
             std::string light_position = prefix + "position";
+            std::string light_strength = prefix + "strength";
             this->ambient_shader->fill(light_ambient, this->lights[i]->ambient);
             this->ambient_shader->fill(light_type, this->lights[i]->type);
             this->ambient_shader->fill(light_color, this->lights[i]->color);
             this->ambient_shader->fill(light_position, this->lights[i]->get_position());
+            this->ambient_shader->fill(light_strength, this->lights[i]->strength);
         }
 
         this->ambient_shader->fill("u_Camera", this->camera.get_position());

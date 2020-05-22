@@ -2,6 +2,7 @@
 #define LIGHT_CPP
 
 #include "light.hpp"
+#include <glm/gtx/component_wise.hpp>
 
 void Light::set()
 {

@@ -6,6 +6,9 @@
 #include "camera.hpp"
 #include "scenario_item.hpp"
 
+#define LIGHT_MAX_STRENGTH 100.0
+#define LIGHT_DEFAULT_STRENGTH 1.0
+
 enum LightType
 {
     LIGHT_DIFFUSE
@@ -19,6 +22,7 @@ private:
 public:
     LightType type;
     float ambient = 0.1;
+    float strength = LIGHT_DEFAULT_STRENGTH;
     glm::vec4 color = {1.0, 0.8, 0.3, 1.0};
     DebugMesh *debug_mesh;
 
@@ -32,6 +36,7 @@ public:
 
     void set_color(const glm::vec4 &color);
     inline void set_ambient(float ambient) { this->ambient = ambient; };
+    inline void set_strength(float strength) { this->strength = strength; };
 };
 
 #endif
