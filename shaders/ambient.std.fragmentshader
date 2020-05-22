@@ -44,6 +44,7 @@ in VS_OUT {
     vec3 frag_pos;
     vec3 normal;
     mat3 TBN;
+    mat3 model_matrix;
 } vs;
 
 out vec4 color;
@@ -103,8 +104,9 @@ float get_reflection(){
 vec3 get_normal(){
     vec3 normal_vector = vs.normal;
     if (u_Material.normal_texture_flag == 1){
-        normal_vector = texture(u_Textures.normal, vs.tex_coord).rgb;
-        normal_vector = vs.TBN * (normal_vector * 2.0 - 1.0);
+        normal_vector = texture(u_Textures.normal, vs.tex_coord).rbg;
+        normal_vector = (normal_vector * 2.0) - 1.0;
+        normal_vector = vs.model_matrix * normal_vector + vs.normal;
     }
 
     normal_vector = normalize(normal_vector);
