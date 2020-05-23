@@ -17,6 +17,7 @@
 
 enum ShaderType
 {
+    SHADER_TYPE_DEFAULT,
     SHADER_TYPE_SCENE,
     SHADER_TYPE_POST_PROCESSING,
     SHADER_TYPE_OTHER
@@ -57,6 +58,8 @@ class Shader
 private:
     bool loaded;
     unsigned int program_id;
+    std::string vert_name;
+    std::string frag_name;
     std::unordered_map<std::string, BaseUniformItem *> items;
 
     static std::unordered_map<std::string, Shader *> loaded_shaders;
@@ -65,6 +68,7 @@ private:
     unsigned int compile(std::string file_path, unsigned int type);
     void init(ShaderType shader_type);
     void init(std::string shader_name, ShaderType shader_type);
+    void init(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type);
 
 public:
     bool use_lights = true;
@@ -76,6 +80,8 @@ public:
     Shader(ShaderType shader_type);
     Shader(std::string shader_name);
     Shader(std::string shader_name, ShaderType shader_type);
+    Shader(std::string fragment_shader_name, std::string vertex_shader_name);
+    Shader(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type);
     ~Shader();
 
     void setup();
@@ -86,12 +92,18 @@ public:
     template <class T>
     void fill(std::string name, const T &value);
 
-    void load(std::string shader_name);
+    void load();
     void exec();
     void set_shader_type(ShaderType shader_type);
 
+    static std::string get_id(std::string shader_name);
+    static std::string get_id(std::string fragment_shader_name, std::string vertex_shader_name);
+
     static Shader *get_shader(std::string shader_name);
     static Shader *get_shader(std::string shader_name, ShaderType shader_type);
+    static Shader *get_shader(std::string fragment_shader_name, std::string vertex_shader_name);
+    static Shader *get_shader(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type);
+
     static void stop_all();
     static void list_opengl_errors(const char *file, int line);
 };

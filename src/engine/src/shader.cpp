@@ -12,7 +12,7 @@
 
 Shader::Shader()
 {
-    this->init(SHADER_TYPE_SCENE);
+    this->init(SHADER_TYPE_DEFAULT);
 }
 
 Shader::Shader(ShaderType shader_type)
@@ -22,7 +22,7 @@ Shader::Shader(ShaderType shader_type)
 
 Shader::Shader(std::string shader_name)
 {
-    this->init(shader_name, SHADER_TYPE_SCENE);
+    this->init(shader_name, SHADER_TYPE_DEFAULT);
 }
 
 Shader::Shader(std::string shader_name, ShaderType shader_type)
@@ -30,16 +30,39 @@ Shader::Shader(std::string shader_name, ShaderType shader_type)
     this->init(shader_name, shader_type);
 }
 
+Shader::Shader(std::string fragment_shader_name, std::string vertex_shader_name)
+{
+    this->init(fragment_shader_name, vertex_shader_name, SHADER_TYPE_DEFAULT);
+}
+
+Shader::Shader(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type)
+{
+    this->init(fragment_shader_name, vertex_shader_name, shader_type);
+}
+
 void Shader::init(ShaderType shader_type)
 {
     this->loaded = false;
+
+    if (shader_type == SHADER_TYPE_DEFAULT)
+    {
+        shader_type = SHADER_TYPE_SCENE;
+    }
+
     this->set_shader_type(shader_type);
 }
 
 void Shader::init(std::string shader_name, ShaderType shader_type)
 {
+    this->init(shader_name, shader_name, SHADER_TYPE_DEFAULT);
+}
+
+void Shader::init(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type)
+{
     this->init(shader_type);
-    this->name = shader_name;
+    this->name = fragment_shader_name + ", " + vertex_shader_name;
+    this->frag_name = fragment_shader_name;
+    this->vert_name = vertex_shader_name;
 
     if (!RenderWindow::is_render_thread())
     {
@@ -47,7 +70,7 @@ void Shader::init(std::string shader_name, ShaderType shader_type)
         return;
     }
 
-    this->load(shader_name);
+    this->load();
 }
 
 Shader::~Shader()
@@ -60,26 +83,35 @@ Shader::~Shader()
 
 Shader *Shader::get_shader(std::string shader_name)
 {
-    if (Shader::loaded_shaders.find(shader_name) == Shader::loaded_shaders.end())
-    {
-        return new Shader(shader_name);
-    }
-
-    std::cerr << "[Shader] load de shader cacheado: " << shader_name.c_str() << std::endl;
-
-    return Shader::loaded_shaders[shader_name];
+    return Shader::get_shader(shader_name, shader_name, SHADER_TYPE_DEFAULT);
 }
 
 Shader *Shader::get_shader(std::string shader_name, ShaderType shader_type)
 {
-    if (Shader::loaded_shaders.find(shader_name) == Shader::loaded_shaders.end())
+    return Shader::get_shader(shader_name, shader_name, shader_type);
+}
+
+Shader *Shader::get_shader(std::string fragment_shader_name, std::string vertex_shader_name)
+{
+    return Shader::get_shader(fragment_shader_name, vertex_shader_name, SHADER_TYPE_DEFAULT);
+}
+
+Shader *Shader::get_shader(std::string fragment_shader_name, std::string vertex_shader_name, ShaderType shader_type)
+{
+    std::string id = Shader::get_id(fragment_shader_name, vertex_shader_name);
+    if (Shader::loaded_shaders.find(id) == Shader::loaded_shaders.end())
     {
-        return new Shader(shader_name, shader_type);
+        /*
+            Issue:
+            pode gerar dois ou mais shaders que contenham a combinacão frag_name, vert_name diferentes
+            mas usem os mesmos program shaders (por fallback)
+        */
+        return new Shader(fragment_shader_name, vertex_shader_name, shader_type);
     }
 
-    std::cerr << "[Shader] load de shader cacheado: " << shader_name.c_str() << std::endl;
+    std::cerr << "[Shader] load de shader cacheado: " << id.c_str() << std::endl;
 
-    return Shader::loaded_shaders[shader_name]; // Ignora shader_type.
+    return Shader::loaded_shaders[id]; // Ignora shader_type.
 }
 
 void Shader::set_shader_type(ShaderType shader_type)
@@ -199,14 +231,14 @@ unsigned int Shader::compile(std::string file_path, unsigned int type)
     return shader_id;
 }
 
-void Shader::load(std::string shader_name)
+void Shader::load()
 {
 
     int status;
-    std::string vertex_file_path = Shader::shaders_folder + shader_name + SHADERS_VERTEX_EXT;
-    std::string fragment_file_path = Shader::shaders_folder + shader_name + SHADERS_FRAGMENT_EXT;
+    std::string vertex_file_path = Shader::shaders_folder + this->vert_name + SHADERS_VERTEX_EXT;
+    std::string fragment_file_path = Shader::shaders_folder + this->frag_name + SHADERS_FRAGMENT_EXT;
 
-    std::cerr << "[Shader] carregamento de shader: " << shader_name.c_str() << std::endl;
+    std::cerr << "[Shader] carregamento de shader: " << this->name.c_str() << std::endl;
 
     {
         bool vert_found;
@@ -223,7 +255,7 @@ void Shader::load(std::string shader_name)
 
         if (!vert_found && !frag_found)
         {
-            std::cerr << "[Shader] Shader não encontrado: " << shader_name.c_str() << std::endl;
+            std::cerr << "[Shader] Shader não encontrado: " << this->name.c_str() << std::endl;
             std::cerr << "\tpath: " << vertex_file_path.c_str() << std::endl;
             exit(1);
         }
@@ -283,9 +315,8 @@ void Shader::load(std::string shader_name)
 
     this->loaded = true;
     this->program_id = program_id;
-    this->name = shader_name;
 
-    Shader::loaded_shaders[shader_name] = this;
+    Shader::loaded_shaders[this->name] = this;
 }
 
 void Shader::exec()
@@ -427,7 +458,17 @@ void Shader::stop_all()
 
 void Shader::setup()
 {
-    this->load(this->name);
+    this->load();
+}
+
+std::string Shader::get_id(std::string shader_name)
+{
+    return Shader::get_id(shader_name, shader_name);
+}
+
+std::string Shader::get_id(std::string fragment_shader_name, std::string vertex_shader_name)
+{
+    return fragment_shader_name + ", " + vertex_shader_name;
 }
 
 std::unordered_map<std::string, Shader *> Shader::loaded_shaders;

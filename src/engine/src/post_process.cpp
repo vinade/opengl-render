@@ -6,7 +6,7 @@
 
 PostProcess::PostProcess(const std::string shader_name)
 {
-    this->shader = Shader::get_shader(shader_name, SHADER_TYPE_POST_PROCESSING);
+    this->shader = Shader::get_shader(shader_name, "fbo_color", SHADER_TYPE_POST_PROCESSING);
 }
 
 void GaussianNoise::set_noise_level(float noise_level)
