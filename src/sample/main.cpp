@@ -250,6 +250,8 @@ int main()
 {
 
 #ifdef DEBUG_MODE_COMPILE
+    engine.render.imgui_controller->observef("fps", &engine.render.fps);
+
     engine.render.imgui_controller->observef("L0.ambient", &light_ambient_debug, 0.0f, 10.0f);
     engine.render.imgui_controller->observef("L0.strength", &light_strength_debug, 0.0f, 20.0f);
     engine.render.imgui_controller->observef("L0.R", &color_light_debug[0], 0.0f, 1.0f);

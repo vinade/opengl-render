@@ -142,8 +142,19 @@ void RenderWindow::setup_preloaded()
 #ifdef DEBUG_MODE_COMPILE
 void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 {
+	double current_time = glfwGetTime();
+	double diff_time = current_time - this->previous_frame_sample_time;
+	if (diff_time >= RENDER_WINDOW_FPS_TIME_SAMPLE)
+	{
+		this->fps = float(this->frame_sample_counter) / diff_time;
+
+		this->frame_sample_counter = 0;
+		this->previous_frame_sample_time = current_time;
+	}
+
 	this->render_handler();
 	this->imgui_controller->display(window);
+	this->frame_sample_counter++;
 }
 #endif
 
@@ -226,6 +237,7 @@ void RenderWindow::start()
 	}
 
 #ifdef DEBUG_MODE_COMPILE
+	this->previous_frame_sample_time = glfwGetTime();
 	this->imgui_controller->init(this->window);
 #endif
 

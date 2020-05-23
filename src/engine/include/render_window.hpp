@@ -16,6 +16,7 @@
 #define RENDER_WINDOW_POS_X 100
 #define RENDER_WINDOW_POS_Y 100
 #define RENDER_WINDOW_RENDER_WAIT 32
+#define RENDER_WINDOW_FPS_TIME_SAMPLE 2.0
 
 #ifdef DEBUG_MODE_COMPILE
 #include "imgui_controller.hpp"
@@ -56,11 +57,14 @@ private:
 	void init_multiple_keys_state();
 
 #ifdef DEBUG_MODE_COMPILE
+	double previous_frame_sample_time;
+	int frame_sample_counter;
 	void render_handler_wrapper(GLFWwindow *window);
 #endif
 
 public:
 #ifdef DEBUG_MODE_COMPILE
+	float fps = 0.0;
 	ImGuiController *imgui_controller;
 #endif
 
