@@ -14,8 +14,11 @@ public:
     PostProcess(const std::string shader_name);
     void exec() { this->shader->exec(); };
 
-    virtual void setup() = 0;
-    virtual void fill() = 0;
+    void setup();
+    void fill();
+
+    virtual void specific_setup() = 0;
+    virtual void specific_fill() = 0;
 };
 
 class GaussianNoise : public PostProcess
@@ -27,8 +30,8 @@ public:
     bool every_frame = true;
     GaussianNoise(const std::string shader_name) : PostProcess(shader_name){};
 
-    void setup();
-    void fill();
+    void specific_setup();
+    void specific_fill();
 
     void set_noise_level(float noise_level);
 };
