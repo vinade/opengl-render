@@ -9,6 +9,7 @@
 #include "tile.hpp"
 #include "shader.hpp"
 #include "frame_buffer.hpp"
+#include "post_process.hpp"
 #include <vector>
 
 #define SCENE_MAX_LIGHTS 4
@@ -21,14 +22,14 @@ class Scene
 private:
     std::vector<Tile *> tiles;
     SkyboxMesh *skybox = nullptr;
+    FrameBuffer *fbo;
+    FrameBuffer *fbo2;
 
     void draw_on_buffer(FrameBuffer *fbo);
     void setup_light(int i);
-    // std::vector<PostProcess*> post_processes;
-
-    // FrameBufferObject* destination; // ou o unit id do fbo
 
 public:
+    std::vector<PostProcess *> post_shaders;
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;
 
@@ -44,15 +45,12 @@ public:
 
     void add(Light *light);
     void add(Light &light);
-    // void remove_light(Light *light);
 
     void add(ScenarioItem *scenario_item);
     void add(ScenarioItem &scenario_item);
-    // void remove_scenario_item(ScenarioItem *scenario_item);
 
-    // void add_post_process(PostProcess *post_process);
-    // void add_post_process(PostProcess &post_process);
-    // void remove_post_process(PostProcess *post_process);
+    void add(PostProcess *pp_shader);
+    void add(PostProcess &pp_shader);
 
     inline unsigned int count_lights() { return this->lights.size(); };
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };

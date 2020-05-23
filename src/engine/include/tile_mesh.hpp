@@ -25,6 +25,7 @@ public:
     TileMesh(Texture *texture_obj, const std::string &shader_name);
 
     void init(const std::string &shader_name);
+    void draw();
     void draw(const glm::mat4 &model_matrix);
     void setup();
 };

@@ -62,10 +62,15 @@ void TileMesh::init(const std::string &shader_name)
 
 void TileMesh::draw(const glm::mat4 &model_matrix)
 {
-    this->texture->bind();
     this->shader->fill("u_Texture", 1);
     this->shader->fill("u_Model", model_matrix);
     this->shader->exec();
+    this->draw();
+}
+
+void TileMesh::draw()
+{
+    this->texture->bind();
     this->vao->bind();
     this->ibo->bind();
     this->ibo->draw();

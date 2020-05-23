@@ -10,10 +10,10 @@ class BasicScene
 {
 
 private:
-    std::vector<Tile *> tiles;
     void draw_on_buffer(FrameBuffer *fbo);
 
 public:
+    std::vector<Tile *> tiles;
     void add(Tile *tile);
     void add(Tile &tile);
 

@@ -13,11 +13,14 @@ void Scene::init()
 
 void Scene::init(bool init_lights)
 {
+    /* PÓS PRELOAD: se não estiver na main thread */
     if (!RenderWindow::is_render_thread())
     {
         RenderWindow::context->to_setup(this);
         return;
     }
+
+    /* SCENE SHADER */
 
     this->ambient_shader = Shader::get_shader("ambient.std", SHADER_TYPE_SCENE);
 
@@ -61,6 +64,7 @@ void Scene::init(bool init_lights)
         return;
     }
 
+    /* SKYBOX */
     if (this->skybox == nullptr)
     {
         this->skybox = new SkyboxMesh();
@@ -73,10 +77,27 @@ void Scene::init(bool init_lights)
         }
     }
 
+    /* LIGHTS */
     if (init_lights)
     {
         this->setup_lights();
     }
+
+    /* POST PROCESSING SHADERS */
+    for (auto *pp_shader : this->post_shaders)
+    {
+        if (!pp_shader->initialized)
+        {
+            pp_shader->setup();
+            pp_shader->initialized = true;
+        }
+    }
+
+    /* FBO */
+    this->fbo = new FrameBuffer();
+    this->fbo->set();
+    this->fbo2 = new FrameBuffer();
+    this->fbo2->set();
 }
 
 void Scene::add(Light *light)
@@ -178,6 +199,19 @@ void Scene::add(Tile *tile)
     AppUtils::add_once(this->tiles, tile);
 }
 
+void Scene::add(PostProcess &pp_shader)
+{
+    Scene::add((PostProcess *)&pp_shader);
+}
+
+void Scene::add(PostProcess *pp_shader)
+{
+    /* Neste caso não deve ser add_once,
+       pois um mesmo shader pode ser aplicado mais de uma vez */
+
+    this->post_shaders.push_back(pp_shader);
+}
+
 void Scene::update_color_buffer(RenderWindow *render)
 {
     this->draw_on_buffer(render->fbo_color);
@@ -210,19 +244,19 @@ void Scene::draw()
     this->draw(nullptr);
 }
 
-void Scene::draw(FrameBuffer *fbo)
+void Scene::draw(FrameBuffer *target_fbo)
 {
 
     /*
         Bind FrameBuffer
     */
-    if (fbo == nullptr)
+    if ((target_fbo != nullptr) && (target_fbo->depth))
     {
-        FrameBuffer::unbind();
+        target_fbo->bind();
     }
     else
     {
-        fbo->bind();
+        this->fbo->bind();
     }
 
     /*
@@ -288,7 +322,7 @@ void Scene::draw(FrameBuffer *fbo)
     /*
         Objetos de debug
     */
-    if (DEBUG_MODE && (fbo == nullptr))
+    if (DEBUG_MODE && (target_fbo == nullptr))
     {
         /*
             Luzes
@@ -298,6 +332,30 @@ void Scene::draw(FrameBuffer *fbo)
             light->draw(this->camera, this->perspective);
         }
     }
+
+    /* Se o FBO alvo for para guardar a profundidade, não utiliza o pós processamento */
+    if ((target_fbo != nullptr) && (target_fbo->depth))
+    {
+        return;
+    }
+
+    /* POST PROCESS */
+    for (auto *pp_shader : this->post_shaders)
+    {
+        if (pp_shader->initialized)
+        {
+            FrameBuffer *f;
+
+            this->fbo->draw(this->fbo2, pp_shader);
+
+            f = this->fbo;
+            this->fbo = this->fbo2;
+            this->fbo2 = f;
+        }
+    }
+
+    /* Destino do draw */
+    this->fbo->draw(target_fbo);
 }
 
 void Scene::draw_tiles()

@@ -64,11 +64,42 @@ void FrameBuffer::bind() const
 
 void FrameBuffer::draw()
 {
-    FrameBuffer::unbind();
+    this->draw(nullptr);
+}
+
+void FrameBuffer::draw(FrameBuffer *fbo)
+{
+    this->draw(fbo, nullptr);
+}
+
+void FrameBuffer::draw(FrameBuffer *fbo, PostProcess *pp_shader)
+{
+
+    if (fbo == nullptr)
+    {
+        FrameBuffer::unbind();
+    }
+    else
+    {
+        fbo->bind();
+    }
 
     this->tile.center_x();
     this->tile.center_y();
-    ((BasicScene *)this->scene)->draw_tiles();
+
+    if ((pp_shader != nullptr) && (pp_shader->initialized))
+    {
+        pp_shader->model_matrix = this->tile.model_matrix;
+
+        pp_shader->fill();
+        pp_shader->exec();
+
+        ((BasicScene *)this->scene)->tiles[0]->tile_mesh->draw();
+    }
+    else
+    {
+        ((BasicScene *)this->scene)->draw_tiles();
+    }
 }
 
 void FrameBuffer::unbind()

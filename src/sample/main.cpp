@@ -9,6 +9,7 @@
 #include "light.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
+#include "post_process.hpp"
 #include "material_loader.hpp"
 
 #include <stdio.h>
@@ -24,15 +25,18 @@ ScenarioItem *moon_1;
 ScenarioItem *plant_1;
 ScenarioItem *nanosuit_1;
 Scene *scene = nullptr;
+GaussianNoise *pp_gaussian_noise = nullptr;
 Engine engine;
 
 glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
 glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
 float light_ambient_debug = 0.1;
 float light_strength_debug = 1.0;
+float noise_level_debug = 0.2;
 
 void render_handler()
 {
+    pp_gaussian_noise->set_noise_level(noise_level_debug);
 
     light_0->set_position(light_translation_debug);
     light_0->set_color(glm::vec4(color_light_debug, 1.0));
@@ -75,8 +79,9 @@ void preload()
     moon_1 = new ScenarioItem();
     plant_1 = new ScenarioItem();
     nanosuit_1 = new ScenarioItem();
+    pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
 
-    // scene->init();
+    scene->add(pp_gaussian_noise);
     scene->add(light_0);
     // scene->add(light_1);
     scene->add(cat_1);
@@ -85,6 +90,8 @@ void preload()
     scene->add(plant_1);
     scene->camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
     scene->camera.update_view_matrix();
+
+    pp_gaussian_noise->every_frame = true;
 
     light_1->set_position(glm::vec3(0.5, 0.5, -2.0));
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
@@ -243,6 +250,8 @@ int main()
     engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
     engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);
     engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
+
+    engine.render.imgui_controller->observef("gaussian_noise", &noise_level_debug, 0.0f, 1.0f);
 
     engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
     engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);

@@ -1,0 +1,36 @@
+#version 460 core
+#define NOISE_AMPL 200.0
+
+in vec2 v_texCoord;
+
+out vec4 color;
+
+uniform float u_Seed;
+uniform float u_Level;
+uniform vec4 u_Color;
+uniform sampler2D u_Texture;
+
+float rand_1(float n){
+    float y = sin(u_Seed + n * NOISE_AMPL) * NOISE_AMPL;
+	return y;
+}
+
+float rand_s(float n){
+    float y = sin(n * NOISE_AMPL);
+	return y;
+}
+
+void main(){
+	vec4 colorTex = texture(u_Texture, v_texCoord);
+
+    float level = 0.3 * u_Level;
+    float seed_0 = rand_1(v_texCoord.x)+ rand_1(v_texCoord.y);
+    float seed_x = rand_1(v_texCoord.x + rand_1(v_texCoord.y));
+    float seed_y = rand_1(v_texCoord.y + rand_1(seed_0));
+    float seed_z = rand_1(seed_0) + rand_1(seed_x + seed_y);
+
+    color.r = colorTex.r + level * rand_s(seed_x);
+    color.g = colorTex.g + level * rand_s(seed_y);
+    color.b = colorTex.b + level * rand_s(seed_z);
+    color.a = 1.0;
+}
