@@ -1,7 +1,6 @@
 #ifndef IMGUI_CONTROLLER_CPP
 #define IMGUI_CONTROLLER_CPP
 
-#include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <cassert>
@@ -41,57 +40,25 @@ void ImGuiController::display(GLFWwindow *window)
 
 		for (auto &item : this->f_variables)
 		{
-
-			float value = *(item.variable);
-
-			if (value < item.min)
+			this->display_number_item(item);
+			if (!item.read_only)
 			{
-				std::cerr << "[DEBUG] valor mínimo desrespeitado." << std::endl;
-				std::cerr << "\tvalor mínimo: " << item.min << std::endl;
-				std::cerr << "\t" << item.title.c_str() << ": " << value << std::endl;
+				ImGui::SliderFloat(item.title.c_str(), item.variable, item.min, item.max);
 			}
-
-			if (value > item.max)
-			{
-				std::cerr << "[DEBUG] valor máximo desrespeitado." << std::endl;
-				std::cerr << "\tvalor máximo: " << item.min << std::endl;
-				std::cerr << "\t" << item.title.c_str() << ": " << value << std::endl;
-			}
-
-			assert(value >= item.min);
-			assert(value <= item.max);
-
-			ImGui::SliderFloat(item.title.c_str(), item.variable, item.min, item.max);
 		}
 
 		for (auto &item : this->i_variables)
 		{
-
-			int value = *(item.variable);
-
-			if (value < item.min)
+			this->display_number_item(item);
+			if (!item.read_only)
 			{
-				std::cerr << "[DEBUG] valor mínimo desrespeitado." << std::endl;
-				std::cerr << "\tvalor mínimo: " << item.min << std::endl;
-				std::cerr << "\t" << item.title.c_str() << ": " << value << std::endl;
+				ImGui::SliderInt(item.title.c_str(), item.variable, item.min, item.max);
 			}
-
-			if (value > item.max)
-			{
-				std::cerr << "[DEBUG] valor máximo desrespeitado." << std::endl;
-				std::cerr << "\tvalor máximo: " << item.min << std::endl;
-				std::cerr << "\t" << item.title.c_str() << ": " << value << std::endl;
-			}
-
-			assert(value >= item.min);
-			assert(value <= item.max);
-
-			ImGui::SliderInt(item.title.c_str(), item.variable, item.min, item.max);
 		}
 
 		for (auto &item : this->radios)
 		{
-			ImGui::Text(item.title.c_str());
+			ImGui::Text("%s", item.title.c_str());
 
 			for (int i; i < item.values; i++)
 			{
@@ -145,32 +112,24 @@ void ImGuiController::button(const std::string &title, void (*fn)())
 	this->buttons.push_back(item);
 }
 
+void ImGuiController::observef(const std::string &title, float *variable)
+{
+	this->observe(this->f_variables, title, variable);
+}
+
+void ImGuiController::observei(const std::string &title, int *variable)
+{
+	this->observe(this->i_variables, title, variable);
+}
+
 void ImGuiController::observef(const std::string &title, float *variable, float min, float max)
 {
-	std::string observed_item_title(title);
-	struct imgui_item<float> item =
-	{
-		observed_item_title,
-			variable,
-			min,
-			max
-	};
-
-	this->f_variables.push_back(item);
+	this->observe(this->f_variables, title, variable, min, max);
 }
 
 void ImGuiController::observei(const std::string &title, int *variable, int min, int max)
 {
-	std::string observed_item_title(title);
-	struct imgui_item<int> item =
-	{
-		observed_item_title,
-			variable,
-			min,
-			max
-	};
-
-	this->i_variables.push_back(item);
+	this->observe(this->i_variables, title, variable, min, max);
 }
 
 #endif
