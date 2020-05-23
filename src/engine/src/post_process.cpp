@@ -2,11 +2,12 @@
 #define POST_PROCESS_CPP
 
 #include "post_process.hpp"
+#include "tile_mesh.hpp"
 #include <cstdlib>
 
 PostProcess::PostProcess(const std::string shader_name)
 {
-    this->shader = Shader::get_shader(shader_name, "fbo_color", SHADER_TYPE_POST_PROCESSING);
+    this->shader = Shader::get_shader(shader_name, TILE_MESH_SIMPLE_SHADER, SHADER_TYPE_POST_PROCESSING);
 }
 
 void GaussianNoise::set_noise_level(float noise_level)

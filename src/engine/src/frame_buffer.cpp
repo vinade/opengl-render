@@ -20,13 +20,13 @@ void FrameBuffer::init(bool depth)
 {
     this->depth = depth;
     this->texture = new Texture(&this->texture_id, &this->width, &this->height);
-    this->shader_name = depth ? "fbo_depth" : "fbo_color";
+    this->shader_name = depth ? "fbo_depth" : "std";
     this->channels = depth ? 1 : 3;
 }
 
 void FrameBuffer::set()
 {
-    this->shader = new Shader(this->shader_name);
+    this->shader = new Shader(this->shader_name, TILE_MESH_SIMPLE_SHADER);
 
     this->tile.set(this->texture);
 
