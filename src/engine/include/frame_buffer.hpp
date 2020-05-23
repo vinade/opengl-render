@@ -6,8 +6,9 @@
 #include "texture.hpp"
 #include "tile.hpp"
 #include "shader.hpp"
-#include "post_process.hpp"
 #include <vector>
+
+class PostProcess;
 
 class FrameBuffer
 {
@@ -40,6 +41,7 @@ public:
     void set();
     void draw();
     void draw(FrameBuffer *fbo);
+    void draw(PostProcess *pp_shader);
     void draw(FrameBuffer *fbo, PostProcess *pp_shader);
     void update_data();
     void save(const std::string &file_path);

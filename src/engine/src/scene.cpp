@@ -96,8 +96,6 @@ void Scene::init(bool init_lights)
     /* FBO */
     this->fbo = new FrameBuffer();
     this->fbo->set();
-    this->fbo2 = new FrameBuffer();
-    this->fbo2->set();
 }
 
 void Scene::add(Light *light)
@@ -345,12 +343,10 @@ void Scene::draw(FrameBuffer *target_fbo)
         if (pp_shader->initialized)
         {
             FrameBuffer *f;
-
-            this->fbo->draw(this->fbo2, pp_shader);
-
+            this->fbo->draw(pp_shader);
             f = this->fbo;
-            this->fbo = this->fbo2;
-            this->fbo2 = f;
+            this->fbo = pp_shader->fbo;
+            pp_shader->fbo = f;
         }
     }
 

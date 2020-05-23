@@ -1,0 +1,49 @@
+#version 460 core
+
+in vec2 v_texCoord;
+
+out vec4 color;
+
+uniform int u_Range;
+uniform vec4 u_Color;
+uniform sampler2D u_Texture;
+
+vec2 image_size;
+
+vec2 xy2uv(float x, float y){
+	return vec2(x / image_size.x, y / image_size.y);
+}
+
+vec2 uv2xy(float u, float v){
+	return vec2(u * image_size.x, v * image_size.y);
+}
+
+vec3 get_pixel(int x, int y){
+    return texture(u_Texture, xy2uv(float(x), float(y))).rgb;
+}
+
+vec3 blur(){
+    vec3 acc = vec3(0.0);
+   	vec2 pos = uv2xy(v_texCoord.x, v_texCoord.y);
+
+    int px = int(pos.x);
+    int py = int(pos.y);
+    int side_size = 2 * u_Range + 1;
+    float weight = 1.0 / float(side_size * side_size);
+    int delta_max_limit = u_Range + 1;
+
+    for (int dy = -u_Range; dy < delta_max_limit; dy++){
+        for (int dx = -u_Range; dx < delta_max_limit; dx++){
+            acc += get_pixel(px + dx, py + dy);
+        }
+    }
+
+    return acc * weight;
+}
+
+void main(){
+    ivec2 image_sizei = textureSize(u_Texture, 0);
+    image_size.x = float(image_sizei.x);
+    image_size.y = float(image_sizei.y);
+    color = vec4(blur(), 1.0);
+}

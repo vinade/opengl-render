@@ -64,12 +64,17 @@ void FrameBuffer::bind() const
 
 void FrameBuffer::draw()
 {
-    this->draw(nullptr);
+    this->draw((FrameBuffer *)nullptr);
 }
 
 void FrameBuffer::draw(FrameBuffer *fbo)
 {
     this->draw(fbo, nullptr);
+}
+
+void FrameBuffer::draw(PostProcess *pp_shader)
+{
+    this->draw(pp_shader->fbo, pp_shader);
 }
 
 void FrameBuffer::draw(FrameBuffer *fbo, PostProcess *pp_shader)

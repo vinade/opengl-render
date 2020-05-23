@@ -2,12 +2,14 @@
 #define POST_PROCESS_HPP
 
 #include "shader.hpp"
+#include "frame_buffer.hpp"
 #include <glm/glm.hpp>
 
 class PostProcess
 {
 public:
     Shader *shader;
+    FrameBuffer *fbo;
     glm::mat4 model_matrix;
     bool initialized = false;
 
@@ -21,10 +23,16 @@ public:
     virtual void specific_fill() = 0;
 };
 
+/*********************************
+
+    Ruído Gaussiano
+
+**********************************/
+
 class GaussianNoise : public PostProcess
 {
 private:
-    float noise_level = 0.5;
+    float level = 0.5;
 
 public:
     bool every_frame = true;
@@ -33,7 +41,28 @@ public:
     void specific_setup();
     void specific_fill();
 
-    void set_noise_level(float noise_level);
+    void set_level(float level) { this->level = level; };
+};
+
+/*********************************
+
+    Blur Gaussiano
+
+**********************************/
+
+class GaussianBlur : public PostProcess
+{
+private:
+    int range = 1;
+
+public:
+    bool every_frame = true;
+    GaussianBlur(const std::string shader_name) : PostProcess(shader_name){};
+
+    void specific_setup();
+    void specific_fill();
+
+    void set_range(int range) { this->range = range; };
 };
 
 #endif

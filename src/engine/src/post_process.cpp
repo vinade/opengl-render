@@ -12,9 +12,18 @@ PostProcess::PostProcess(const std::string shader_name)
 
 void PostProcess::setup()
 {
+    if (this->initialized)
+    {
+        return;
+    }
+
+    this->fbo = new FrameBuffer();
+    this->fbo->set();
+
     this->shader->setup("u_Texture", DATA_TYPE_INT);
     this->shader->setup("u_Model", DATA_TYPE_MAT4);
     this->specific_setup();
+    this->initialized = true;
 }
 
 void PostProcess::fill()
@@ -29,11 +38,6 @@ void PostProcess::fill()
     Ruído Gaussiano
 
 **********************************/
-
-void GaussianNoise::set_noise_level(float noise_level)
-{
-    this->noise_level = noise_level;
-}
 
 void GaussianNoise::specific_setup()
 {
@@ -50,7 +54,22 @@ void GaussianNoise::specific_fill()
     }
 
     this->shader->fill("u_Seed", seed);
-    this->shader->fill("u_Level", this->noise_level);
+    this->shader->fill("u_Level", this->level);
+}
+
+/*********************************
+
+    Blur Gaussiano
+
+**********************************/
+void GaussianBlur::specific_setup()
+{
+    this->shader->setup("u_Range", DATA_TYPE_INT);
+}
+
+void GaussianBlur::specific_fill()
+{
+    this->shader->fill("u_Range", this->range);
 }
 
 #endif

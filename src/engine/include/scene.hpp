@@ -23,7 +23,6 @@ private:
     std::vector<Tile *> tiles;
     SkyboxMesh *skybox = nullptr;
     FrameBuffer *fbo;
-    FrameBuffer *fbo2;
 
     void draw_on_buffer(FrameBuffer *fbo);
     void setup_light(int i);
