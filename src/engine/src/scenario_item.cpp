@@ -269,7 +269,13 @@ void ScenarioItem::load_data_from_file(const std::string &file_path, bool preloa
 
 void ScenarioItem::draw(Shader *shader)
 {
-	this->update_model_matrix();
+
+	if (shader->use_mvp)
+	{
+		this->update_model_matrix();
+		shader->fill("u_Model", this->model_matrix);
+	}
+
 	for (unsigned int i = 0; i < this->meshes.size(); i++)
 	{
 		this->meshes[i].draw(shader);
