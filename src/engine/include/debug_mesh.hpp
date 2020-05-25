@@ -10,7 +10,7 @@ private:
     static const unsigned int index_buffer_src[36];
 
 public:
-    unsigned int vertex_count = 24;
+    unsigned int vertex_count = 8;
     unsigned int index_count = 36;
 
     glm::vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
