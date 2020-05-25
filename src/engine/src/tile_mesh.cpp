@@ -54,7 +54,7 @@ void TileMesh::init(const std::string &shader_name)
     vbo_layout->push(DATA_TYPE_FLOAT, 2);
     vbo_layout->push(DATA_TYPE_FLOAT, 2);
 
-    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer_src2, this->vertex_count * vbo_layout->get_stride());
+    VertexBuffer *vbo = new VertexBuffer((void *)TileMesh::vertex_buffer_src2, this->vertex_count * vbo_layout->get_stride());
 
     this->vao->add_buffer(vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_buffer_src2[0], this->index_count);

@@ -22,7 +22,7 @@ DebugMesh::DebugMesh()
     VertexBufferLayout *vbo_layout = new VertexBufferLayout();
     vbo_layout->push(DATA_TYPE_FLOAT, 3);
 
-    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer_src, this->vertex_count * vbo_layout->get_stride());
+    VertexBuffer *vbo = new VertexBuffer((void *)this->vertex_buffer_src, this->vertex_count * vbo_layout->get_stride());
 
     this->vao->add_buffer(vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_buffer_src[0], this->index_count);

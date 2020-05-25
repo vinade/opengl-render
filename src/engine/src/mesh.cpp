@@ -101,7 +101,7 @@ void Mesh::setup()
 
     this->flat_vertex_data(vbo_layout);
 
-    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_stride());
+    VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_counter());
 
     this->vao->add_buffer(vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
