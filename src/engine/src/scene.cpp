@@ -26,6 +26,7 @@ void Scene::init(bool init_lights)
 
     if (this->ambient_shader->use_materials)
     {
+        this->ambient_shader->setup("u_Textures.size", DATA_TYPE_FLOAT);
         this->ambient_shader->setup("u_Textures.skybox", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.diffuse", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.normal", DATA_TYPE_INT);
@@ -197,6 +198,16 @@ void Scene::add(Tile *tile)
     AppUtils::add_once(this->tiles, tile);
 }
 
+void Scene::add(HeightMap &height_map)
+{
+    Scene::add((HeightMap *)&height_map);
+}
+
+void Scene::add(HeightMap *height_map)
+{
+    AppUtils::add_once(this->height_map_items, height_map);
+}
+
 void Scene::add(PostProcess &pp_shader)
 {
     Scene::add((PostProcess *)&pp_shader);
@@ -269,6 +280,7 @@ void Scene::draw(FrameBuffer *target_fbo)
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->fill("u_Textures.skybox", 0);
+        this->ambient_shader->fill("u_Textures.size", 1.0);
         this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(TEXTURE_DIFFUSE));
         this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(TEXTURE_NORMAL));
         this->ambient_shader->fill("u_Textures.metallic", Texture::get_type_slot(TEXTURE_METALLIC));
@@ -308,12 +320,17 @@ void Scene::draw(FrameBuffer *target_fbo)
 
     for (auto item : this->scenario_items)
     {
+        // atencão: altera o u_Model
+        item->draw(this->ambient_shader);
+    }
 
-        if (this->ambient_shader->use_mvp)
-        {
-            this->ambient_shader->fill("u_Model", item->model_matrix);
-        }
-
+    /*
+        HeightMaps
+    */
+    for (auto item : this->height_map_items)
+    {
+        // atencão: altera o u_Texture.size
+        // atencão: altera o u_Model
         item->draw(this->ambient_shader);
     }
 

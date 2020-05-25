@@ -6,6 +6,7 @@
 #include "texture.hpp"
 #include "vertex_array.hpp"
 #include "scenario_item.hpp"
+#include "height_map.hpp"
 #include "light.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
@@ -24,6 +25,7 @@ ScenarioItem *cat_1;
 ScenarioItem *moon_1;
 ScenarioItem *plant_1;
 ScenarioItem *nanosuit_1;
+HeightMap *height_map;
 Scene *scene = nullptr;
 
 Light *light_0;
@@ -52,6 +54,8 @@ void render_handler()
 
     moon_1->inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
+    height_map->inc_rotation(glm::vec3(0.0f, 0.05f, 0.0f));
+
     switch (frame_buffer_select)
     {
     default:
@@ -78,6 +82,7 @@ void preload()
 
     scene = new Scene();
 
+    height_map = new HeightMap();
     light_0 = new Light();
     light_1 = new Light();
     cat_1 = new ScenarioItem();
@@ -99,6 +104,10 @@ void preload()
     scene->add(plant_1);
     scene->camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
     scene->camera.update_view_matrix();
+
+    scene->add(height_map);
+    height_map->set_position(glm::vec3(0.0, 0.0, -4.0));
+    height_map->set_scale(0.5);
 
     pp_gaussian_noise->every_frame = true;
 
@@ -143,6 +152,7 @@ void preload()
         "simple_gold_1",
     });
 
+    height_map->set_material("leather_1");
     // moon_1->set_material("metal_1");
     // nanosuit_1->meshes[0].material = MaterialLoader::get_material("leather_1");
 }
@@ -156,6 +166,11 @@ void shuffle_materials()
         {
             m.material = Material::materials[std::rand() % Material::materials.size()];
         }
+    }
+
+    for (auto hp : scene->height_map_items)
+    {
+        hp->height_map_mesh->material = Material::materials[std::rand() % Material::materials.size()];
     }
 }
 
@@ -275,6 +290,7 @@ int main()
     engine.set_mouse_handler(mouse_handler);
     engine.set_preload(preload);
     engine.set_render_handler(render_handler);
+    engine.render.set_size(1024, 768);
     engine.start();
 
     return 0;

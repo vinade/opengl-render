@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "scenario_item.hpp"
+#include "height_map.hpp"
 #include "skybox_mesh.hpp"
 #include "light.hpp"
 #include "tile.hpp"
@@ -31,6 +32,7 @@ public:
     std::vector<PostProcess *> post_shaders;
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;
+    std::vector<HeightMap *> height_map_items;
 
     Camera camera;
     Perspective perspective;
@@ -50,6 +52,9 @@ public:
 
     void add(PostProcess *pp_shader);
     void add(PostProcess &pp_shader);
+
+    void add(HeightMap &height_map);
+    void add(HeightMap *height_map);
 
     inline unsigned int count_lights() { return this->lights.size(); };
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };

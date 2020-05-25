@@ -26,12 +26,12 @@ public:
 
 	Mesh();
 
-	float *vertex_buffer;
+	float *vertex_buffer = nullptr;
 	std::vector<std::vector<float>> vertex_data;
 	std::vector<unsigned int> index_data;
 
-	VertexArray *vao;
-	IndexBuffer *ibo;
+	VertexArray *vao = nullptr;
+	IndexBuffer *ibo = nullptr;
 
 	void prepare(glm::vec3 &center, glm::vec3 &size);
 	void prepare(glm::vec3 &center, glm::vec3 &size, bool preload);

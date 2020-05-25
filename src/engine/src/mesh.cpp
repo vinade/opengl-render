@@ -105,6 +105,7 @@ void Mesh::setup()
 
     this->vao->add_buffer(vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
+    std::cerr << "UEPA\n";
 }
 
 void Mesh::draw(Shader *shader)

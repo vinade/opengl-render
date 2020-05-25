@@ -130,6 +130,9 @@ void RenderWindow::setup_preloaded()
 	RenderWindow::call_setup(this->mesh_setup_list);
 	std::cerr << "\tMeshes ready." << std::endl;
 
+	RenderWindow::call_setup(this->height_map_mesh_setup_list);
+	std::cerr << "\tHeightMap ready." << std::endl;
+
 	RenderWindow::call_setup(this->scene_setup_list);
 	std::cerr << "\tScene ready." << std::endl;
 

@@ -4,6 +4,8 @@
 #include "debug_flags.hpp"
 #include "app_utils.hpp"
 #include "frame_buffer.hpp"
+#include "height_map.hpp"
+#include "height_map_mesh.hpp"
 #include "light.hpp"
 #include "scene.hpp"
 #include <GLFW/glfw3.h>
@@ -51,6 +53,7 @@ private:
 	std::vector<Shader *> shader_setup_list;
 	std::vector<TileMesh *> tile_mesh_setup_list;
 	std::vector<Mesh *> mesh_setup_list;
+	std::vector<HeightMapMesh *> height_map_mesh_setup_list;
 	std::vector<Texture *> texture_setup_list;
 	std::vector<Scene *> scene_setup_list;
 	std::vector<FrameBuffer *> frame_buffer_setup_list;
@@ -97,6 +100,7 @@ public:
 	void to_setup(TileMesh *tile_mesh) { AppUtils::add_once(this->tile_mesh_setup_list, tile_mesh); };
 	void to_setup(Texture *texture) { AppUtils::add_once(this->texture_setup_list, texture); };
 	void to_setup(Mesh *mesh) { AppUtils::add_once(this->mesh_setup_list, mesh); };
+	void to_setup(HeightMapMesh *height_map_mesh) { AppUtils::add_once(this->height_map_mesh_setup_list, height_map_mesh); };
 	void to_setup(Scene *scene) { AppUtils::add_once(this->scene_setup_list, scene); };
 	void to_setup(FrameBuffer *frame_buffer) { AppUtils::add_once(this->frame_buffer_setup_list, frame_buffer); };
 
