@@ -13,6 +13,8 @@ public:
 
 	~VertexBuffer();
 
+	void init(const void *data, unsigned int size);
+	void update(float *data, unsigned int count);
 	void bind() const;
 	void unbind() const;
 };
