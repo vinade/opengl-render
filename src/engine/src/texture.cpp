@@ -52,7 +52,7 @@ void Texture::load_texture(TextureType tex_type, bool preload)
 	{
 		std::string original_file_path = this->file_path;
 
-		this->file_path = this->texture_folder + this->file_path;
+		this->file_path = Texture::texture_folder + this->file_path;
 		this->local_buffer = stbi_load(this->file_path.c_str(), &this->width, &this->height, &this->bpp, this->get_channels());
 
 		if (!this->width || !this->height)

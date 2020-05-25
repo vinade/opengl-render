@@ -12,6 +12,7 @@ private:
 public:
     HeightMapMesh *height_map_mesh;
     HeightMap();
+    HeightMap(const std::string &file_path);
     HeightMap(float *height_map_data, int width, int height);
     ~HeightMap();
 

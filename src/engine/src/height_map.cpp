@@ -10,6 +10,12 @@ HeightMap::HeightMap()
     this->height_map_mesh->from_float_array(&HeightMap::debug_data[0][0], HeightMap::debug_width, HeightMap::debug_height);
 }
 
+HeightMap::HeightMap(const std::string &file_path)
+{
+    this->height_map_mesh = new HeightMapMesh();
+    this->height_map_mesh->load(file_path);
+}
+
 HeightMap::HeightMap(float *height_map_data, int width, int height)
 {
     this->height_map_mesh = new HeightMapMesh();

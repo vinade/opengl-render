@@ -1,6 +1,7 @@
 #ifndef HEIGHT_MAP_MESH_CPP
 #define HEIGHT_MAP_MESH_CPP
 
+#include "stb/stb_image.h"
 #include "height_map_mesh.hpp"
 #include "vertex_array.hpp"
 #include "index_buffer.hpp"
@@ -18,8 +19,9 @@ HeightMapMesh::HeightMapMesh()
     this->material = Material::materials[0];
 }
 
-void HeightMapMesh::from_float_array(float *data, unsigned int width, unsigned int height)
+void HeightMapMesh::from_float_array(float *data, int width, int height)
 {
+
     float half_width = width / 2.0;
     float half_height = height / 2.0;
 
@@ -132,9 +134,40 @@ void HeightMapMesh::setup()
         vbo_layout->push(DATA_TYPE_FLOAT, 3);
     }
 
-    this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_stride());
+    // this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_itens_lenght());
+    this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * 14);
     this->vao->add_buffer(this->vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
 }
+
+void HeightMapMesh::load(const std::string &file_path)
+{
+    stbi_set_flip_vertically_on_load(0);
+
+    int bpp;
+    float *local_buffer;
+    std::string hp_path = file_path;
+    local_buffer = stbi_loadf(hp_path.c_str(), &this->width, &this->height, &bpp, 1);
+
+    if (!this->width || !this->height)
+    {
+        std::string original_file_path = hp_path;
+
+        hp_path = HeightMapMesh::height_map_folder + hp_path;
+        local_buffer = stbi_loadf(hp_path.c_str(), &this->width, &this->height, &bpp, 1);
+
+        if (!this->width || !this->height)
+        {
+            std::cerr << "[HeightMapMesh] Não foi possível carregar o height map: " << original_file_path << std::endl;
+            std::cerr << "\tfallback também falhou: " << hp_path << std::endl;
+            exit(1);
+        }
+    }
+
+    this->from_float_array(local_buffer, this->width, this->height);
+    free(local_buffer);
+}
+
+const std::string HeightMapMesh::height_map_folder = std::string(CMAKE_ROOT_DIR HEIGHT_MAP_MESH_DEFAULT_FOLDER);
 
 #endif

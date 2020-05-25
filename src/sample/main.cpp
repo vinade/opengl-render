@@ -54,8 +54,6 @@ void render_handler()
 
     moon_1->inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
 
-    height_map->inc_rotation(glm::vec3(0.0f, 0.05f, 0.0f));
-
     switch (frame_buffer_select)
     {
     default:
@@ -82,7 +80,7 @@ void preload()
 
     scene = new Scene();
 
-    height_map = new HeightMap();
+    height_map = new HeightMap("debug.png");
     light_0 = new Light();
     light_1 = new Light();
     cat_1 = new ScenarioItem();
@@ -106,8 +104,8 @@ void preload()
     scene->camera.update_view_matrix();
 
     scene->add(height_map);
-    height_map->set_position(glm::vec3(0.0, 0.0, -4.0));
-    height_map->set_scale(0.5);
+    height_map->set_position(glm::vec3(0.0, 40.0, -4.0));
+    height_map->set_scale(glm::vec3(1.0, 50.0, 1.0));
 
     pp_gaussian_noise->every_frame = true;
 
