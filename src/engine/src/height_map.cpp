@@ -27,6 +27,16 @@ HeightMap::~HeightMap()
     delete this->height_map_mesh;
 }
 
+void HeightMap::load(const std::string &file_path)
+{
+    if (this->height_map_mesh == nullptr)
+    {
+        this->height_map_mesh = new HeightMapMesh();
+    }
+
+    this->height_map_mesh->load(file_path);
+}
+
 void HeightMap::set_material(const std::string material_name)
 {
     Material *mtl = MaterialLoader::get_material(material_name);

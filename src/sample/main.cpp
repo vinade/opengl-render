@@ -11,6 +11,7 @@
 #include "scene.hpp"
 #include "engine.hpp"
 #include "post_process.hpp"
+#include "tile.hpp"
 #include "material_loader.hpp"
 
 #include <stdio.h>
@@ -80,7 +81,7 @@ void preload()
 
     scene = new Scene();
 
-    height_map = new HeightMap("debug.png");
+    height_map = new HeightMap("h2.jpeg");
     light_0 = new Light();
     light_1 = new Light();
     cat_1 = new ScenarioItem();
@@ -104,8 +105,8 @@ void preload()
     scene->camera.update_view_matrix();
 
     scene->add(height_map);
-    height_map->set_position(glm::vec3(0.0, 40.0, -4.0));
-    height_map->set_scale(glm::vec3(1.0, 50.0, 1.0));
+    height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
+    height_map->set_scale(glm::vec3(1.0, 10.0, 1.0));
 
     pp_gaussian_noise->every_frame = true;
 
@@ -180,6 +181,11 @@ void shuffle_direction()
     scene->camera.update_view_matrix();
 }
 
+void change_height_map()
+{
+    height_map->load("debug.png");
+}
+
 void mouse_handler(int button)
 {
     if (Engine::context->cursor_enabled)
@@ -209,7 +215,7 @@ void keyboard_handler(int key, int scancode, int action, int mods)
     glm::vec3 normal_vector;
     if ((action == GLFW_PRESS) || (action == GLFW_REPEAT))
     {
-        float speed = 0.05;
+        float speed = 0.95;
 
         if (Engine::check_key(GLFW_KEY_W, key, action))
         {
@@ -281,6 +287,7 @@ int main()
     engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
     engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);
     engine.render.imgui_controller->button("point to objects", shuffle_direction);
+    engine.render.imgui_controller->button("change heightmap", change_height_map);
 
 #endif
 

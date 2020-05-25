@@ -16,6 +16,7 @@ public:
     HeightMap(float *height_map_data, int width, int height);
     ~HeightMap();
 
+    void load(const std::string &file_path);
     void draw(Shader *shader);
     void set_material(const std::string material_name);
     void set_material(Material *mtl);

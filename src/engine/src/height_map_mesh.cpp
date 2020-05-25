@@ -21,7 +21,6 @@ HeightMapMesh::HeightMapMesh()
 
 void HeightMapMesh::from_float_array(float *data, int width, int height)
 {
-
     float half_width = width / 2.0;
     float half_height = height / 2.0;
 
@@ -31,11 +30,10 @@ void HeightMapMesh::from_float_array(float *data, int width, int height)
     this->vertex_count = width * height;
     this->index_count = (width - 1) * (height - 1) * 6;
 
-    if (this->vertex_buffer != nullptr)
+    if (this->vertex_buffer == nullptr)
     {
-        free(this->vertex_buffer);
+        this->vertex_buffer = (float *)malloc(sizeof(float) * this->vertex_count * this->vertex_elements_count);
     }
-    this->vertex_buffer = (float *)malloc(sizeof(float) * this->vertex_count * this->vertex_elements_count);
 
     for (int y = 0; y < height; y++)
     {
@@ -107,19 +105,10 @@ void HeightMapMesh::setup()
     }
     this->ready = true;
 
-    if (this->vao != nullptr)
-    {
-        delete this->vao;
-    }
-
     if (this->vbo != nullptr)
     {
-        delete this->vbo;
-    }
-
-    if (this->ibo != nullptr)
-    {
-        delete this->ibo;
+        this->vbo->update(this->vertex_buffer, this->vertex_count * vbo_layout->get_counter());
+        return;
     }
 
     this->vao = new VertexArray();
@@ -134,8 +123,7 @@ void HeightMapMesh::setup()
         vbo_layout->push(DATA_TYPE_FLOAT, 3);
     }
 
-    // this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_itens_lenght());
-    this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * 14);
+    this->vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_counter());
     this->vao->add_buffer(this->vbo, vbo_layout);
     this->ibo = new IndexBuffer(&this->index_data[0], this->index_count);
 }
@@ -147,6 +135,9 @@ void HeightMapMesh::load(const std::string &file_path)
     int bpp;
     float *local_buffer;
     std::string hp_path = file_path;
+    this->width = 0;
+    this->height = 0;
+
     local_buffer = stbi_loadf(hp_path.c_str(), &this->width, &this->height, &bpp, 1);
 
     if (!this->width || !this->height)
