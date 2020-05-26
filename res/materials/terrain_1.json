@@ -1,0 +1,9 @@
+{
+    "metallic": 0,
+    "albedo_map": "ground_1/Ground_Wet_002_basecolor.jpg",
+    "normal_map": "ground_1/Ground_Wet_002_normal.jpg",
+    "roughness_map": "ground_1/Ground_Wet_002_roughness.jpg",
+    "ambient_occlusion_map": "ground_1/Ground_Wet_002_ambientOcclusion.jpg",
+    "reflection_map": "ground_1/Ground_Wet_002_mask.jpg",
+    "displacement_map": "ground_1/Ground_Wet_002_height.png"
+}
