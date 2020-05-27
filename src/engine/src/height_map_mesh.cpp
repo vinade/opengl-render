@@ -39,17 +39,14 @@ void HeightMapMesh::from_float_array(float *data, int width, int height)
     {
         for (int x = 0; x < width; x++)
         {
+            float tex_coord_x = float(x) / float(width);
+            float tex_coord_y = float(y) / float(height);
             int i = y * width + x;
             int vi = i * this->vertex_elements_count;
+
             this->vertex_buffer[vi + 0] = float(x) - half_width;
             this->vertex_buffer[vi + 1] = float(data[i]) * 2.0 - 1.0;
             this->vertex_buffer[vi + 2] = float(y) - half_height;
-
-            float aux;
-            float tex_coord_x = this->texture_size * float(x) / float(width);
-            float tex_coord_y = this->texture_size * float(y) / float(height);
-            tex_coord_x = modf(tex_coord_x, &aux);
-            tex_coord_y = modf(tex_coord_y, &aux);
 
             this->vertex_buffer[vi + 3] = tex_coord_x;
             this->vertex_buffer[vi + 4] = tex_coord_y;
@@ -157,6 +154,186 @@ void HeightMapMesh::load(const std::string &file_path)
 
     this->from_float_array(local_buffer, this->width, this->height);
     free(local_buffer);
+}
+
+float unit_rand()
+{
+    float res;
+
+    res = rand() % 1000;
+    res = res / 500 - 1;
+
+    return res;
+}
+
+inline int HeightMapMesh::address_of_coord(glm::ivec2 p)
+{
+    return (p.y * this->width) + p.x;
+}
+
+void HeightMapMesh::diamond_square_recursion(glm::ivec2 p0, glm::ivec2 p1, glm::ivec2 p2, glm::ivec2 p3, float range, float *data, char *flag)
+{
+
+    float new_range;
+    std::vector<int> p_list;
+
+    p_list.push_back(this->address_of_coord(p0));
+    p_list.push_back(this->address_of_coord(p1));
+    p_list.push_back(this->address_of_coord(p2));
+    p_list.push_back(this->address_of_coord(p3));
+
+    for (int coord : p_list)
+    {
+        if (flag[coord] == 0)
+        {
+            data[coord] = data[coord] + (unit_rand() * range);
+            flag[coord] = 1;
+        }
+
+        if (data[coord] > this->max_height)
+            this->max_height = data[coord];
+
+        if (data[coord] < this->min_height)
+            this->min_height = data[coord];
+    }
+
+    if (((p1.x - p0.x) > 1) || ((p2.y - p0.y) > 1))
+    {
+        glm::ivec2 p01;
+        glm::ivec2 p02;
+        glm::ivec2 p03;
+        glm::ivec2 p13;
+        glm::ivec2 p23;
+
+        p01.x = (p1.x + p0.x) >> 1;
+        p01.y = p0.y;
+
+        p02.x = p0.x;
+        p02.y = (p2.y + p0.y) >> 1;
+
+        p03.x = (p3.x + p0.x) >> 1;
+        p03.y = (p3.y + p0.y) >> 1;
+
+        p13.x = p1.x;
+        p13.y = (p3.y + p1.y) >> 1;
+
+        p23.x = (p3.x + p2.x) >> 1;
+        p23.y = p2.y;
+
+        int p01_coord = this->address_of_coord(p01);
+        int p02_coord = this->address_of_coord(p02);
+        int p03_coord = this->address_of_coord(p03);
+        int p13_coord = this->address_of_coord(p13);
+        int p23_coord = this->address_of_coord(p23);
+
+        //p01
+        if (flag[p01_coord] == 0)
+        {
+            data[p01_coord] = (data[p_list[0]] + data[p_list[1]]) / 2;
+        }
+
+        //p02
+        if (flag[p02_coord] == 0)
+        {
+            data[p02_coord] = (data[p_list[0]] + data[p_list[2]]) / 2;
+        }
+
+        //p03
+        if (flag[p03_coord] == 0)
+        {
+            data[p03_coord] = (data[p_list[0]] + data[p_list[3]]) / 2;
+        }
+
+        //p13
+        if (flag[p13_coord] == 0)
+        {
+            data[p13_coord] = (data[p_list[3]] + data[p_list[1]]) / 2;
+        }
+
+        //p23
+        if (flag[p23_coord] == 0)
+        {
+            data[p23_coord] = (data[p_list[2]] + data[p_list[3]]) / 2;
+        }
+
+        new_range = range / this->suavity;
+        this->diamond_square_recursion(p0, p01, p02, p03, new_range, data, flag);
+        this->diamond_square_recursion(p01, p1, p03, p13, new_range, data, flag);
+        this->diamond_square_recursion(p02, p03, p2, p23, new_range, data, flag);
+        this->diamond_square_recursion(p03, p13, p23, p3, new_range, data, flag);
+    }
+    // passo
+}
+
+void HeightMapMesh::diamond_square()
+{
+    this->diamond_square(this->width, this->height);
+}
+
+void HeightMapMesh::diamond_square(int width, int height)
+{
+    float *data;
+    char *flag;
+    glm::ivec2 p0;
+    glm::ivec2 p1;
+    glm::ivec2 p2;
+    glm::ivec2 p3;
+    int total_height = 0;
+
+    this->height = height;
+    this->width = width;
+
+    data = (float *)malloc(sizeof(float) * width * height);
+    flag = (char *)malloc(sizeof(char) * width * height);
+
+    this->suavity = 2.0 + (((float)(rand() % 2000) / 1000.0) - 1.0);
+
+    this->max_height = 0;
+    this->min_height = 0;
+
+    for (int y = 0; y < this->height; y++)
+    {
+        memset(&flag[y], 0, this->width);
+    }
+
+    p0.x = 0;
+    p0.y = 0;
+
+    p1.x = this->width - 1;
+    p1.y = 0;
+
+    p2.x = 0;
+    p2.y = this->height - 1;
+
+    p3.x = this->width - 1;
+    p3.y = this->height - 1;
+
+    int p0_coord = this->address_of_coord(p0);
+    int p1_coord = this->address_of_coord(p1);
+    int p2_coord = this->address_of_coord(p2);
+    int p3_coord = this->address_of_coord(p3);
+
+    data[p0_coord] = 0;
+    data[p1_coord] = 0;
+    data[p2_coord] = 0;
+    data[p3_coord] = 0;
+
+    this->diamond_square_recursion(p0, p1, p2, p3, 1.0, data, flag);
+
+    total_height = this->max_height - this->min_height;
+    // Normaliza os dados
+    for (int y = 0; y < this->height; y++)
+    {
+        for (int x = 0; x < this->width; x++)
+        {
+            int coord = y * this->width + x;
+            data[coord] = (data[coord] - this->min_height) / total_height;
+        }
+    }
+
+    this->from_float_array(data, this->width, height);
+    free(data);
+    free(flag);
 }
 
 const std::string HeightMapMesh::height_map_folder = std::string(CMAKE_ROOT_DIR HEIGHT_MAP_MESH_DEFAULT_FOLDER);

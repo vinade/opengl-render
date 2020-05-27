@@ -1,5 +1,18 @@
 #version 460 core
 
+struct Textures
+{
+    int repeat;
+    samplerCube skybox;
+    sampler2D diffuse;
+    sampler2D normal;
+    sampler2D metallic;
+    sampler2D roughness;
+    sampler2D ambient_occlusion;
+    sampler2D reflection;
+};
+
+
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 texCoord;
 layout(location = 2) in vec3 normal;
@@ -17,13 +30,14 @@ out VS_OUT {
 uniform mat4 u_Model;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
+uniform Textures u_Textures;
 
 
 void main(){
     vec4 pos = vec4(position, 1.0);
     gl_Position = u_Projection * u_View * u_Model * pos;
     vs.frag_pos = vec3(u_Model * pos);
-    vs.tex_coord = texCoord;
+    vs.tex_coord = texCoord * float(u_Textures.repeat);
     vs.model_matrix = mat3(transpose(inverse(u_Model)));
     vs.normal = vs.model_matrix * normal;
 

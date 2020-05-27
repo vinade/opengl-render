@@ -81,7 +81,8 @@ void preload()
 
     scene = new Scene();
 
-    height_map = new HeightMap("h2.jpeg");
+    // height_map = new HeightMap("h2.jpeg");
+    height_map = new HeightMap(10, 10);
     light_0 = new Light();
     light_1 = new Light();
     cat_1 = new ScenarioItem();
@@ -106,7 +107,7 @@ void preload()
 
     scene->add(height_map);
     height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
-    height_map->set_scale(glm::vec3(1.0, 10.0, 1.0));
+    height_map->set_scale(glm::vec3(3.0, 2.0, 3.0));
 
     pp_gaussian_noise->every_frame = true;
 
@@ -151,7 +152,6 @@ void preload()
         "simple_gold_1",
     });
 
-    height_map->set_material("leather_1");
     // moon_1->set_material("metal_1");
     // nanosuit_1->meshes[0].material = MaterialLoader::get_material("leather_1");
 }
@@ -183,7 +183,7 @@ void shuffle_direction()
 
 void change_height_map()
 {
-    height_map->load("debug.png");
+    height_map->diamond_square(10, 10);
 }
 
 void mouse_handler(int button)

@@ -30,7 +30,7 @@ struct LightSource
 
 struct Textures
 {
-    float size;
+    int repeat;
     samplerCube skybox;
     sampler2D diffuse;
     sampler2D normal;

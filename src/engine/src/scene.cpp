@@ -26,7 +26,7 @@ void Scene::init(bool init_lights)
 
     if (this->ambient_shader->use_materials)
     {
-        this->ambient_shader->setup("u_Textures.size", DATA_TYPE_FLOAT);
+        this->ambient_shader->setup("u_Textures.repeat", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.skybox", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.diffuse", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.normal", DATA_TYPE_INT);
@@ -280,7 +280,7 @@ void Scene::draw(FrameBuffer *target_fbo)
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->fill("u_Textures.skybox", 0);
-        this->ambient_shader->fill("u_Textures.size", 1.0);
+        this->ambient_shader->fill("u_Textures.repeat", 1);
         this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(TEXTURE_DIFFUSE));
         this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(TEXTURE_NORMAL));
         this->ambient_shader->fill("u_Textures.metallic", Texture::get_type_slot(TEXTURE_METALLIC));

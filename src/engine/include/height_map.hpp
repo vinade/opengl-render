@@ -4,28 +4,30 @@
 #include "height_map_mesh.hpp"
 #include "scenario_item.hpp"
 
+#define HEIGHT_MAP_DEFAULT_WIDTH 15
+#define HEIGHT_MAP_DEFAULT_HEIGHT 15
+#define HEIGHT_MAP_DEFAULT_MATERIAL "terrain_1"
+
 class HeightMap : public ScenarioItem
 {
 private:
-    float texture_size = 1.0;
+    int repeat_number = 1;
 
 public:
     HeightMapMesh *height_map_mesh;
     HeightMap();
     HeightMap(const std::string &file_path);
     HeightMap(float *height_map_data, int width, int height);
+    HeightMap(int width, int height);
     ~HeightMap();
 
     void load(const std::string &file_path);
     void draw(Shader *shader);
     void set_material(const std::string material_name);
     void set_material(Material *mtl);
-    inline void set_texture_size(float texture_size) { this->texture_size = texture_size; };
-
-    /* Temporário */
-    static float debug_data[5][5];
-    static int debug_width;
-    static int debug_height;
+    void diamond_square();
+    void diamond_square(int width, int height);
+    inline void set_repeat_number(float repeat_number) { this->repeat_number = repeat_number; };
 };
 
 #endif

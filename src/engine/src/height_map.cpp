@@ -7,24 +7,44 @@
 HeightMap::HeightMap()
 {
     this->height_map_mesh = new HeightMapMesh();
-    this->height_map_mesh->from_float_array(&HeightMap::debug_data[0][0], HeightMap::debug_width, HeightMap::debug_height);
+    this->height_map_mesh->diamond_square(HEIGHT_MAP_DEFAULT_WIDTH, HEIGHT_MAP_DEFAULT_WIDTH);
+    this->set_material(HEIGHT_MAP_DEFAULT_MATERIAL);
 }
 
 HeightMap::HeightMap(const std::string &file_path)
 {
     this->height_map_mesh = new HeightMapMesh();
     this->height_map_mesh->load(file_path);
+    this->set_material(HEIGHT_MAP_DEFAULT_MATERIAL);
 }
 
 HeightMap::HeightMap(float *height_map_data, int width, int height)
 {
     this->height_map_mesh = new HeightMapMesh();
     this->height_map_mesh->from_float_array(height_map_data, width, height);
+    this->set_material(HEIGHT_MAP_DEFAULT_MATERIAL);
+}
+
+HeightMap::HeightMap(int width, int height)
+{
+    this->height_map_mesh = new HeightMapMesh();
+    this->height_map_mesh->diamond_square(width, height);
+    this->set_material(HEIGHT_MAP_DEFAULT_MATERIAL);
 }
 
 HeightMap::~HeightMap()
 {
     delete this->height_map_mesh;
+}
+
+void HeightMap::diamond_square()
+{
+    this->height_map_mesh->diamond_square();
+}
+
+void HeightMap::diamond_square(int width, int height)
+{
+    this->height_map_mesh->diamond_square(width, height);
 }
 
 void HeightMap::load(const std::string &file_path)
@@ -51,19 +71,9 @@ void HeightMap::set_material(Material *mtl)
 void HeightMap::draw(Shader *shader)
 {
     this->update_model_matrix();
-    shader->fill("u_Textures.size", this->texture_size);
+    shader->fill("u_Textures.repeat", this->repeat_number);
     shader->fill("u_Model", this->model_matrix);
     this->height_map_mesh->draw(shader);
 }
-
-int HeightMap::debug_width = 5;
-int HeightMap::debug_height = 5;
-float HeightMap::debug_data[5][5] = {
-    {1.0, 0.3, 0.4, 0.2, 0.0},
-    {1.0, 0.3, 0.4, 0.2, 0.0},
-    {1.0, 0.3, 0.4, 0.2, 0.0},
-    {1.0, 0.3, 0.4, 0.2, 0.0},
-    {1.0, 0.3, 0.4, 0.2, 0.0},
-};
 
 #endif
