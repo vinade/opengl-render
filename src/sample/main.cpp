@@ -149,13 +149,11 @@ void preload()
     plant_1->set_position(glm::vec3(1.0, 0.0, -4.0));
     plant_1->set_scale(1.5);
     plant_1->set_on_height_map(height_map);
-    plant_1->inc_position(glm::vec3(0.0, 0.8, 0.0));
 
     nanosuit_1->load_data_from_file("nano_suit/Nanosuit.obj");
     nanosuit_1->set_position(glm::vec3(0.0, 0.0, -5.0));
     nanosuit_1->set_scale(2.0);
     nanosuit_1->set_on_height_map(height_map);
-    nanosuit_1->inc_position(glm::vec3(0.0, 0.8, 0.0));
     nanosuit_1->set_rotation(glm::vec3(90.0, -180.0, 0.0));
 
     MaterialLoader::load_materials({

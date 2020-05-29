@@ -81,7 +81,7 @@ float HeightMap::get_height(float x, float y)
     glm::vec3 s = this->get_scale();
     glm::vec3 p = this->get_position();
     float height = this->height_map_mesh->get_height((x - p.x) / s.x, (y - p.z) / s.z); // simples, sem considerar rotacão
-    return height * s.y + p.y + 0.5;
+    return height * s.y + p.y;
 }
 
 #endif
