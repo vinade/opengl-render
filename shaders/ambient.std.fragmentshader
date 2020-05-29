@@ -80,7 +80,7 @@ vec3 get_albedo(){
         albedo = texture(u_Textures.diffuse, vs.tex_coord).rgb;
     }
 
-    albedo = pow(albedo, vec3(2.2));
+    // albedo = pow(albedo, vec3(2.2));
     return albedo;
 }
 
