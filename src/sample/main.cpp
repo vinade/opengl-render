@@ -31,8 +31,8 @@ Scene *scene = nullptr;
 
 Light *light_0;
 Light *light_1;
-glm::vec3 color_light_debug(1.0f, 1.0f, 1.0f);
-glm::vec3 light_translation_debug(-0.9f, 0.9f, -2.7f);
+glm::vec3 color_light_debug(1.0, 1.0, 1.0);
+glm::vec3 light_translation_debug(-0.9, 0.9, -2.7);
 float light_ambient_debug = 0.1;
 float light_strength_debug = 1.0;
 
@@ -46,6 +46,10 @@ void render_handler()
     pp_gaussian_noise->set_level(noise_level_debug);
     pp_gaussian_blur->set_range(int(blur_level_debug));
 
+    glm::vec3 cam = scene->camera.get_position();
+    float height = height_map->get_height(cam.x, cam.z);
+    scene->camera.m_position.y = height + 1.7;
+
     light_0->set_position(light_translation_debug);
     light_0->set_color(glm::vec4(color_light_debug, 1.0));
     light_0->set_ambient(light_ambient_debug);
@@ -53,7 +57,7 @@ void render_handler()
 
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
-    moon_1->inc_rotation(glm::vec3(0.0f, 0.01f, 0.0f));
+    moon_1->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
 
     switch (frame_buffer_select)
     {
@@ -82,7 +86,7 @@ void preload()
     scene = new Scene();
 
     // height_map = new HeightMap("h2.jpeg");
-    height_map = new HeightMap(10, 10);
+    height_map = new HeightMap(15, 15);
     light_0 = new Light();
     light_1 = new Light();
     cat_1 = new ScenarioItem();
@@ -102,16 +106,20 @@ void preload()
     scene->add(moon_1);
     scene->add(nanosuit_1);
     scene->add(plant_1);
-    scene->camera.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
-    scene->camera.update_view_matrix();
 
     scene->add(height_map);
     height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
-    height_map->set_scale(glm::vec3(3.0, 2.0, 3.0));
+    height_map->set_scale(glm::vec3(10.0, 5.0, 10.0));
+
+    // float height = height_map->get_height(-3.4, 2.7);
+    scene->camera.set_position(glm::vec3(0.0, 0.0, 0.0));
+    float height = height_map->get_height(scene->camera.m_position.x, scene->camera.m_position.z);
+    scene->camera.m_position.y = height + 1.7;
+    scene->camera.update_view_matrix();
 
     pp_gaussian_noise->every_frame = true;
 
-    light_1->set_position(glm::vec3(0.5, 0.5, -2.0));
+    light_1->set_position(glm::vec3(0.5, height + 0.5, -2.0));
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
     light_1->set_ambient(0.0);
 
@@ -126,23 +134,29 @@ void preload()
     // cat_1->load_data_from_file("airgun_1/Air_Gun-Wavefront OBJ.obj");
     // cat_1->load_data_from_file("cobblestones_1/cobblestones.obj");
     cat_1->load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
-
-    cat_1->set_position(glm::vec3(-1.0f, -1.0f, -4.0f));
-    cat_1->set_rotation(glm::vec3(90.0f, -180.0f, 150.0f));
+    cat_1->set_position(glm::vec3(-1.0, 0.0, -4.0));
     cat_1->set_scale(1.0);
+    cat_1->set_on_height_map(height_map);
+    cat_1->set_rotation(glm::vec3(90.0, -180.0, 150.0));
 
     moon_1->load_data_from_file("moon_1/Moon 2K.obj");
-    moon_1->set_position(glm::vec3(-2.0f, 2.0f, -8.0f));
+    moon_1->set_position(glm::vec3(-2.0, 0.0, -8.0));
     moon_1->set_scale(2.0);
+    moon_1->set_on_height_map(height_map);
+    moon_1->inc_position(glm::vec3(0.0, 2.0, 0.0));
 
     plant_1->load_data_from_file("plant_1/01Alocasia_obj.obj");
-    plant_1->set_position(glm::vec3(1.0f, 0.0f, -4.0f));
+    plant_1->set_position(glm::vec3(1.0, 0.0, -4.0));
     plant_1->set_scale(1.5);
+    plant_1->set_on_height_map(height_map);
+    plant_1->inc_position(glm::vec3(0.0, 0.8, 0.0));
 
     nanosuit_1->load_data_from_file("nano_suit/Nanosuit.obj");
-    nanosuit_1->set_position(glm::vec3(0.0f, 0.0f, -5.0f));
-    nanosuit_1->set_rotation(glm::vec3(90.0f, -180.0f, 0.0f));
+    nanosuit_1->set_position(glm::vec3(0.0, 0.0, -5.0));
     nanosuit_1->set_scale(2.0);
+    nanosuit_1->set_on_height_map(height_map);
+    nanosuit_1->inc_position(glm::vec3(0.0, 0.8, 0.0));
+    nanosuit_1->set_rotation(glm::vec3(90.0, -180.0, 0.0));
 
     MaterialLoader::load_materials({
         "leather_1",
@@ -197,7 +211,7 @@ void mouse_handler(int button)
     {
         if (Engine::delta_mouse.x)
         {
-            scene->camera.rotate(0.01 * -Engine::delta_mouse.x, glm::vec3(0.0f, 1.0f, 0.0f));
+            scene->camera.rotate(0.01 * -Engine::delta_mouse.x, glm::vec3(0.0, 1.0, 0.0));
         }
 
         if (Engine::delta_mouse.y)
@@ -271,18 +285,18 @@ int main()
 #ifdef DEBUG_MODE_COMPILE
     engine.render.imgui_controller->observef("fps", &engine.render.fps);
 
-    engine.render.imgui_controller->observef("L0.ambient", &light_ambient_debug, 0.0f, 10.0f);
-    engine.render.imgui_controller->observef("L0.strength", &light_strength_debug, 0.0f, 20.0f);
-    engine.render.imgui_controller->observef("L0.R", &color_light_debug[0], 0.0f, 1.0f);
-    engine.render.imgui_controller->observef("L0.G", &color_light_debug[1], 0.0f, 1.0f);
-    engine.render.imgui_controller->observef("L0.B", &color_light_debug[2], 0.0f, 1.0f);
+    engine.render.imgui_controller->observef("L0.ambient", &light_ambient_debug, 0.0, 10.0);
+    engine.render.imgui_controller->observef("L0.strength", &light_strength_debug, 0.0, 20.0);
+    engine.render.imgui_controller->observef("L0.R", &color_light_debug[0], 0.0, 1.0);
+    engine.render.imgui_controller->observef("L0.G", &color_light_debug[1], 0.0, 1.0);
+    engine.render.imgui_controller->observef("L0.B", &color_light_debug[2], 0.0, 1.0);
 
-    engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0f, 5.0f);
-    engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0f, 5.0f);
-    engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0f, 3.0f);
+    engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0, 5.0);
+    engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0, 5.0);
+    engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0, 3.0);
 
-    engine.render.imgui_controller->observef("noise", &noise_level_debug, 0.0f, 1.0f);
-    engine.render.imgui_controller->observef("blur", &blur_level_debug, 0.0f, 10.0f);
+    engine.render.imgui_controller->observef("noise", &noise_level_debug, 0.0, 1.0);
+    engine.render.imgui_controller->observef("blur", &blur_level_debug, 0.0, 10.0);
 
     engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
     engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);

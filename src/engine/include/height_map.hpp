@@ -27,6 +27,7 @@ public:
     void set_material(Material *mtl);
     void diamond_square();
     void diamond_square(int width, int height);
+    float get_height(float x, float y);
     inline void set_repeat_number(float repeat_number) { this->repeat_number = repeat_number; };
 };
 

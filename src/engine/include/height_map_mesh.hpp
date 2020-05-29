@@ -22,6 +22,7 @@ public:
 
     HeightMapMesh();
 
+    float get_height(float x, float y);
     void load(const std::string &file_path);
     void diamond_square();
     void diamond_square(int width, int height);
@@ -29,6 +30,9 @@ public:
     void from_float_array(float *data, int width, int height);
 
     void setup();
+
+    float get_height_from_3p(float x, float y, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
+    glm::vec3 get_point_from_vb(int x, int y);
 
     inline int address_of_coord(glm::ivec2 p);
 

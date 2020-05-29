@@ -336,6 +336,61 @@ void HeightMapMesh::diamond_square(int width, int height)
     free(flag);
 }
 
+glm::vec3 HeightMapMesh::get_point_from_vb(int x, int y)
+{
+    int p_coord = this->address_of_coord(glm::ivec2(x, y));
+    p_coord = p_coord * this->vertex_elements_count;
+
+    return glm::vec3(
+        this->vertex_buffer[p_coord],
+        this->vertex_buffer[p_coord + 1],
+        this->vertex_buffer[p_coord + 2]);
+}
+
+float HeightMapMesh::get_height_from_3p(float x, float y, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
+{
+    glm::vec3 v1 = glm::vec3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
+    glm::vec3 v2 = glm::vec3(p1.x - p3.x, p1.y - p3.y, p1.z - p3.z);
+    glm::vec3 n = glm::cross(v1, v2);
+
+    float d = n.x * p1.x + n.y * p1.y + n.z * p1.z;
+    return -(n.x * x + n.z * y - d) / n.y;
+}
+
+float HeightMapMesh::get_height(float x, float y) // o y deve receber o Z
+{
+    float nx = x + (this->width / 2.0);
+    float ny = y + (this->height / 2.0);
+
+    int min_x_i = floor(nx);
+    int min_y_i = floor(ny);
+
+    int max_x_i = min_x_i + 1;
+    int max_y_i = min_y_i + 1;
+
+    // decisão da face
+    float dx = (nx - min_x_i);
+    float dy = (ny - min_y_i);
+    int face_i = dx + dy > 1 ? 1 : 0;
+
+    // pontos das diagonais
+    glm::vec3 p2 = this->get_point_from_vb(min_x_i, max_y_i);
+    glm::vec3 p3 = this->get_point_from_vb(max_x_i, min_y_i);
+
+    // terceiro ponto
+    glm::vec3 p1;
+    if (face_i == 0)
+    {
+        p1 = this->get_point_from_vb(min_x_i, min_y_i);
+    }
+    else
+    {
+        p1 = this->get_point_from_vb(max_x_i, max_y_i);
+    }
+
+    return this->get_height_from_3p(x, y, p1, p2, p3);
+}
+
 const std::string HeightMapMesh::height_map_folder = std::string(CMAKE_ROOT_DIR HEIGHT_MAP_MESH_DEFAULT_FOLDER);
 
 #endif

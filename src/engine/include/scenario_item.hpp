@@ -8,6 +8,8 @@
 #define SCENARIO_ITEM_MODELS_FOLDER "./res/models/"
 #define SCENARIO_ITEM_TEX_TYPE_COUNTER 13
 
+class HeightMap;
+
 class ScenarioItem
 {
 
@@ -49,6 +51,7 @@ public:
 
 	void update_model_matrix();
 	inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[1], this->m_position[2]); };
+	inline glm::vec3 get_scale() { return glm::vec3(this->m_scale[0], this->m_scale[1], this->m_scale[2]); };
 
 	void set_position(const glm::vec3 pos);
 	void set_rotation(const glm::vec3 rotation);
@@ -60,8 +63,10 @@ public:
 	void inc_scale(const glm::vec3 scale);
 	void inc_scale(float scale);
 
-	void set_material(const std::string& material_name);
-	void set_material(Material* mtl);
+	void set_material(const std::string &material_name);
+	void set_material(Material *mtl);
+
+	void set_on_height_map(HeightMap *hp);
 
 	void debug_coords();
 };

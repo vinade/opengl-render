@@ -11,6 +11,7 @@
 #include "scenario_item.hpp"
 #include "render_window.hpp"
 #include "material_loader.hpp"
+#include "height_map.hpp"
 
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
@@ -362,6 +363,12 @@ void ScenarioItem::set_material(Material *mtl)
 	{
 		mesh.material = mtl;
 	}
+}
+
+void ScenarioItem::set_on_height_map(HeightMap *hp)
+{
+	float height = hp->get_height(this->m_position.x, this->m_position.z);
+	this->m_position.y = height + this->m_scale.y / 2.0;
 }
 
 aiTextureType ScenarioItem::texture_types[SCENARIO_ITEM_TEX_TYPE_COUNTER] = {
