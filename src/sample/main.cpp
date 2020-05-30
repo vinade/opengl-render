@@ -195,7 +195,7 @@ void shuffle_direction()
 
 void change_height_map()
 {
-    height_map->diamond_square(10, 10);
+    height_map->diamond_square();
 }
 
 void mouse_handler(int button)

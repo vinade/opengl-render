@@ -65,6 +65,12 @@ void HeightMapMesh::from_float_array(float *data, int width, int height)
         }
     }
 
+    if (this->index_data.size())
+    {
+        this->setup();
+        return;
+    }
+
     for (int y = 0; y < height - 1; y++)
     {
         for (int x = 0; x < width - 1; x++)
@@ -262,15 +268,29 @@ void HeightMapMesh::diamond_square_recursion(glm::ivec2 p0, glm::ivec2 p1, glm::
         this->diamond_square_recursion(p02, p03, p2, p23, new_range, data, flag);
         this->diamond_square_recursion(p03, p13, p23, p3, new_range, data, flag);
     }
-    // passo
-}
-
-void HeightMapMesh::diamond_square()
-{
-    this->diamond_square(this->width, this->height);
 }
 
 void HeightMapMesh::diamond_square(int width, int height)
+{
+    if ((this->width != 0) && (this->height != 0))
+    {
+        std::cerr << "Para atualizer o mapa, utilize diamond_square() (sem passar tamanho)" << std::endl;
+        exit(1);
+    }
+
+    this->height = height;
+    this->width = width;
+
+    if (this->vertex_buffer != nullptr)
+    {
+        free(this->vertex_buffer);
+        this->vertex_buffer = nullptr;
+    }
+
+    this->diamond_square();
+}
+
+void HeightMapMesh::diamond_square()
 {
     float *data;
     char *flag;
@@ -280,11 +300,8 @@ void HeightMapMesh::diamond_square(int width, int height)
     glm::ivec2 p3;
     int total_height = 0;
 
-    this->height = height;
-    this->width = width;
-
-    data = (float *)malloc(sizeof(float) * width * height);
-    flag = (char *)malloc(sizeof(char) * width * height);
+    data = (float *)malloc(sizeof(float) * this->width * this->height);
+    flag = (char *)malloc(sizeof(char) * this->width * this->height);
 
     this->suavity = 2.0 + (((float)(rand() % 2000) / 1000.0) - 1.0);
 
@@ -331,7 +348,7 @@ void HeightMapMesh::diamond_square(int width, int height)
         }
     }
 
-    this->from_float_array(data, this->width, height);
+    this->from_float_array(data, this->width, this->height);
     free(data);
     free(flag);
 }
