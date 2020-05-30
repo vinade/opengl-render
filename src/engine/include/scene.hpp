@@ -22,7 +22,6 @@ class Scene
 
 private:
     std::vector<Tile *> tiles;
-    SkyboxMesh *skybox = nullptr;
     FrameBuffer *fbo;
 
     void draw_on_buffer(FrameBuffer *fbo);
@@ -37,6 +36,7 @@ public:
     Camera camera;
     Perspective perspective;
     Shader *ambient_shader;
+    SkyboxMesh *skybox = nullptr;
 
     void init();
     void init(bool init_lights);

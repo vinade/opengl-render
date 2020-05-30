@@ -59,6 +59,8 @@ void render_handler()
 
     moon_1->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
 
+    scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
+
     switch (frame_buffer_select)
     {
     default:
