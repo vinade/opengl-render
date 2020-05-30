@@ -3,6 +3,7 @@
 struct Textures
 {
     int repeat;
+    vec4 skybox_color;
     samplerCube skybox;
     sampler2D diffuse;
     sampler2D normal;

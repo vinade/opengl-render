@@ -31,6 +31,7 @@ struct LightSource
 struct Textures
 {
     int repeat;
+    vec4 skybox_color;
     samplerCube skybox;
     sampler2D diffuse;
     sampler2D normal;
@@ -80,7 +81,7 @@ vec3 get_albedo(){
         albedo = texture(u_Textures.diffuse, vs.tex_coord).rgb;
     }
 
-    // albedo = pow(albedo, vec3(2.2));
+    albedo = pow(albedo, vec3(2.2));
     return albedo;
 }
 
@@ -117,15 +118,9 @@ vec3 get_normal(){
 vec3 calc_reflection(vec3 normal_vector, float reflection_factor){
     vec3 direction = normalize(vs.frag_pos - u_Camera);
     vec3 reflection = reflect(direction, normal_vector);
-    return texture(u_Textures.skybox, reflection).rgb * reflection_factor;
-}
-
-vec3 calc_refraction(vec3 normal_vector){
-    float refraction_factor = 0.0;
-    float refraction_ratio = 1.0 / 1.52;
-    vec3 direction = normalize(vs.frag_pos - u_Camera);
-    vec3 refraction = refract(direction, normal_vector, refraction_ratio);
-    return texture(u_Textures.skybox, refraction).rgb * refraction_factor;
+    vec3 skybox_tex = texture(u_Textures.skybox, reflection).rgb;
+    vec3 skybox_color = u_Textures.skybox_color.a * (1.0 - u_Textures.skybox_color.a) * skybox_tex;
+    return skybox_color * reflection_factor;
 }
 
 vec3 gamma_correction(vec3 fragment){

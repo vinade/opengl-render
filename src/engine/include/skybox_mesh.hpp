@@ -25,6 +25,7 @@ public:
     static const std::vector<std::string> faces;
     Light *light = nullptr;
 
+    glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.9);
     unsigned int vertex_size = 3 * sizeof(float);
     unsigned int vertex_count = 24;
     unsigned int index_count = 36;

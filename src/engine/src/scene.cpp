@@ -28,6 +28,7 @@ void Scene::init(bool init_lights)
     {
         this->ambient_shader->setup("u_Textures.repeat", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.skybox", DATA_TYPE_INT);
+        this->ambient_shader->setup("u_Textures.skybox_color", DATA_TYPE_VEC4);
         this->ambient_shader->setup("u_Textures.diffuse", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.normal", DATA_TYPE_INT);
         this->ambient_shader->setup("u_Textures.ambient_occlusion", DATA_TYPE_INT);
@@ -69,7 +70,7 @@ void Scene::init(bool init_lights)
     if (this->skybox == nullptr)
     {
         this->skybox = new SkyboxMesh();
-        this->skybox->set_scale(5000.0);
+        this->skybox->set_scale(4000.0);
         // this->skybox->set_position(glm::vec3(0.0f, -50.0f, -200.0f));
 
         if ((this->skybox->light == nullptr) && (this->lights.size()))
@@ -280,6 +281,7 @@ void Scene::draw(FrameBuffer *target_fbo)
     if (this->ambient_shader->use_materials)
     {
         this->ambient_shader->fill("u_Textures.skybox", 0);
+        this->ambient_shader->fill("u_Textures.skybox_color", this->skybox->color);
         this->ambient_shader->fill("u_Textures.repeat", 1);
         this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(TEXTURE_DIFFUSE));
         this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(TEXTURE_NORMAL));

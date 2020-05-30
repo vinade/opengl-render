@@ -28,6 +28,7 @@ void SkyboxMesh::init(const std::string &texture_path)
     this->shader->setup("u_Texture", DATA_TYPE_INT);
     this->shader->setup("u_Model", DATA_TYPE_MAT4);
     this->shader->setup("u_View", DATA_TYPE_MAT4);
+    this->shader->setup("u_Color", DATA_TYPE_VEC4);
     this->shader->setup("u_Projection", DATA_TYPE_MAT4);
     this->shader->setup("u_Projection", DATA_TYPE_MAT4);
     this->shader->setup("u_AmbientLight.ambient", DATA_TYPE_FLOAT);
@@ -86,6 +87,7 @@ void SkyboxMesh::draw(const glm::mat4 &view_matrix, const glm::mat4 &projection_
     this->shader->fill("u_Model", this->model_matrix);
     this->shader->fill("u_View", view_matrix);
     this->shader->fill("u_Projection", projection_matrix);
+    this->shader->fill("u_Color", this->color);
 
     if (this->light != nullptr)
     {
