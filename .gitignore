@@ -33,6 +33,7 @@
 
 bin/
 build/
+temp/
 imgui.ini
 *.rar
 *.zip
