@@ -86,6 +86,7 @@ void preload()
 {
 
     scene = new Scene();
+    scene->use_skybox = true;
 
     // height_map = new HeightMap("h2.jpeg");
     height_map = new HeightMap(15, 15);
