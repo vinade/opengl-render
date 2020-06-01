@@ -28,6 +28,8 @@ private:
     void setup_light(int i);
 
 public:
+    bool use_skybox = false;
+
     std::vector<PostProcess *> post_shaders;
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;

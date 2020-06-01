@@ -67,7 +67,7 @@ void Scene::init(bool init_lights)
     }
 
     /* SKYBOX */
-    if (this->skybox == nullptr)
+    if ((this->use_skybox) && (this->skybox == nullptr))
     {
         this->skybox = new SkyboxMesh();
         this->skybox->set_scale(4000.0);
@@ -103,7 +103,7 @@ void Scene::init(bool init_lights)
 void Scene::add(Light *light)
 {
 
-    if (this->skybox != nullptr)
+    if ((this->use_skybox) && (this->skybox != nullptr))
     {
         if (this->skybox->light == nullptr)
         {
@@ -257,6 +257,12 @@ void Scene::draw()
 void Scene::draw(FrameBuffer *target_fbo)
 {
 
+    if (!this->lights.size())
+    {
+        std::cerr << "[Scene] Para usar o shader de ambiente e o skybox é necessário pelo menos uma fonte de luz." << std::endl;
+        exit(1);
+    }
+
     /*
         Bind FrameBuffer
     */
@@ -272,16 +278,23 @@ void Scene::draw(FrameBuffer *target_fbo)
     /*
         Skybox
     */
-    this->skybox->set_position(this->camera.get_position());
-    this->skybox->draw(this->camera.view_matrix, this->perspective.projection_matrix);
+    if ((this->use_skybox) && (this->skybox != nullptr))
+    {
+
+        this->skybox->set_position(this->camera.get_position());
+        this->skybox->draw(this->camera.view_matrix, this->perspective.projection_matrix);
+    }
 
     /*
         Objetos
     */
     if (this->ambient_shader->use_materials)
     {
+        if (this->use_skybox)
+        {
+            this->ambient_shader->fill("u_Textures.skybox_color", this->skybox->color);
+        }
         this->ambient_shader->fill("u_Textures.skybox", 0);
-        this->ambient_shader->fill("u_Textures.skybox_color", this->skybox->color);
         this->ambient_shader->fill("u_Textures.repeat", 1);
         this->ambient_shader->fill("u_Textures.diffuse", Texture::get_type_slot(TEXTURE_DIFFUSE));
         this->ambient_shader->fill("u_Textures.normal", Texture::get_type_slot(TEXTURE_NORMAL));
@@ -299,7 +312,6 @@ void Scene::draw(FrameBuffer *target_fbo)
 
     if (this->ambient_shader->use_lights)
     {
-
         unsigned int light_size = this->lights.size();
         for (unsigned int i = 0; i < light_size; i++)
         {
