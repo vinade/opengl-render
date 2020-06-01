@@ -13,8 +13,16 @@ void depth::Sampler::preload_handler()
 {
     depth::Sampler *context = depth::Sampler::context;
 
-    Light *light_0 = new Light();
     context->scene = new Scene();
+
+    context->lights[0] = new Light();
+    context->lights[1] = new Light();
+    context->lights[2] = new Light();
+    context->lights[3] = new Light();
+    context->scene->add(context->lights[0]);
+    context->scene->add(context->lights[1]);
+    context->scene->add(context->lights[2]);
+    context->scene->add(context->lights[3]);
 
     context->scene->camera.set_position(glm::vec3(0.0, 0.0, 0.0));
     context->scene->camera.update_view_matrix();
@@ -23,7 +31,22 @@ void depth::Sampler::preload_handler()
     context->scene->add(context->pp_gaussian_noise);
     context->pp_gaussian_noise->set_level(0.5);
 
-    context->scene->add(light_0);
+    /*
+        load dos materiais
+    */
+    MaterialLoader::load_materials(depth::Sampler::material_names);
+
+    /*
+        load dos objetos
+    */
+    context->items = (ScenarioItem **)malloc(sizeof(ScenarioItem *) * depth::Sampler::object_names.size());
+    int obj_i = 0;
+    for (std::string object_name : depth::Sampler::object_names)
+    {
+        context->items[obj_i] = new ScenarioItem();
+        context->items[obj_i]->load_data_from_file(object_name);
+    }
+
     context->scene->setup();
 }
 
@@ -43,4 +66,20 @@ depth::Sampler::Sampler(int sample_size)
 }
 
 depth::Sampler *depth::Sampler::context = nullptr;
+
+std::vector<std::string> depth::Sampler::object_names = {
+    "cat_1/12221_Cat_v1_l3.obj",
+    "moon_1/Moon 2K.obj",
+    "plant_1/01Alocasia_obj.obj",
+    "nano_suit/Nanosuit.obj",
+};
+
+std::vector<std::string> depth::Sampler::material_names = {
+    "leather_1",
+    "metal_1",
+    "alien_1",
+    "metal_6",
+    "simple_gold_1",
+};
+
 #endif

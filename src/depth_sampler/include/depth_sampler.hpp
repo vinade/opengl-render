@@ -19,8 +19,12 @@ namespace depth
 class depth::Sampler
 {
 private:
-    Mesh *meshes = nullptr;        // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
-    ScenarioItem *items = nullptr; // Objetos da cena
+    Mesh *meshes = nullptr;         // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
+    ScenarioItem **items = nullptr; // Objetos da cena
+    // Material *materials = nullptr;  // Objetos da cena
+    int items_size = 0;
+    // int materials_size = 0;
+
     int sample_size = 0;
 
 public:
@@ -39,6 +43,8 @@ public:
     GaussianBlur *pp_gaussian_blur = nullptr;
 
     static Sampler *context;
+    static std::vector<std::string> object_names;
+    static std::vector<std::string> material_names;
 
     Sampler(int sample_size);
 
