@@ -209,6 +209,16 @@ void Scene::add(HeightMap *height_map)
     AppUtils::add_once(this->height_map_items, height_map);
 }
 
+void Scene::add(Puppeteer &puppeteer)
+{
+    Scene::add((Puppeteer *)&puppeteer);
+}
+
+void Scene::add(Puppeteer *puppeteer)
+{
+    AppUtils::add_once(this->puppeteers, puppeteer);
+}
+
 void Scene::add(PostProcess &pp_shader)
 {
     Scene::add((PostProcess *)&pp_shader);
@@ -332,7 +342,16 @@ void Scene::draw(FrameBuffer *target_fbo)
         this->ambient_shader->fill("u_Camera", this->camera.get_position());
     }
 
-    for (auto item : this->scenario_items)
+    /*
+        Objetos do cenário
+    */
+    for (auto item : this->scenario_items) // itens do cenário
+    {
+        // atencão: altera o u_Model
+        item->draw(this->ambient_shader);
+    }
+
+    for (auto item : this->puppeteers) // controladores de itens do cenário
     {
         // atencão: altera o u_Model
         item->draw(this->ambient_shader);
@@ -397,5 +416,4 @@ void Scene::setup()
 {
     this->init(true);
 }
-
 #endif

@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "perspective.hpp"
 #include "scenario_item.hpp"
+#include "puppeteer.hpp"
 #include "height_map.hpp"
 #include "skybox_mesh.hpp"
 #include "light.hpp"
@@ -34,6 +35,7 @@ public:
     std::vector<Light *> lights;
     std::vector<ScenarioItem *> scenario_items;
     std::vector<HeightMap *> height_map_items;
+    std::vector<Puppeteer *> puppeteers;
 
     Camera camera;
     Perspective perspective;
@@ -57,6 +59,9 @@ public:
 
     void add(HeightMap &height_map);
     void add(HeightMap *height_map);
+
+    void add(Puppeteer &puppeteer);
+    void add(Puppeteer *puppeteer);
 
     inline unsigned int count_lights() { return this->lights.size(); };
     inline unsigned int count_scenario_items() { return this->scenario_items.size(); };
