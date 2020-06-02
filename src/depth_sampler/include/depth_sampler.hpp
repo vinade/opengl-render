@@ -14,17 +14,23 @@
 namespace depth
 {
     class Sampler;
-};
+
+    struct sampler_item
+    {
+        ScenarioItem *obj;
+        glm::vec3 position;
+        glm::vec3 rotation;
+        glm::vec3 scale;
+    };
+}; // namespace depth
 
 class depth::Sampler
 {
 private:
-    Mesh *meshes = nullptr;         // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
-    ScenarioItem **items = nullptr; // Objetos da cena
-    // Material *materials = nullptr;  // Objetos da cena
-    int items_size = 0;
-    // int materials_size = 0;
+    depth::sampler_item *objs = nullptr; // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
+    ScenarioItem **models = nullptr;     // Objetos da cena
 
+    int models_size = 0;
     int sample_size = 0;
 
 public:

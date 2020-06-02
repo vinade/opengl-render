@@ -3,10 +3,12 @@
 
 #include "material_loader.hpp"
 #include "depth_sampler.hpp"
+#include <unistd.h>
 
 void depth::Sampler::render_handler()
 {
     depth::Sampler::context->scene->draw();
+    sleep(10);
 }
 
 void depth::Sampler::preload_handler()
@@ -37,16 +39,25 @@ void depth::Sampler::preload_handler()
     MaterialLoader::load_materials(depth::Sampler::material_names);
 
     /*
-        load dos objetos
+        load das models
     */
-    context->items = (ScenarioItem **)malloc(sizeof(ScenarioItem *) * depth::Sampler::object_names.size());
-    int obj_i = 0;
+    context->models = (ScenarioItem **)malloc(sizeof(ScenarioItem *) * depth::Sampler::object_names.size());
+    int model_i = 0;
     for (std::string object_name : depth::Sampler::object_names)
     {
-        context->items[obj_i] = new ScenarioItem();
-        context->items[obj_i]->load_data_from_file(object_name);
+        context->models[model_i] = new ScenarioItem();
+        context->models[model_i]->load_data_from_file(object_name);
+        model_i++;
+    }
+    context->models_size = model_i;
+
+    /* alocação de memória para os controladores de objetos */
+    for (int i = 0; i < context->sample_size; i++)
+    {
+        context->scene->puppeteers.push_back(new Puppeteer());
     }
 
+    /* cena completa... pronta para o setup */
     context->scene->setup();
 }
 
