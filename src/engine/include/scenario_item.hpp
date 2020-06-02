@@ -50,6 +50,7 @@ public:
 	void draw(Shader *shader);
 
 	void update_model_matrix();
+	void update_model_matrix(const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale);
 	inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[1], this->m_position[2]); };
 	inline glm::vec3 get_scale() { return glm::vec3(this->m_scale[0], this->m_scale[1], this->m_scale[2]); };
 
