@@ -283,6 +283,21 @@ void ScenarioItem::draw(Shader *shader)
 	}
 }
 
+void ScenarioItem::draw(Shader *shader, const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale)
+{
+
+	if (shader->use_mvp)
+	{
+		this->update_model_matrix(pos, rotation, scale);
+		shader->fill("u_Model", this->model_matrix);
+	}
+
+	for (unsigned int i = 0; i < this->meshes.size(); i++)
+	{
+		this->meshes[i].draw(shader);
+	}
+}
+
 void ScenarioItem::update_model_matrix()
 {
 
