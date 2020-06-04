@@ -10,8 +10,7 @@ void Puppeteer::draw(Shader *shader)
         return;
     }
 
-    this->obj->update_model_matrix(this->position, this->rotation, this->scale);
-    this->obj->draw(shader);
+    this->obj->draw(shader, this->position, this->rotation, this->scale);
 }
 
 #endif

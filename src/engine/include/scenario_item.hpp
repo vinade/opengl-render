@@ -48,6 +48,7 @@ public:
 	void load_data_from_file(const std::string &file_path);
 	void load_data_from_file(const std::string &file_path, bool preload);
 	void draw(Shader *shader);
+	void draw(Shader *shader, const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale);
 
 	void update_model_matrix();
 	void update_model_matrix(const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale);
