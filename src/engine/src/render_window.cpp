@@ -139,6 +139,9 @@ void RenderWindow::setup_preloaded()
 	RenderWindow::call_setup(this->frame_buffer_setup_list);
 	std::cerr << "\tFrameBuffers ready." << std::endl;
 
+	RenderWindow::call_setup(this->skybox_setup_list);
+	std::cerr << "\tSkyboxes ready." << std::endl;
+
 	this->setup_done = true;
 }
 

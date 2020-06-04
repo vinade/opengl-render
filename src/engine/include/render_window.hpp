@@ -36,8 +36,8 @@ private:
 	char **cppArgv;
 	std::string title;
 
-	void (*reshape_handler)(int width, int height);
-	void (*render_handler)();
+	void (*reshape_handler)(int width, int height) = nullptr;
+	void (*render_handler)() = nullptr;
 
 	void init_RenderWindow();
 	void init_RenderWindow(int iArgc, char **cppArgv);
@@ -46,8 +46,8 @@ private:
 	void setup_preloaded();
 	bool preload_done = false;
 	bool setup_done = false;
-	void (*gl_init)();
-	void (*preload)();
+	void (*gl_init)() = nullptr;
+	void (*preload)() = nullptr;
 
 	/* setup list */
 	std::vector<Shader *> shader_setup_list;
@@ -57,6 +57,7 @@ private:
 	std::vector<Texture *> texture_setup_list;
 	std::vector<Scene *> scene_setup_list;
 	std::vector<FrameBuffer *> frame_buffer_setup_list;
+	std::vector<SkyboxMesh *> skybox_setup_list;
 
 	void init_multiple_keys_state();
 
@@ -103,6 +104,7 @@ public:
 	void to_setup(HeightMapMesh *height_map_mesh) { AppUtils::add_once(this->height_map_mesh_setup_list, height_map_mesh); };
 	void to_setup(Scene *scene) { AppUtils::add_once(this->scene_setup_list, scene); };
 	void to_setup(FrameBuffer *frame_buffer) { AppUtils::add_once(this->frame_buffer_setup_list, frame_buffer); };
+	void to_setup(SkyboxMesh *skybox) { AppUtils::add_once(this->skybox_setup_list, skybox); };
 
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
 	static void GLAPIENTRY gl_debug_callback(GLenum source, GLenum type,
