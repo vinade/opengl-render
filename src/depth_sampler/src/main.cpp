@@ -3,7 +3,7 @@
 
 int main()
 {
-    depth::Sampler sampler(3);
+    depth::Sampler sampler(30);
 
     std::cerr << "done.\n";
     return 0;

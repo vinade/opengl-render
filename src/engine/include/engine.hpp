@@ -15,8 +15,8 @@ private:
         GLFW_KEY_E,
     };
     std::unordered_map<int, bool> multiple_keys_state;
-    void (*keyboard_handler)(int key, int scancode, int action, int mods);
-    void (*mouse_handler)(int button);
+    void (*keyboard_handler)(int key, int scancode, int action, int mods) = nullptr;
+    void (*mouse_handler)(int button) = nullptr;
 
 public:
     bool cursor_enabled = true;

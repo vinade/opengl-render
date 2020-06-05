@@ -8,6 +8,7 @@
 #include "stb/stb_image.h"
 #include "skybox_mesh.hpp"
 #include "cmake_params.hpp"
+#include "render_window.hpp"
 
 SkyboxMesh::SkyboxMesh()
 {
@@ -22,6 +23,13 @@ SkyboxMesh::SkyboxMesh(const std::string &texture_path)
 
 void SkyboxMesh::init(const std::string &texture_path)
 {
+    this->texture_path = texture_path;
+    if (!RenderWindow::is_render_thread())
+    {
+        RenderWindow::context->to_setup(this);
+        return;
+    }
+
     this->shader = Shader::get_shader("skybox", SHADER_TYPE_OTHER);
     this->shader->use_mvp = true;
 
@@ -148,6 +156,11 @@ void SkyboxMesh::inc_rotation(const glm::vec3 rotation)
     this->m_rotation[1] = this->m_rotation[1] + rotation[1];
     this->m_rotation[2] = this->m_rotation[2] + rotation[2];
     this->update_model_matrix();
+}
+
+void SkyboxMesh::setup()
+{
+    this->init(this->texture_path);
 }
 
 const float SkyboxMesh::vertex_buffer_src[24] = {

@@ -64,18 +64,20 @@ void Engine::init_multiple_keys_state()
 
 void Engine::cursor_position_callback(GLFWwindow *window, double x, double y)
 {
+    if (Engine::context->mouse_handler == nullptr)
+    {
+        return;
+    }
+
     Engine::delta_mouse.x = x - Engine::mouse.x;
     Engine::delta_mouse.y = y - Engine::mouse.y;
 
     Engine::mouse.x = x;
     Engine::mouse.y = y;
 
-    if (Engine::context->mouse_handler != nullptr)
+    if (Engine::delta_mouse.x || Engine::delta_mouse.y)
     {
-        if (Engine::delta_mouse.x || Engine::delta_mouse.y)
-        {
-            (*Engine::context->mouse_handler)(0);
-        }
+        (*Engine::context->mouse_handler)(0);
     }
 }
 
