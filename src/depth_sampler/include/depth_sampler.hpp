@@ -32,9 +32,9 @@ private:
     depth::sampler_item *objs = nullptr;
 
     int models_size = 0;
-    int sample_size = 0;
 
 public:
+    int sample_size = 0;
     std::vector<ScenarioItem *> models; // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
     std::vector<SkyboxMesh *> skyboxes; // referência aos skyboxes possíveis para o shuffle
     Engine engine;

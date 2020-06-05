@@ -8,9 +8,11 @@
 
 void depth::Sampler::render_handler()
 {
-    depth::shuffle(depth::Sampler::context);
-    depth::Sampler::context->scene->draw();
-    sleep(2);
+    depth::Sampler *context = depth::Sampler::context;
+    depth::shuffle(context);
+    context->scene->draw();
+
+    sleep(1);
 }
 
 void depth::Sampler::preload_handler()

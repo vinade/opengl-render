@@ -29,6 +29,7 @@ namespace depth
     void shuffle_camera(Camera &camera);
     void shuffle_post(GaussianNoise *post);
     void shuffle_post(GaussianBlur *post);
+    void shuffle_all_puppeters(depth::Sampler *sampler_context);
 
     void shuffle(depth::Sampler *sampler_context);
 }; // namespace depth
