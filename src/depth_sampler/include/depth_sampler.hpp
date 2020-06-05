@@ -8,8 +8,10 @@
 #include "engine.hpp"
 #include "post_process.hpp"
 
-#define DEPTH_SAMPLER_WIDTH 320
-#define DEPTH_SAMPLER_HEIGHT 200
+// #define DEPTH_SAMPLER_WIDTH 320
+// #define DEPTH_SAMPLER_HEIGHT 200
+#define DEPTH_SAMPLER_WIDTH 1024
+#define DEPTH_SAMPLER_HEIGHT 768
 
 namespace depth
 {
@@ -27,23 +29,17 @@ namespace depth
 class depth::Sampler
 {
 private:
-    depth::sampler_item *objs = nullptr; // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
-    ScenarioItem **models = nullptr;     // Objetos da cena
+    depth::sampler_item *objs = nullptr;
 
     int models_size = 0;
     int sample_size = 0;
 
 public:
+    std::vector<ScenarioItem *> models; // referência aos meshes criados pelos ScenarioItems para facilitar o shuffle
+    std::vector<SkyboxMesh *> skyboxes; // referência aos skyboxes possíveis para o shuffle
     Engine engine;
 
     Scene *scene;
-    HeightMap *height_map;
-    Light *lights[4] = {
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-    };
 
     GaussianNoise *pp_gaussian_noise = nullptr;
     GaussianBlur *pp_gaussian_blur = nullptr;
@@ -51,6 +47,7 @@ public:
     static Sampler *context;
     static std::vector<std::string> object_names;
     static std::vector<std::string> material_names;
+    static std::vector<std::string> skyboxes_names;
 
     Sampler(int sample_size);
 
