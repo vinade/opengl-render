@@ -8,10 +8,8 @@
 #include "engine.hpp"
 #include "post_process.hpp"
 
-// #define DEPTH_SAMPLER_WIDTH 320
-// #define DEPTH_SAMPLER_HEIGHT 200
-#define DEPTH_SAMPLER_WIDTH 1024
-#define DEPTH_SAMPLER_HEIGHT 768
+#define DEPTH_SAMPLER_WIDTH 320
+#define DEPTH_SAMPLER_HEIGHT 200
 #define DEPTH_MODE_SHARED_LIB 0
 #define DEPTH_MODE_DEBUG 1
 
