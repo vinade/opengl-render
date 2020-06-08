@@ -1,0 +1,4 @@
+#ifndef DEPTH_INTERFACE_HPP
+#define DEPTH_INTERFACE_HPP
+
+#endif
