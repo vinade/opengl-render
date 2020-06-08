@@ -1,5 +1,5 @@
-#define DEBUG_MODE_COMPILE
-#define DEBUG_MODE true
+// #define DEBUG_MODE_COMPILE
+// #define DEBUG_MODE true
 
 #include <debug_flags.hpp>
 #include "camera.hpp"
