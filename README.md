@@ -1,17 +1,22 @@
 # Projeto
-O projeto é dividido em 3 grandes partes.
 
 
-## Engine
-### Build da engine
+
+## Depth Sampler
+### Build do módulo
 ```sh
 $ mkdir build
 $ cd build
-build$ cmake ../src
+build$ cmake ../depth_sampler
 build$ make
 ```
 
-### Rodar o Sample da engine
+### Rodar o sample da engine
 ```sh
 build$ ./sample/engine-sample
+```
+
+### Rodar o debug do módulo
+```sh
+build$ ./app/depth-sampler-debug
 ```
