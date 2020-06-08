@@ -61,7 +61,7 @@ void RenderWindow::init_RenderWindow(int iArgc, char **cppArgv, const std::strin
 	this->pos_x = RENDER_WINDOW_POS_X;
 	this->pos_y = RENDER_WINDOW_POS_Y;
 	this->fbo_color = new FrameBuffer();
-	this->fbo_depth = new FrameBuffer(true);
+	this->fbo_depth = new FrameBuffer(FRAME_BUFFER_DEPTH);
 
 #ifdef DEBUG_MODE_COMPILE
 	this->imgui_controller = new ImGuiController();

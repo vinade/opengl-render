@@ -11,17 +11,22 @@ FrameBuffer::FrameBuffer()
     this->init(false);
 }
 
-FrameBuffer::FrameBuffer(bool depth)
+FrameBuffer::FrameBuffer(unsigned int fbo_type)
 {
-    this->init(depth);
+    this->init(fbo_type);
 }
 
-void FrameBuffer::init(bool depth)
+void FrameBuffer::init(unsigned int fbo_type)
 {
-    this->depth = depth;
+    this->depth = fbo_type & FRAME_BUFFER_FLAG_DEPTH;
     this->texture = new Texture(&this->texture_id, &this->width, &this->height);
-    this->shader_name = depth ? "fbo_depth" : "std";
-    this->channels = depth ? 1 : 3;
+    this->shader_name = this->depth ? "fbo_depth" : "std";
+    this->channels = this->depth ? 1 : 3;
+
+    if (fbo_type & FRAME_BUFFER_FLAG_AUX_FBO)
+    {
+        this->color_fbo = new FrameBuffer();
+    }
 }
 
 void FrameBuffer::set()
@@ -36,6 +41,11 @@ void FrameBuffer::set()
     this->width = RenderWindow::context->width; // Tamanhos não atualizáveis
     this->height = RenderWindow::context->height;
     this->data = (float *)malloc(this->width * this->height * this->channels * sizeof(float));
+
+    if (this->color_fbo != nullptr)
+    {
+        this->color_fbo->set();
+    }
 
     if (!RenderWindow::is_render_thread())
     {
@@ -120,6 +130,11 @@ void FrameBuffer::update_data()
 
 void FrameBuffer::update_data(float *dest_data)
 {
+    this->update_data(dest_data, false);
+}
+
+void FrameBuffer::update_data(float *dest_data, bool force_one_channel)
+{
     // torna o fbo ativo
     glBindFramebuffer(GL_FRAMEBUFFER, this->id);
 
@@ -127,11 +142,26 @@ void FrameBuffer::update_data(float *dest_data)
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     if (!this->depth)
     {
-        glReadPixels(0, 0, this->width, this->height, GL_RGB, GL_FLOAT, dest_data);
+        if (force_one_channel)
+        {
+            glReadPixels(0, 0, this->width, this->height, GL_RED, GL_FLOAT, dest_data);
+        }
+        else
+        {
+            glReadPixels(0, 0, this->width, this->height, GL_RGB, GL_FLOAT, dest_data);
+        }
     }
     else
     {
-        glReadPixels(0, 0, this->width, this->height, GL_DEPTH_COMPONENT, GL_FLOAT, dest_data);
+        if (this->color_fbo != nullptr)
+        {
+            this->draw(this->color_fbo);
+            this->color_fbo->update_data(dest_data, true);
+        }
+        else
+        {
+            glReadPixels(0, 0, this->width, this->height, GL_DEPTH_COMPONENT, GL_FLOAT, dest_data);
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

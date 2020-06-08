@@ -2,6 +2,10 @@
 #define FRAME_BUFFER_HPP
 
 #define FRAME_BUFFER_OFF 0
+#define FRAME_BUFFER_FLAG_DEPTH 1
+#define FRAME_BUFFER_FLAG_AUX_FBO 2
+#define FRAME_BUFFER_DEPTH 1
+#define FRAME_BUFFER_DEPTH_WITH_CORRECTION 3
 
 #include "texture.hpp"
 #include "tile.hpp"
@@ -25,6 +29,7 @@ private:
     Tile tile;
     void *scene;
     Texture *texture;
+    FrameBuffer *color_fbo = nullptr;
 
 public:
     bool depth = false;
@@ -34,10 +39,10 @@ public:
     Shader *shader;
 
     FrameBuffer();
-    FrameBuffer(bool depth);
+    FrameBuffer(unsigned int fbo_type);
     ~FrameBuffer();
 
-    void init(bool depth);
+    void init(unsigned int fbo_type);
     void set();
     void draw();
     void draw(FrameBuffer *fbo);
@@ -45,6 +50,7 @@ public:
     void draw(FrameBuffer *fbo, PostProcess *pp_shader);
     void update_data();
     void update_data(float *data);
+    void update_data(float *data, bool force_one_channel);
     void save(const std::string &file_path);
     void bind() const;
     void setup();

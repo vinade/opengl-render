@@ -16,7 +16,6 @@ void depth::Sampler::create_scene(FrameBuffer *fbo, const glm::vec3 &position, f
     context->scene->camera.update_view_matrix();
     context->scene->draw(fbo);
 
-    // glfwSwapBuffers(RenderWindow::context->window);
     fbo->update_data(image_data);
 }
 
@@ -156,7 +155,7 @@ void depth::Sampler::init(int sample_size, int mode)
     this->mode = mode;
     this->fbo_color_left = new FrameBuffer();
     this->fbo_color_right = new FrameBuffer();
-    this->fbo_depth = new FrameBuffer(true);
+    this->fbo_depth = new FrameBuffer(FRAME_BUFFER_DEPTH_WITH_CORRECTION);
 
     depth::Sampler::context = this;
 
