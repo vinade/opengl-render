@@ -45,6 +45,7 @@ public:
     void draw(FrameBuffer *fbo, PostProcess *pp_shader);
     void update_data();
     void save(const std::string &file_path);
+    void save(float *data);
     void bind() const;
     void setup();
 

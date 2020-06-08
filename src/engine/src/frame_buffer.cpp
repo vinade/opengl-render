@@ -130,6 +130,13 @@ void FrameBuffer::update_data()
     }
 }
 
+void FrameBuffer::save(float *data)
+{
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    unsigned int data_type = this->depth ? GL_R : GL_RGB;
+    glReadPixels(0, 0, this->width, this->height, data_type, GL_FLOAT, data);
+}
+
 void FrameBuffer::save(const std::string &file_path)
 {
     FILE *output_image;
