@@ -118,8 +118,14 @@ void depth::shuffle_puppeteer(Puppeteer *puppeteer, std::vector<ScenarioItem *> 
 void depth::shuffle_all_puppeters(depth::Sampler *sampler_context)
 {
 
-    int visible_objs = 10 + (std::rand() % (sampler_context->sample_size - 10));
     int i = 0;
+    int visible_objs = SHUFFLER_MIMINUM_OBJS;
+
+    if (sampler_context->sample_size > SHUFFLER_MIMINUM_OBJS)
+    {
+        visible_objs = visible_objs + (std::rand() % (sampler_context->sample_size - SHUFFLER_MIMINUM_OBJS));
+    }
+
     for (auto puppeteer : sampler_context->scene->puppeteers)
     {
         if (i < visible_objs)
@@ -144,7 +150,7 @@ void depth::shuffle(depth::Sampler *sampler_context)
 
     for (auto height_map : sampler_context->scene->height_map_items)
     {
-        std::cerr << "HMap Shuffle" << std::endl;
+        std::cerr << "HeightMap Shuffle" << std::endl;
         exit(1);
         depth::shuffle_height_map(height_map);
     }

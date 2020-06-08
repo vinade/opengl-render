@@ -8,6 +8,8 @@
 #include "engine.hpp"
 #include "post_process.hpp"
 
+#define SHUFFLER_MIMINUM_OBJS 10
+
 namespace depth
 {
     class Sampler;
