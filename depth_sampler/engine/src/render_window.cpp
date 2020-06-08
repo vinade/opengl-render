@@ -166,10 +166,6 @@ void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 
 void RenderWindow::start()
 {
-	BasicScene splash_screen_scene;
-	Tile splash_screen_logo;
-
-	RenderWindow::context = this;
 	if (this->running)
 	{
 		std::cerr << "[RENDER_WINDOW] start() deve ser chamado apenas umas vez." << std::endl;
@@ -182,6 +178,16 @@ void RenderWindow::start()
 		std::cerr << "\tExemplo: render_window->set_render_handler(alguma_funcao)." << std::endl;
 		return;
 	}
+
+	RenderWindow::context = this;
+	RenderWindow::RENDER_THREAD_ID = std::this_thread::get_id();
+	this->render();
+}
+
+void RenderWindow::render()
+{
+	BasicScene splash_screen_scene;
+	Tile splash_screen_logo;
 
 	this->running = true;
 
@@ -319,6 +325,6 @@ void GLAPIENTRY RenderWindow::gl_debug_callback(GLenum source, GLenum type,
 }
 
 RenderWindow *RenderWindow::context = nullptr;
-const std::thread::id RenderWindow::RENDER_THREAD_ID = std::this_thread::get_id();
+std::thread::id RenderWindow::RENDER_THREAD_ID;
 
 #endif

@@ -59,6 +59,7 @@ private:
 	std::vector<FrameBuffer *> frame_buffer_setup_list;
 	std::vector<SkyboxMesh *> skybox_setup_list;
 
+	void render();
 	void init_multiple_keys_state();
 
 #ifdef DEBUG_MODE_COMPILE
@@ -80,7 +81,7 @@ public:
 	int width;
 	int height;
 
-	const static std::thread::id RENDER_THREAD_ID;
+	static std::thread::id RENDER_THREAD_ID;
 	static RenderWindow *context;
 
 	RenderWindow();
