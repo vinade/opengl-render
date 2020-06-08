@@ -115,6 +115,11 @@ void FrameBuffer::unbind()
 
 void FrameBuffer::update_data()
 {
+    this->update_data(this->data);
+}
+
+void FrameBuffer::update_data(float *dest_data)
+{
     // torna o fbo ativo
     glBindFramebuffer(GL_FRAMEBUFFER, this->id);
 
@@ -122,19 +127,14 @@ void FrameBuffer::update_data()
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     if (!this->depth)
     {
-        glReadPixels(0, 0, this->width, this->height, GL_RGB, GL_FLOAT, this->data);
+        glReadPixels(0, 0, this->width, this->height, GL_RGB, GL_FLOAT, dest_data);
     }
     else
     {
-        glReadPixels(0, 0, this->width, this->height, GL_DEPTH_COMPONENT, GL_FLOAT, this->data);
+        glReadPixels(0, 0, this->width, this->height, GL_DEPTH_COMPONENT, GL_FLOAT, dest_data);
     }
-}
 
-void FrameBuffer::save(float *data)
-{
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-    unsigned int data_type = this->depth ? GL_R : GL_RGB;
-    glReadPixels(0, 0, this->width, this->height, data_type, GL_FLOAT, data);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void FrameBuffer::save(const std::string &file_path)

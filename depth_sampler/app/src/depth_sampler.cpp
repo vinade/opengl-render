@@ -17,7 +17,7 @@ void depth::Sampler::create_scene(FrameBuffer *fbo, const glm::vec3 &position, f
     context->scene->draw(fbo);
 
     // glfwSwapBuffers(RenderWindow::context->window);
-    fbo->save(image_data);
+    fbo->update_data(image_data);
 }
 
 ImageData *depth::Sampler::create_content()
