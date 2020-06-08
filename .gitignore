@@ -34,6 +34,7 @@
 bin/
 build/
 temp/
+.vscode/
 imgui.ini
 *.rar
 *.zip
