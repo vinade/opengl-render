@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def preview_image_channel(img, id, offset=0, channels_first=False):
 
     height = img.shape[0]
@@ -64,7 +65,7 @@ def preview_image_channel(img, id, offset=0, channels_first=False):
 
 def load_from_png(path):
     im = plt.imread(path)
-    im = im[:,:,:3]
+    im = im[:, :, :3]
     return np.array(im)
 
 
@@ -75,4 +76,3 @@ def save_to_png(id, data):
         img_data = data.reshape(data.shape[0], data.shape[1])
     img_data = img_data[::-1]
     plt.imsave(path, img_data, cmap='Greys_r')
-
