@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import time
 import ctypes
 
 
@@ -58,7 +57,8 @@ class DepthDataLoader():
                 pixels = [img1.data[pi + ci] for ci in range(channels)]
 
                 if img2:
-                    pixels = pixels + [img2.data[pi + ci] for ci in range(channels)]
+                    pixels = pixels + [img2.data[pi + ci]
+                                       for ci in range(channels)]
 
                 line.append(pixels)
 
@@ -66,10 +66,14 @@ class DepthDataLoader():
 
         return image
 
-    def _load(self, batch_size=1, n_cases=100):
+    def _load(self, batch_size=1):
         """ Carrega as imagens da shared lib """
 
+        # estimativa do número de casos de teste (dobro do número de samples)
+        n_cases = self.n * 2
         item_cache = {}
+
+        # Carrega os dados do render
         DepthRender.refresh_content(self.sc_pointer)
         sc = self.sc_pointer[0]
         imgs = ctypes.cast(sc.content, ctypes.POINTER(ImageData))
@@ -77,32 +81,32 @@ class DepthDataLoader():
         input_data = []
         output_data = []
         slices = int(n_cases/batch_size)
-        n_cases = n_cases - 1
+
         for i in range(slices):
             input_item = []
             output_item = []
 
             for j in range(batch_size):
-                test_i = random.randint(0, n_cases) % sc.n
-                test_i = test_i * 3
+                sample_index = random.randrange(self.n) * 3
 
-                if test_i in item_cache:
+                if sample_index in item_cache:
                     # Aproveita a referência
-                    input_item.append(item_cache[test_i]['input'])
-                    output_item.append(item_cache[test_i]['output'])
+                    input_item.append(item_cache[sample_index]['input'])
+                    output_item.append(item_cache[sample_index]['output'])
                     continue
 
-                img_input_esq = imgs[test_i]
-                img_input_dir = imgs[test_i + 2]
-                img_output = imgs[test_i + 1]
+                [img_input_esq, img_output,
+                    img_input_dir] = imgs[sample_index: sample_index + 3]
 
-                input_images = DepthDataLoader.load_image_from_buffer(img_input_esq, img_input_dir)
+                input_images = DepthDataLoader.load_image_from_buffer(
+                    img_input_esq, img_input_dir)
                 input_item.append(input_images)
 
-                output_images = DepthDataLoader.load_image_from_buffer(img_output)
+                output_images = DepthDataLoader.load_image_from_buffer(
+                    img_output)
                 output_item.append(output_images)
 
-                item_cache[test_i] = {
+                item_cache[sample_index] = {
                     'input': input_images,
                     'output': output_images,
                 }
@@ -115,19 +119,13 @@ class DepthDataLoader():
             'output': np.array(output_data)
         }
 
-
-    def load(self, batch_size=1, n_cases=100, channels_first=True):
+    def load(self, batch_size=1):
         """ Carrega as imagens da shared lib """
 
-        data = self._load(batch_size, n_cases)
-
-        if not channels_first:
-            data['input'] = np.rollaxis(data['input'], 2, 5)
-            data['output'] = np.rollaxis(data['output'], 2, 5)
-
-        return data
+        return self._load(batch_size)
 
 
+# Interface com o módulo DepthSampler
 DepthRender = ctypes.CDLL('../build/app/libdepth-sampler.so')
 DepthRender.init_content_controller.restype = ctypes.POINTER(SampleContent)
 DepthRender.refresh_content.argtypes = [ctypes.POINTER(SampleContent)]
