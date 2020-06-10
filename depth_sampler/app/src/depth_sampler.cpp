@@ -23,6 +23,14 @@ ImageData *depth::Sampler::create_content()
 {
     depth::Sampler *context = depth::Sampler::context;
 
+    { // Temporário
+        // TODO: remover o descarte dos primeiros frames.
+        context->scene->draw();
+        context->scene->draw();
+        glFlush();
+        glfwSwapBuffers(RenderWindow::context->window);
+    }
+
     for (int i = 0; i < context->sample_size; i++)
     {
         int j = i * 3;
