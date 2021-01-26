@@ -9,7 +9,10 @@ uniform sampler2D u_Texture;
 
 void main(){
 	color = texture(u_Texture, v_texCoord);
-    color.r = (color.r - 0.9) * 10.0;
+    // color.r = (color.r - 0.5) * 10.0;
+    color.r = color.r * color.r;
+    color.r = color.r * color.r;
+    color.r = color.r * color.r;
     color.g = color.r;
     color.b = color.r;
 }

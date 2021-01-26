@@ -1,3 +1,4 @@
+from cv2 import cv2
 import random
 import numpy as np
 import ctypes
@@ -35,12 +36,13 @@ class SampleContent(ctypes.Structure):
 
 class DepthDataLoader():
 
-    def __init__(self, n=20):
+    def __init__(self, n=20, desired_size=None):
         self.n = n
         self.sc_pointer = DepthRender.init_content_controller(n)
+        self.desired_size = desired_size
 
     @staticmethod
-    def load_image_from_buffer(img1, img2=None):
+    def load_image_from_buffer(img1, img2=None, desired_size=None):
         """ Carrega imagem de um buffer organizado com channel last """
 
         width = img1.width
@@ -64,13 +66,22 @@ class DepthDataLoader():
 
             image.append(line)
 
+        if desired_size is not None:
+            image = np.array(image)
+            # image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY, 1)
+            # image = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE)
+            # image = cv2.resize(image, desired_size, interpolation=cv2.INTER_LINEAR)
+            image = cv2.resize(image, desired_size,
+                               interpolation=cv2.INTER_AREA)
+            image = image[..., np.newaxis]
+
         return image
 
     def _load(self, batch_size=1):
         """ Carrega as imagens da shared lib """
 
         # estimativa do número de casos de teste (dobro do número de samples)
-        n_cases = self.n * 2
+        n_cases = self.n
         item_cache = {}
 
         # Carrega os dados do render
@@ -87,7 +98,8 @@ class DepthDataLoader():
             output_item = []
 
             for j in range(batch_size):
-                sample_index = random.randrange(self.n) * 3
+                # sample_index = random.randrange(self.n) * 3
+                sample_index = ((i * batch_size + j) % self.n) * 3
 
                 if sample_index in item_cache:
                     # Aproveita a referência
@@ -103,7 +115,7 @@ class DepthDataLoader():
                 input_item.append(input_images)
 
                 output_images = DepthDataLoader.load_image_from_buffer(
-                    img_output)
+                    img_output, desired_size=self.desired_size)
                 output_item.append(output_images)
 
                 item_cache[sample_index] = {
