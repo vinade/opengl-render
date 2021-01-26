@@ -57,7 +57,6 @@ void depth::Sampler::render_handler()
         sleep(5);
         break;
     case DEPTH_MODE_SHARED_LIB:
-        std::cout << "[DepthSampler] Esperando request..." << std::endl;
         while (waiting)
         {
             sleep(1);
@@ -95,7 +94,7 @@ void depth::Sampler::preload_handler()
     context->scene->use_skybox = true;
 
     context->pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
-    context->pp_gaussian_noise->set_level(0.5);
+    context->pp_gaussian_noise->set_level(0.3);
     context->pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
     context->pp_gaussian_blur->set_range(3);
 
@@ -104,8 +103,8 @@ void depth::Sampler::preload_handler()
     context->scene->add(new Light());
     context->scene->add(new Light());
 
-    context->scene->add(context->pp_gaussian_noise);
     context->scene->add(context->pp_gaussian_blur);
+    context->scene->add(context->pp_gaussian_noise);
 
     context->scene->camera.set_position(glm::vec3(0.0, 0.0, 0.0));
     context->scene->camera.update_view_matrix();

@@ -18,6 +18,7 @@ namespace depth
 
     void shuffle_color(glm::vec4 &color);
     void shuffle_color(glm::vec4 &color, float alpha);
+    void shuffle_color(glm::vec4 &color, float alpha, float lum);
     void shuffle_position(glm::vec3 &position);
     void shuffle_scale(glm::vec3 &scale);
     void shuffle_rotation(glm::vec3 &rotation);

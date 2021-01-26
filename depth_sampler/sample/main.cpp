@@ -6,6 +6,7 @@
 #include "vertex_array.hpp"
 #include "scenario_item.hpp"
 #include "height_map.hpp"
+#define DEBUG_MODE_COMPILE
 #include "light.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
@@ -283,6 +284,7 @@ int main()
 {
 
 #ifdef DEBUG_MODE_COMPILE
+    // exit(0);
     engine.render.imgui_controller->observef("fps", &engine.render.fps);
 
     engine.render.imgui_controller->observef("L0.ambient", &light_ambient_debug, 0.0, 10.0);
@@ -291,17 +293,17 @@ int main()
     engine.render.imgui_controller->observef("L0.G", &color_light_debug[1], 0.0, 1.0);
     engine.render.imgui_controller->observef("L0.B", &color_light_debug[2], 0.0, 1.0);
 
-    engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0, 5.0);
-    engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0, 5.0);
-    engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0, 3.0);
+    // engine.render.imgui_controller->observef("x", &light_translation_debug[0], -5.0, 5.0);
+    // engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0, 5.0);
+    // engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0, 3.0);
 
-    engine.render.imgui_controller->observef("noise", &noise_level_debug, 0.0, 1.0);
-    engine.render.imgui_controller->observef("blur", &blur_level_debug, 0.0, 10.0);
+    // engine.render.imgui_controller->observef("noise", &noise_level_debug, 0.0, 1.0);
+    // engine.render.imgui_controller->observef("blur", &blur_level_debug, 0.0, 10.0);
 
-    engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
-    engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);
-    engine.render.imgui_controller->button("point to objects", shuffle_direction);
-    engine.render.imgui_controller->button("change heightmap", change_height_map);
+    // engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
+    // engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);
+    // engine.render.imgui_controller->button("point to objects", shuffle_direction);
+    // engine.render.imgui_controller->button("change heightmap", change_height_map);
 
 #endif
 

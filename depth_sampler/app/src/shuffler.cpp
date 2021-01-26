@@ -15,12 +15,19 @@ inline float depth::random(float min_value, float max_value)
 void depth::shuffle_color(glm::vec4 &color)
 {
     float alpha = depth::random(0.0, 1.0);
+    alpha = alpha * alpha;
     depth::shuffle_color(color, alpha);
 }
 
 void depth::shuffle_color(glm::vec4 &color, float alpha)
 {
     float lum = depth::random(0.0, 1.0);
+    lum = lum * lum;
+    depth::shuffle_color(color, alpha, lum);
+}
+
+void depth::shuffle_color(glm::vec4 &color, float alpha, float lum)
+{
     color.r = lum * depth::random(0.0, 1.0);
     color.g = lum * depth::random(0.0, 1.0);
     color.b = lum * depth::random(0.0, 1.0);
