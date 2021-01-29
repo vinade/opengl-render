@@ -35,8 +35,8 @@ Light *light_0;
 Light *light_1;
 glm::vec3 color_light_debug(1.0, 1.0, 1.0);
 glm::vec3 light_translation_debug(-0.9, 0.9, -2.7);
-float light_ambient_debug = 1.5;
-float light_strength_debug = 3.0;
+float light_ambient_debug = 2.7;
+float light_strength_debug = 1.0;
 
 GaussianNoise *pp_gaussian_noise = nullptr;
 GaussianBlur *pp_gaussian_blur = nullptr;

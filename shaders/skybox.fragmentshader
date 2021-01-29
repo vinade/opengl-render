@@ -19,6 +19,6 @@ uniform vec4 u_Color;
 
 void main(){
 	vec4 colorTex = texture(u_Texture, v_skyboxCoord);
-    color = colorTex + u_AmbientLight.ambient * u_AmbientLight.color;
+    color = 3.0 * u_AmbientLight.ambient * (colorTex + 0.1 * u_AmbientLight.color);
     color = (1.0 - u_Color.a) * color + u_Color.a * u_Color;
 }
