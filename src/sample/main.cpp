@@ -62,10 +62,16 @@ void render_handler()
 
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
+    // spaceship->set_rotation(glm::vec3(
+    //     spaceship_angle.x + spaceship_offset.x,
+    //     -(spaceship_angle.y + spaceship_offset.y),
+    //     spaceship_angle.z + spaceship_offset.z));
+
     spaceship->set_rotation(glm::vec3(
-        spaceship_angle.x + spaceship_offset.x,
-        spaceship_angle.y + spaceship_offset.y,
-        spaceship_angle.z + spaceship_offset.z));
+        (-spaceship_angle.x + spaceship_offset.x),
+        180.0 - (spaceship_angle.z + spaceship_offset.z + 49),
+        (-spaceship_angle.y + spaceship_offset.y) // cima, na cena
+        ));
 
     // scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
 

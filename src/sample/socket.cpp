@@ -123,12 +123,12 @@ void *connection_handler(void *socket_desc)
         az.b[2] = client_message[10];
         az.b[3] = client_message[11];
 
-        (*space_angle_pointer).x = -ax.f;
-        (*space_angle_pointer).y = az.f + 180.0;
-        (*space_angle_pointer).z = -ay.f;
+        (*space_angle_pointer).x = ax.f; // -
+        (*space_angle_pointer).y = ay.f; // -
+        (*space_angle_pointer).z = az.f; //
 
         //Send the message back to client
-        //printf("%.2f\t%.2f\t%.2f\n", ax.f, ay.f, az.f);
+        // printf("%.2f\t%.2f\t%.2f\n", (*space_angle_pointer).x, (*space_angle_pointer).y, (*space_angle_pointer).z);
         // write(sock, client_message, strlen(client_message));
 
         //clear the message buffer
