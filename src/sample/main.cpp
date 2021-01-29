@@ -6,7 +6,7 @@
 #include "texture.hpp"
 #include "vertex_array.hpp"
 #include "scenario_item.hpp"
-#include "height_map.hpp"
+// #include "height_map.hpp"
 #include "light.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
@@ -28,15 +28,15 @@ int frame_buffer_select = 0;
 // ScenarioItem *moon_1;
 // ScenarioItem *plant_1;
 ScenarioItem *spaceship;
-HeightMap *height_map;
+// HeightMap *height_map;
 Scene *scene = nullptr;
 
 Light *light_0;
 Light *light_1;
 glm::vec3 color_light_debug(1.0, 1.0, 1.0);
 glm::vec3 light_translation_debug(-0.9, 0.9, -2.7);
-float light_ambient_debug = 0.1;
-float light_strength_debug = 1.0;
+float light_ambient_debug = 1.5;
+float light_strength_debug = 3.0;
 
 GaussianNoise *pp_gaussian_noise = nullptr;
 GaussianBlur *pp_gaussian_blur = nullptr;
@@ -52,8 +52,8 @@ void render_handler()
     pp_gaussian_blur->set_range(int(blur_level_debug));
 
     glm::vec3 cam = scene->camera.get_position();
-    float height = height_map->get_height(cam.x, cam.z);
-    scene->camera.m_position.y = height + 1.7;
+    // float height = height_map->get_height(cam.x, cam.z);
+    scene->camera.m_position.y = 1.7;
 
     light_0->set_position(light_translation_debug);
     light_0->set_color(glm::vec4(color_light_debug, 1.0));
@@ -96,7 +96,7 @@ void preload()
     scene = new Scene();
     scene->use_skybox = true;
 
-    height_map = new HeightMap(15, 15);
+    // height_map = new HeightMap(15, 15);
     light_0 = new Light();
     light_1 = new Light();
 
@@ -110,19 +110,19 @@ void preload()
     scene->add(light_0);
     scene->add(spaceship);
 
-    scene->add(height_map);
-    height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
-    height_map->set_scale(glm::vec3(10.0, 2.0, 10.0));
+    // scene->add(height_map);
+    // height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
+    // height_map->set_scale(glm::vec3(10.0, 2.0, 10.0));
 
     // float height = height_map->get_height(-3.4, 2.7);
     scene->camera.set_position(glm::vec3(0.0, 0.0, 0.0));
-    float height = height_map->get_height(scene->camera.m_position.x, scene->camera.m_position.z);
-    scene->camera.m_position.y = height + 1.7;
+    // float height = height_map->get_height(scene->camera.m_position.x, scene->camera.m_position.z);
+    scene->camera.m_position.y = 1.7;
     scene->camera.update_view_matrix();
 
     pp_gaussian_noise->every_frame = true;
 
-    light_1->set_position(glm::vec3(0.5, height + 0.5, -2.0));
+    light_1->set_position(glm::vec3(0.5, 0.5, -2.0));
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
     light_1->set_ambient(0.0);
 
@@ -155,9 +155,9 @@ void preload()
 
     // spaceship->load_data_from_file("nano_suit/Nanosuit.obj");
     spaceship->load_data_from_file("spaceship_1/spaceship_1.obj");
-    spaceship->set_position(glm::vec3(0.0, 0.0, -5.0));
+    spaceship->set_position(glm::vec3(0.0, 1.5, -5.0));
     spaceship->set_scale(2.0);
-    spaceship->set_on_height_map(height_map);
+    // spaceship->set_on_height_map(0.5);
     spaceship->set_rotation(spaceship_angle);
 
     MaterialLoader::load_materials({
@@ -184,10 +184,10 @@ void shuffle_materials()
         }
     }
 
-    for (auto hp : scene->height_map_items)
-    {
-        hp->height_map_mesh->material = Material::materials[std::rand() % Material::materials.size()];
-    }
+    // for (auto hp : scene->height_map_items)
+    // {
+    //     hp->height_map_mesh->material = Material::materials[std::rand() % Material::materials.size()];
+    // }
 }
 
 void shuffle_direction()
@@ -200,7 +200,7 @@ void shuffle_direction()
 
 void change_height_map()
 {
-    height_map->diamond_square();
+    // height_map->diamond_square();
 }
 
 void mouse_handler(int button)
@@ -308,7 +308,7 @@ int main()
     engine.render.imgui_controller->radio("FrameBuffer", &frame_buffer_select, 3);
     engine.render.imgui_controller->button("Shuffle materials", shuffle_materials);
     engine.render.imgui_controller->button("point to objects", shuffle_direction);
-    engine.render.imgui_controller->button("change heightmap", change_height_map);
+    // engine.render.imgui_controller->button("change heightmap", change_height_map);
 
 #endif
 
