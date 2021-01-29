@@ -19,13 +19,15 @@
 #include <ctime>
 #include <glm/gtx/rotate_vector.hpp>
 
+#include "socket.cpp"
+
 Engine engine;
 int frame_buffer_select = 0;
 
-ScenarioItem *cat_1;
-ScenarioItem *moon_1;
-ScenarioItem *plant_1;
-ScenarioItem *nanosuit_1;
+// ScenarioItem *cat_1;
+// ScenarioItem *moon_1;
+// ScenarioItem *plant_1;
+ScenarioItem *spaceship;
 HeightMap *height_map;
 Scene *scene = nullptr;
 
@@ -40,6 +42,9 @@ GaussianNoise *pp_gaussian_noise = nullptr;
 GaussianBlur *pp_gaussian_blur = nullptr;
 float noise_level_debug = 0.0;
 float blur_level_debug = 0.0;
+
+glm::vec3 spaceship_angle(0.0, 0.0, 0.0);
+glm::vec3 spaceship_offset(0.0, 0.0, 0.0);
 
 void render_handler()
 {
@@ -57,9 +62,12 @@ void render_handler()
 
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
-    moon_1->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
+    spaceship->set_rotation(glm::vec3(
+        spaceship_angle.x + spaceship_offset.x,
+        spaceship_angle.y + spaceship_offset.y,
+        spaceship_angle.z + spaceship_offset.z));
 
-    scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
+    // scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
 
     switch (frame_buffer_select)
     {
@@ -88,14 +96,11 @@ void preload()
     scene = new Scene();
     scene->use_skybox = true;
 
-    // height_map = new HeightMap("h2.jpeg");
     height_map = new HeightMap(15, 15);
     light_0 = new Light();
     light_1 = new Light();
-    cat_1 = new ScenarioItem();
-    moon_1 = new ScenarioItem();
-    plant_1 = new ScenarioItem();
-    nanosuit_1 = new ScenarioItem();
+
+    spaceship = new ScenarioItem();
     pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
     pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
 
@@ -103,16 +108,11 @@ void preload()
     scene->add(pp_gaussian_noise);
 
     scene->add(light_0);
-    // scene->add(light_1);
-
-    scene->add(cat_1);
-    scene->add(moon_1);
-    scene->add(nanosuit_1);
-    scene->add(plant_1);
+    scene->add(spaceship);
 
     scene->add(height_map);
     height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
-    height_map->set_scale(glm::vec3(10.0, 5.0, 10.0));
+    height_map->set_scale(glm::vec3(10.0, 2.0, 10.0));
 
     // float height = height_map->get_height(-3.4, 2.7);
     scene->camera.set_position(glm::vec3(0.0, 0.0, 0.0));
@@ -136,28 +136,29 @@ void preload()
     // cat_1->load_data_from_file("plant_2/potted_plant_obj.obj");
     // cat_1->load_data_from_file("airgun_1/Air_Gun-Wavefront OBJ.obj");
     // cat_1->load_data_from_file("cobblestones_1/cobblestones.obj");
-    cat_1->load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
-    cat_1->set_position(glm::vec3(-1.0, 0.0, -4.0));
-    cat_1->set_scale(1.0);
-    cat_1->set_on_height_map(height_map);
-    cat_1->set_rotation(glm::vec3(90.0, -180.0, 150.0));
+    // cat_1->load_data_from_file("cat_1/12221_Cat_v1_l3.obj");
+    // cat_1->set_position(glm::vec3(-1.0, 0.0, -4.0));
+    // cat_1->set_scale(1.0);
+    // cat_1->set_on_height_map(height_map);
+    // cat_1->set_rotation(glm::vec3(90.0, -180.0, 150.0));
 
-    moon_1->load_data_from_file("moon_1/Moon 2K.obj");
-    moon_1->set_position(glm::vec3(-2.0, 0.0, -8.0));
-    moon_1->set_scale(2.0);
-    moon_1->set_on_height_map(height_map);
-    moon_1->inc_position(glm::vec3(0.0, 2.0, 0.0));
+    // moon_1->load_data_from_file("moon_1/Moon 2K.obj");
+    // moon_1->set_position(glm::vec3(-2.0, 0.0, -8.0));
+    // moon_1->set_scale(2.0);
+    // moon_1->set_on_height_map(height_map);
+    // moon_1->inc_position(glm::vec3(0.0, 2.0, 0.0));
 
-    plant_1->load_data_from_file("plant_1/01Alocasia_obj.obj");
-    plant_1->set_position(glm::vec3(1.0, 0.0, -4.0));
-    plant_1->set_scale(1.5);
-    plant_1->set_on_height_map(height_map);
+    // plant_1->load_data_from_file("plant_1/01Alocasia_obj.obj");
+    // plant_1->set_position(glm::vec3(1.0, 0.0, -4.0));
+    // plant_1->set_scale(1.5);
+    // plant_1->set_on_height_map(height_map);
 
-    nanosuit_1->load_data_from_file("nano_suit/Nanosuit.obj");
-    nanosuit_1->set_position(glm::vec3(0.0, 0.0, -5.0));
-    nanosuit_1->set_scale(2.0);
-    nanosuit_1->set_on_height_map(height_map);
-    nanosuit_1->set_rotation(glm::vec3(90.0, -180.0, 0.0));
+    // spaceship->load_data_from_file("nano_suit/Nanosuit.obj");
+    spaceship->load_data_from_file("spaceship_1/spaceship_1.obj");
+    spaceship->set_position(glm::vec3(0.0, 0.0, -5.0));
+    spaceship->set_scale(2.0);
+    spaceship->set_on_height_map(height_map);
+    spaceship->set_rotation(spaceship_angle);
 
     MaterialLoader::load_materials({
         "leather_1",
@@ -168,7 +169,8 @@ void preload()
     });
 
     // moon_1->set_material("metal_1");
-    // nanosuit_1->meshes[0].material = MaterialLoader::get_material("leather_1");
+    // spaceship->meshes[0].material = MaterialLoader::get_material("leather_1");
+    // spaceship->set_material("metal_6");
 }
 
 void shuffle_materials()
@@ -296,6 +298,10 @@ int main()
     engine.render.imgui_controller->observef("y", &light_translation_debug[1], -5.0, 5.0);
     engine.render.imgui_controller->observef("z", &light_translation_debug[2], -10.0, 3.0);
 
+    engine.render.imgui_controller->observef("offset_x", &spaceship_offset[0], -180.0, 180.0);
+    engine.render.imgui_controller->observef("offset_y", &spaceship_offset[1], -180.0, 180.0);
+    engine.render.imgui_controller->observef("offset_z", &spaceship_offset[2], -180.0, 180.0);
+
     engine.render.imgui_controller->observef("noise", &noise_level_debug, 0.0, 1.0);
     engine.render.imgui_controller->observef("blur", &blur_level_debug, 0.0, 10.0);
 
@@ -311,6 +317,9 @@ int main()
     engine.set_preload(preload);
     engine.set_render_handler(render_handler);
     engine.render.set_size(1024, 768);
+
+    create_server(&spaceship_angle);
+
     engine.start();
 
     return 0;

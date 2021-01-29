@@ -10,6 +10,7 @@
 #include "basic_scene.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
+#include <time.h>
 
 RenderWindow::RenderWindow()
 {
@@ -148,6 +149,9 @@ void RenderWindow::setup_preloaded()
 #ifdef DEBUG_MODE_COMPILE
 void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 {
+	int milisec = 15; // length of time to sleep, in miliseconds
+	struct timespec req = {0};
+
 	double current_time = glfwGetTime();
 	double diff_time = current_time - this->previous_frame_sample_time;
 	if (diff_time >= RENDER_WINDOW_FPS_TIME_SAMPLE)
@@ -161,6 +165,10 @@ void RenderWindow::render_handler_wrapper(GLFWwindow *window)
 	this->render_handler();
 	this->imgui_controller->display(window);
 	this->frame_sample_counter++;
+
+	req.tv_sec = 0;
+	req.tv_nsec = milisec * 1000000L;
+	nanosleep(&req, (struct timespec *)NULL);
 }
 #endif
 
