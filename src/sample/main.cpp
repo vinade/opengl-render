@@ -69,7 +69,7 @@ void render_handler()
 
     spaceship->set_rotation(glm::vec3(
         (-spaceship_angle.x + spaceship_offset.x),
-        180.0 - (spaceship_angle.z + spaceship_offset.z + 49),
+        180.0 + (spaceship_angle.z + spaceship_offset.z + 66),
         (-spaceship_angle.y + spaceship_offset.y) // cima, na cena
         ));
 
