@@ -1,8 +1,5 @@
-/*
-    C socket server example, handles multiple clients using threads
-    Compile
-    gcc server.c -lpthread -o server
-*/
+#ifndef DRONE_SOCKET_CPP
+#define DRONE_SOCKET_CPP
 
 #include <stdio.h>
 #include <string.h> //strlen
@@ -12,24 +9,15 @@
 #include <unistd.h>    //write
 #include <pthread.h>   //for threading , link with lpthread
 #include <glm/glm.hpp>
-
-union FloatData
-{
-    float f;
-    char b[4];
-};
-
-glm::vec3 *space_angle_pointer;
+#include "drone_state.h"
 
 //the thread function
 void *connection_handler(void *);
 
-int create_server(glm::vec3 *angle)
+int create_server()
 {
     int socket_desc, client_sock, c;
     struct sockaddr_in server, client;
-
-    space_angle_pointer = angle;
 
     //Create socket
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
@@ -90,8 +78,6 @@ int create_server(glm::vec3 *angle)
  * */
 void *connection_handler(void *socket_desc)
 {
-    FloatData ax, ay, az;
-    // FloatData ax, ay, az;
     //Get the socket descriptor
     int sock = *(int *)socket_desc;
     int read_size;
@@ -101,31 +87,9 @@ void *connection_handler(void *socket_desc)
     //Receive a message from client
     while ((read_size = recv(sock, client_message, 2000, 0)) > 0)
     {
-        //end of string marker
-        // client_message[read_size] = '\0';
 
-        ax.b[0] = client_message[0];
-        ax.b[1] = client_message[1];
-        ax.b[2] = client_message[2];
-        ax.b[3] = client_message[3];
-
-        ay.b[0] = client_message[4];
-        ay.b[1] = client_message[5];
-        ay.b[2] = client_message[6];
-        ay.b[3] = client_message[7];
-
-        az.b[0] = client_message[8];
-        az.b[1] = client_message[9];
-        az.b[2] = client_message[10];
-        az.b[3] = client_message[11];
-
-        (*space_angle_pointer).x = ax.f; // -
-        (*space_angle_pointer).y = ay.f; // -
-        (*space_angle_pointer).z = az.f; //
-
-        //Send the message back to client
-        // printf("%.2f\t%.2f\t%.2f\n", (*space_angle_pointer).x, (*space_angle_pointer).y, (*space_angle_pointer).z);
-        // write(sock, client_message, strlen(client_message));
+        DroneState::instance->read_buffer(client_message);
+        // DroneState::instance->print();
 
         //clear the message buffer
         // memset(client_message, 0, 2000);
@@ -143,3 +107,5 @@ void *connection_handler(void *socket_desc)
 
     return 0;
 }
+
+#endif

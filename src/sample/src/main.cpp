@@ -43,7 +43,6 @@ GaussianBlur *pp_gaussian_blur = nullptr;
 float noise_level_debug = 0.0;
 float blur_level_debug = 0.0;
 
-glm::vec3 spaceship_angle(0.0, 0.0, 0.0);
 glm::vec3 spaceship_offset(0.0, 0.0, 0.0);
 
 void render_handler()
@@ -62,15 +61,10 @@ void render_handler()
 
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
-    // spaceship->set_rotation(glm::vec3(
-    //     spaceship_angle.x + spaceship_offset.x,
-    //     -(spaceship_angle.y + spaceship_offset.y),
-    //     spaceship_angle.z + spaceship_offset.z));
-
     spaceship->set_rotation(glm::vec3(
-        (-spaceship_angle.x + spaceship_offset.x),
-        180.0 + (spaceship_angle.z + spaceship_offset.z + 66),
-        (-spaceship_angle.y + spaceship_offset.y) // cima, na cena
+        (-DroneState::instance->angle.x + spaceship_offset.x),
+        180.0 + (-DroneState::instance->angle.z + spaceship_offset.z + 90),
+        (-DroneState::instance->angle.y + spaceship_offset.y) // cima, na cena
         ));
 
     // scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
@@ -164,7 +158,7 @@ void preload()
     spaceship->set_position(glm::vec3(0.0, 1.5, -5.0));
     spaceship->set_scale(2.0);
     // spaceship->set_on_height_map(0.5);
-    spaceship->set_rotation(spaceship_angle);
+    spaceship->set_rotation(DroneState::instance->angle);
 
     MaterialLoader::load_materials({
         "leather_1",
@@ -291,6 +285,8 @@ void keyboard_handler(int key, int scancode, int action, int mods)
 int main()
 {
 
+    DroneState::instance = new DroneState();
+
 #ifdef DEBUG_MODE_COMPILE
     engine.render.imgui_controller->observef("fps", &engine.render.fps);
 
@@ -324,7 +320,7 @@ int main()
     engine.set_render_handler(render_handler);
     engine.render.set_size(1024, 768);
 
-    create_server(&spaceship_angle);
+    create_server();
 
     engine.start();
 
