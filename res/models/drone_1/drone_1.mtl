@@ -1,0 +1,61 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.639693989)
+
+newmtl Material.006
+Kd 0.80000001 0.80000001 0.80000001
+Ka 0 0 0
+Ks 1 1 1
+Ns 50
+illum 2
+map_Kd circle.png
+
+newmtl pale
+Kd 0.044454455 0.044454455 0.044454455
+Ka 0 0 0
+Ks 1 1 1
+Ns 50
+illum 2
+
+newmtl Material.004
+Kd 0.50272644 0.80000007 0.80000007
+Ka 0 0 0
+Ks 1 1 1
+Ke 0.99539828 1.5840001 1.5840001
+Ns 50
+illum 2
+
+newmtl Material.005
+Kd 0.80000007 0.0039595822 0
+Ka 0 0 0
+Ks 1 1 1
+Ke 1.6000001 0.0079191644 0
+Ns 50
+illum 2
+
+newmtl Material.001
+Kd 0.03521771 0.03521771 0.03521771
+Ka 0 0 0
+Ks 1 1 1
+Ns 50
+illum 2
+
+newmtl Material.002
+Kd 1 1 1
+Ka 0 0 0
+Ks 1 1 1
+Ns 50
+illum 2
+
+newmtl Material.003
+Kd 0.73565698 0.60514855 0.51189578
+Ka 0 0 0
+Ks 1 1 1
+Ns 50
+illum 2
+
+newmtl DefaultMaterial
+Kd 0.60000002 0.60000002 0.60000002
+Ka 0 0 0
+Ks 0.60000002 0.60000002 0.60000002
+illum 1
+
