@@ -8,6 +8,7 @@
 #include "scenario_item.hpp"
 // #include "height_map.hpp"
 #include "light.hpp"
+#include "line.hpp"
 #include "scene.hpp"
 #include "engine.hpp"
 #include "post_process.hpp"
@@ -44,6 +45,21 @@ float noise_level_debug = 0.0;
 float blur_level_debug = 0.0;
 
 glm::vec3 spaceship_offset(0.0, 0.0, 0.0);
+Line *line_0;
+Points line_0_data = {
+    {0.0, 0.0, 0.0},
+    // {-1.0, 0.0, 0.0},
+    // {-1.0, 1.0, 0.0},
+    {0.0, 1.0, 0.0}
+    //   {10.0, 0.0, -1.0},
+    //   {-10.0, 0.0, -1.0},
+    //   {0.0, 10.0, -1.0},
+    //   {0.0, -10.0, -1.0},
+    //   {50.0, -50.0, -50.0},
+    //   {50.0, -50.0, 50.0},
+    //   {50.0, 50.0, 50.0},
+    //   {-50.0, 50.0, 50.0}
+};
 
 void render_handler()
 {
@@ -104,11 +120,14 @@ void preload()
     pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
     pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
 
+    line_0 = new Line(line_0_data);
+
     scene->add(pp_gaussian_blur);
     scene->add(pp_gaussian_noise);
 
     scene->add(light_0);
     scene->add(spaceship);
+    scene->add(line_0);
 
     // scene->add(height_map);
     // height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
@@ -159,6 +178,9 @@ void preload()
     spaceship->set_scale(2.0);
     // spaceship->set_on_height_map(0.5);
     spaceship->set_rotation(DroneState::instance->angle);
+
+    line_0->set_position(glm::vec3(0.0, 1.5, -5.0));
+    line_0->set_scale(1.0);
 
     MaterialLoader::load_materials({
         "leather_1",
@@ -320,7 +342,7 @@ int main()
     engine.set_render_handler(render_handler);
     engine.render.set_size(1024, 768);
 
-    create_server();
+    // create_server();
 
     engine.start();
 

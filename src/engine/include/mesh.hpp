@@ -14,10 +14,10 @@ class Mesh
 {
 
 private:
-	void flat_vertex_data(VertexBufferLayout *vbo_layout);
 	void normalize(glm::vec3 &center, glm::vec3 &size);
 
 public:
+	void flat_vertex_data(VertexBufferLayout *vbo_layout);
 	bool ready = false;
 	unsigned int vertex_count;
 	unsigned int index_count;

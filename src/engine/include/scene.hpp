@@ -8,6 +8,7 @@
 #include "height_map.hpp"
 #include "skybox_mesh.hpp"
 #include "light.hpp"
+#include "line.hpp"
 #include "tile.hpp"
 #include "shader.hpp"
 #include "frame_buffer.hpp"
@@ -33,6 +34,7 @@ public:
 
     std::vector<PostProcess *> post_shaders;
     std::vector<Light *> lights;
+    std::vector<Line *> lines;
     std::vector<ScenarioItem *> scenario_items;
     std::vector<HeightMap *> height_map_items;
     std::vector<Puppeteer *> puppeteers;
@@ -50,6 +52,9 @@ public:
 
     void add(Light *light);
     void add(Light &light);
+
+    void add(Line *line);
+    void add(Line &line);
 
     void add(ScenarioItem *scenario_item);
     void add(ScenarioItem &scenario_item);

@@ -179,6 +179,24 @@ void Scene::setup_light(int i)
     this->ambient_shader->setup(light_strength, DATA_TYPE_FLOAT);
 }
 
+void Scene::add(Line &line)
+{
+    Scene::add((Line *)&line);
+}
+
+void Scene::add(Line *line)
+{
+
+    if (AppUtils::add_once(this->lines, line))
+    {
+        if (!RenderWindow::is_render_thread())
+        {
+            RenderWindow::context->to_setup(this);
+            return;
+        }
+    }
+}
+
 void Scene::add(ScenarioItem *scenario_item)
 {
     AppUtils::add_once(this->scenario_items, scenario_item);
@@ -378,6 +396,14 @@ void Scene::draw(FrameBuffer *target_fbo)
         for (auto light : this->lights)
         {
             light->draw(this->camera, this->perspective);
+        }
+
+        /*
+            Linhas
+        */
+        for (auto line : this->lines)
+        {
+            line->draw(this->camera, this->perspective);
         }
     }
 

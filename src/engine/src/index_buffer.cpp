@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include "index_buffer.hpp"
+#include <stdio.h>
 
 IndexBuffer::IndexBuffer(const unsigned int *data, unsigned int count)
 {
@@ -31,6 +32,14 @@ void IndexBuffer::unbind()
 void IndexBuffer::draw()
 {
 	glDrawElements(GL_TRIANGLES, this->count, GL_UNSIGNED_INT, nullptr);
+}
+
+void IndexBuffer::draw(unsigned int mode)
+{
+
+	glDrawElements(mode, this->count, GL_UNSIGNED_INT, nullptr);
+	// ou
+	// glDrawArrays(mode, 0, this->count);
 }
 
 #endif

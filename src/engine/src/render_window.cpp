@@ -143,6 +143,9 @@ void RenderWindow::setup_preloaded()
 	RenderWindow::call_setup(this->skybox_setup_list);
 	std::cerr << "\tSkyboxes ready." << std::endl;
 
+	RenderWindow::call_setup(this->line_mesh_setup_list);
+	std::cerr << "\tLines Mesh ready." << std::endl;
+
 	this->setup_done = true;
 }
 
@@ -242,7 +245,9 @@ void RenderWindow::start()
 	glEnable(GL_DEPTH_TEST);
 
 	// Chama o preloader
-	std::thread([this] { preload_wrapper(); }).detach();
+	std::thread([this]
+				{ preload_wrapper(); })
+		.detach();
 
 	// chama o inicializador do opengl
 	if (this->gl_init != nullptr)

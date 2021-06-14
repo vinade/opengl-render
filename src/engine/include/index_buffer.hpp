@@ -15,6 +15,7 @@ public:
 	void bind();
 	void unbind();
 	void draw();
+	void draw(unsigned int mode);
 };
 
 #endif

@@ -4,6 +4,13 @@
 #include <vector>
 #include <algorithm>
 
+// GLenum err;
+// while ((err = glGetError()) != GL_NO_ERROR)
+// {
+// 	printf("OpenGL error %08x\n", err);
+// 	err = glGetError();
+// }
+
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
 #endif

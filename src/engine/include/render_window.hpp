@@ -6,6 +6,7 @@
 #include "frame_buffer.hpp"
 #include "height_map.hpp"
 #include "height_map_mesh.hpp"
+#include "line_mesh.hpp"
 #include "light.hpp"
 #include "scene.hpp"
 #include <GLFW/glfw3.h>
@@ -58,6 +59,7 @@ private:
 	std::vector<Scene *> scene_setup_list;
 	std::vector<FrameBuffer *> frame_buffer_setup_list;
 	std::vector<SkyboxMesh *> skybox_setup_list;
+	std::vector<LineMesh *> line_mesh_setup_list;
 
 	void init_multiple_keys_state();
 
@@ -105,6 +107,7 @@ public:
 	void to_setup(Scene *scene) { AppUtils::add_once(this->scene_setup_list, scene); };
 	void to_setup(FrameBuffer *frame_buffer) { AppUtils::add_once(this->frame_buffer_setup_list, frame_buffer); };
 	void to_setup(SkyboxMesh *skybox) { AppUtils::add_once(this->skybox_setup_list, skybox); };
+	void to_setup(LineMesh *line_mesh) { AppUtils::add_once(this->line_mesh_setup_list, line_mesh); };
 
 	static void update_window_size_info(GLFWwindow *window, int width, int height);
 	static void GLAPIENTRY gl_debug_callback(GLenum source, GLenum type,
