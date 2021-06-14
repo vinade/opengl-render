@@ -158,7 +158,7 @@ void LineMesh::draw(const glm::mat4 &model_view, const glm::mat4 &view_matrix, c
 
 Points LineMesh::vertex_buffer_src = {
     {0.0, 0.0, 0.0}, // p0
-    {1.0, 0.0, 0.0}  // p1
+    {1.0, 1.0, 1.0}  // p1
 };
 
 #endif

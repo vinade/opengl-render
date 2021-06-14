@@ -30,6 +30,11 @@ void Line::set()
     this->loaded = true;
 }
 
+void Line::set(const glm::vec3 &line)
+{
+    this->set_scale(line);
+}
+
 void Line::draw(const Camera &camera, const Perspective &perspective)
 {
     // std::cerr << "\t[Line] Draw called\n";

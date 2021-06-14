@@ -50,6 +50,8 @@ Line *line_x;
 Line *line_y;
 Line *line_z;
 
+Line *line_magneto_down_reference;
+
 Points x_axis_data = {
     {0.0, 0.0, 0.0},
     {1.0, 0.0, 0.0}};
@@ -125,15 +127,18 @@ void preload()
     line_y = new Line(y_axis_data);
     line_z = new Line(z_axis_data);
 
+    line_magneto_down_reference = new Line();
+
     scene->add(pp_gaussian_blur);
     scene->add(pp_gaussian_noise);
 
     scene->add(light_0);
-    scene->add(spaceship);
+    // scene->add(spaceship);
 
     scene->add(line_x);
     scene->add(line_y);
     scene->add(line_z);
+    scene->add(line_magneto_down_reference);
 
     // scene->add(height_map);
     // height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
@@ -193,6 +198,10 @@ void preload()
 
     line_z->set_position(glm::vec3(0.0, 1.5, -5.0));
     line_z->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
+
+    line_magneto_down_reference->set_position(glm::vec3(0.0, 1.5, -5.0));
+    line_magneto_down_reference->set_color(glm::vec4(0.0, 0.0, 0.0, 1.0));
+    line_magneto_down_reference->set(glm::vec3(-1.0, 1.0, 1.0));
 
     MaterialLoader::load_materials({
         "leather_1",
