@@ -45,21 +45,22 @@ float noise_level_debug = 0.0;
 float blur_level_debug = 0.0;
 
 glm::vec3 spaceship_offset(0.0, 0.0, 0.0);
-Line *line_0;
-Points line_0_data = {
+
+Line *line_x;
+Line *line_y;
+Line *line_z;
+
+Points x_axis_data = {
     {0.0, 0.0, 0.0},
-    // {-1.0, 0.0, 0.0},
-    // {-1.0, 1.0, 0.0},
-    {0.0, 1.0, 0.0}
-    //   {10.0, 0.0, -1.0},
-    //   {-10.0, 0.0, -1.0},
-    //   {0.0, 10.0, -1.0},
-    //   {0.0, -10.0, -1.0},
-    //   {50.0, -50.0, -50.0},
-    //   {50.0, -50.0, 50.0},
-    //   {50.0, 50.0, 50.0},
-    //   {-50.0, 50.0, 50.0}
-};
+    {1.0, 0.0, 0.0}};
+
+Points y_axis_data = {
+    {0.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0}};
+
+Points z_axis_data = {
+    {0.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0}};
 
 void render_handler()
 {
@@ -120,14 +121,19 @@ void preload()
     pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
     pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
 
-    line_0 = new Line(line_0_data);
+    line_x = new Line(x_axis_data);
+    line_y = new Line(y_axis_data);
+    line_z = new Line(z_axis_data);
 
     scene->add(pp_gaussian_blur);
     scene->add(pp_gaussian_noise);
 
     scene->add(light_0);
     scene->add(spaceship);
-    scene->add(line_0);
+
+    scene->add(line_x);
+    scene->add(line_y);
+    scene->add(line_z);
 
     // scene->add(height_map);
     // height_map->set_position(glm::vec3(0.0, 0.0, 0.0));
@@ -175,12 +181,18 @@ void preload()
     // spaceship->load_data_from_file("nano_suit/Nanosuit.obj");
     spaceship->load_data_from_file("spaceship_1/spaceship_1.obj");
     spaceship->set_position(glm::vec3(0.0, 1.5, -5.0));
-    spaceship->set_scale(2.0);
+    spaceship->set_scale(1.0);
     // spaceship->set_on_height_map(0.5);
     spaceship->set_rotation(DroneState::instance->angle);
 
-    line_0->set_position(glm::vec3(0.0, 1.5, -5.0));
-    line_0->set_scale(1.0);
+    line_x->set_position(glm::vec3(0.0, 1.5, -5.0));
+    line_x->set_color(glm::vec4(1.0, 0.0, 0.0, 1.0));
+
+    line_y->set_position(glm::vec3(0.0, 1.5, -5.0));
+    line_y->set_color(glm::vec4(0.0, 1.0, 0.0, 1.0));
+
+    line_z->set_position(glm::vec3(0.0, 1.5, -5.0));
+    line_z->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
     MaterialLoader::load_materials({
         "leather_1",

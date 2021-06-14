@@ -38,8 +38,6 @@ void LineMesh::prepare()
 
 void LineMesh::prepare(bool preload)
 {
-    this->normalize();
-
     if (!preload)
     {
         this->setup();
@@ -58,7 +56,9 @@ void LineMesh::normalize(glm::vec3 &center, glm::vec3 &size)
 
 void LineMesh::normalize()
 {
+    this->vertex_count = this->vertex_data.size();
     std::cerr << "\t[LineMesh] normalize\n";
+    std::cerr << "\t\t vertex counter: " << this->vertex_count << "\n";
 
     for (unsigned int i = 0; i < this->vertex_count; i++)
     {
@@ -119,6 +119,7 @@ void LineMesh::setup()
     this->ready = true;
 
     this->load_data_from_vector();
+    this->normalize();
 
     this->vao = new VertexArray();
     VertexBufferLayout *vbo_layout = new VertexBufferLayout();
@@ -130,23 +131,6 @@ void LineMesh::setup()
     std::cerr << "\t[LineMesh] vertex_count:" << this->vertex_count << "\n";
     std::cerr << "\t[LineMesh] vbo_layout counter:" << vbo_layout->get_counter() << "\n";
     std::cerr << "\t[LineMesh] vertexbuffer Size:" << this->vertex_count * vbo_layout->get_counter() << "\n";
-
-    std::cerr << "\n\t" << this->vertex_buffer[0];
-    std::cerr << "\t" << this->vertex_buffer[1];
-    std::cerr << "\t" << this->vertex_buffer[2] << "\n";
-
-    std::cerr << "\t" << this->vertex_buffer[3];
-    std::cerr << "\t" << this->vertex_buffer[4];
-    std::cerr << "\t" << this->vertex_buffer[5] << "\n";
-
-    std::cerr << "\t" << this->vertex_buffer[6];
-    std::cerr << "\t" << this->vertex_buffer[7];
-    std::cerr << "\t" << this->vertex_buffer[8] << "\n";
-
-    std::cerr << "\t" << this->vertex_buffer[9];
-    std::cerr << "\t" << this->vertex_buffer[10];
-    std::cerr << "\t" << this->vertex_buffer[11] << "\n\n";
-
     std::cerr << "\t[LineMesh] vertexbuffer Size:" << this->vertex_count * vbo_layout->get_counter() << "\n";
     VertexBuffer *vbo = new VertexBuffer(this->vertex_buffer, this->vertex_count * vbo_layout->get_counter());
 

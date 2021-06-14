@@ -22,7 +22,6 @@ public:
     Line(Points &data);
 
     void set();
-    void set(const glm::vec4 &color);
 
     void draw(){};
     void draw(const Camera &camera, const Perspective &perspective);

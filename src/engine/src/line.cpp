@@ -16,23 +16,16 @@ Line::Line(Points &data)
 
 void Line::set()
 {
-    this->set(glm::vec4(1.0, 0.0, 0.0, 1.0));
-}
-
-void Line::set(const glm::vec4 &color)
-{
-    this->color = color;
-
     if (this->loaded)
     {
-        this->line_mesh->color = color;
+        this->line_mesh->color = this->color;
         return;
     }
 
     std::cerr << "\t[Line] Set LineMesh\n";
     // this->set_scale(1.0);
     this->line_mesh = new LineMesh(this->line_data);
-    this->line_mesh->color = color;
+    this->line_mesh->color = this->color;
     this->line_mesh->prepare();
     this->loaded = true;
 }
