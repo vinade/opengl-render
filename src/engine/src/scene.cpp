@@ -367,6 +367,11 @@ void Scene::draw(FrameBuffer *target_fbo)
     {
         // atencão: altera o u_Model
         item->draw(this->ambient_shader);
+
+        if (item->item_ref != nullptr)
+        {
+            item->item_ref->draw(item->model_matrix, this->camera, this->perspective);
+        }
     }
 
     for (auto item : this->puppeteers) // controladores de itens do cenário

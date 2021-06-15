@@ -26,6 +26,7 @@ public:
 
     void draw(){};
     void draw(const Camera &camera, const Perspective &perspective);
+    void draw(const glm::mat4 model_matrix, const Camera &camera, const Perspective &perspective);
 
     void set_color(const glm::vec4 &color);
 };

@@ -119,7 +119,7 @@ void preload()
     light_0 = new Light();
     light_1 = new Light();
 
-    spaceship = new ScenarioItem();
+    spaceship = new ScenarioItem(true);
     pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
     pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
 

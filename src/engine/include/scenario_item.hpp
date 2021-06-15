@@ -2,6 +2,7 @@
 #define SCENARIO_ITEM_HPP
 
 #include "mesh.hpp"
+#include "item_reference.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
@@ -35,6 +36,7 @@ private:
 	inline void calculate_coords();
 
 public:
+	ItemReference *item_ref = nullptr;
 	glm::mat4 model_matrix;
 	std::vector<Mesh> meshes;
 	const aiScene *scene = NULL;
@@ -44,6 +46,7 @@ public:
 	static const std::string models_folder;
 
 	ScenarioItem(){};
+	ScenarioItem(bool use_item_ref);
 
 	void load_data_from_file(const std::string &file_path);
 	void load_data_from_file(const std::string &file_path, bool preload);
