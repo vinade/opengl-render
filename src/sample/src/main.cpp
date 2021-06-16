@@ -133,7 +133,7 @@ void preload()
     scene->add(pp_gaussian_noise);
 
     scene->add(light_0);
-    // scene->add(spaceship);
+    scene->add(spaceship);
 
     scene->add(line_x);
     scene->add(line_y);

@@ -37,17 +37,12 @@ void Line::set(const glm::vec3 &line)
 
 void Line::draw(const Camera &camera, const Perspective &perspective)
 {
-    // std::cerr << "\t[Line] Draw called\n";
-
     if (!this->loaded) // Se não foi carregado na hora do draw()
     {
-        // std::cerr << "\t[Line] Not loaded\n";
         this->set(); // carrega config padrão
     }
 
-    // std::cerr << "\t[Line] update matrix\n";
     this->update_model_matrix();
-    // std::cerr << "\t[Line] draw mesh\n";
     this->line_mesh->draw(this->model_matrix, camera.view_matrix, perspective.projection_matrix);
 }
 
