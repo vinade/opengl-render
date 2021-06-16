@@ -1,6 +1,7 @@
 #ifndef SCENARIO_ITEM_HPP
 #define SCENARIO_ITEM_HPP
 
+#include "basic_item.hpp"
 #include "mesh.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -10,7 +11,7 @@
 
 class HeightMap;
 
-class ScenarioItem
+class ScenarioItem : public BasicItem
 {
 
 private:
@@ -19,10 +20,6 @@ private:
 	glm::vec3 min = {0.0, 0.0, 0.0};
 	glm::vec3 center;
 	glm::vec3 size;
-
-	glm::vec3 m_position = {0.0, 0.0, 0.0};
-	glm::vec3 m_rotation = {0.0, 0.0, 0.0};
-	glm::vec3 m_scale = {1.0, 1.0, 1.0};
 
 	std::string model_path;
 	std::string base_path;
@@ -35,7 +32,6 @@ private:
 	inline void calculate_coords();
 
 public:
-	glm::mat4 model_matrix;
 	std::vector<Mesh> meshes;
 	const aiScene *scene = NULL;
 
@@ -49,21 +45,6 @@ public:
 	void load_data_from_file(const std::string &file_path, bool preload);
 	void draw(Shader *shader);
 	void draw(Shader *shader, const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale);
-
-	void update_model_matrix();
-	void update_model_matrix(const glm::vec3 &pos, const glm::vec3 &rotation, const glm::vec3 &scale);
-	inline glm::vec3 get_position() { return glm::vec3(this->m_position[0], this->m_position[1], this->m_position[2]); };
-	inline glm::vec3 get_scale() { return glm::vec3(this->m_scale[0], this->m_scale[1], this->m_scale[2]); };
-
-	void set_position(const glm::vec3 pos);
-	void set_rotation(const glm::vec3 rotation);
-	void set_scale(const glm::vec3 scale);
-	void set_scale(float scale);
-
-	void inc_position(const glm::vec3 pos);
-	void inc_rotation(const glm::vec3 rotation);
-	void inc_scale(const glm::vec3 scale);
-	void inc_scale(float scale);
 
 	void set_material(const std::string &material_name);
 	void set_material(Material *mtl);
