@@ -249,6 +249,10 @@ void RenderWindow::start()
 				{ preload_wrapper(); })
 		.detach();
 
+#ifdef DEBUG_MODE_COMPILE
+	glLineWidth(3.0);
+#endif
+
 	// chama o inicializador do opengl
 	if (this->gl_init != nullptr)
 	{
