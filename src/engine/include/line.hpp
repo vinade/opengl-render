@@ -3,10 +3,10 @@
 
 #include "line_mesh.hpp"
 #include "perspective.hpp"
+#include "basic_item.hpp"
 #include "camera.hpp"
-#include "scenario_item.hpp"
 
-class Line : public ScenarioItem
+class Line : public BasicItem
 {
 private:
     bool loaded = false;
@@ -26,6 +26,7 @@ public:
 
     void draw(){};
     void draw(const Camera &camera, const Perspective &perspective);
+    void draw(const glm::mat4 model_matrix, const Camera &camera, const Perspective &perspective);
 
     void set_color(const glm::vec4 &color);
 };

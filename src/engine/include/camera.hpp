@@ -2,7 +2,7 @@
 #define CAMERA_HPP
 
 #include <glm/glm.hpp>
-#include "scenario_item.hpp"
+#include "basic_item.hpp"
 
 class Camera
 {
@@ -23,7 +23,7 @@ public:
     void translate(float amount, const glm::vec3 &direction);
     void rotate(float amount, const glm::vec3 &axis);
     void rotate_up(float amount);
-    void point_to(ScenarioItem *item);
+    void point_to(BasicItem *item);
     void update_view_matrix();
 };
 

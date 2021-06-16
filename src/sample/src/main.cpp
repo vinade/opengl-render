@@ -46,23 +46,7 @@ float blur_level_debug = 0.0;
 
 glm::vec3 spaceship_offset(0.0, 0.0, 0.0);
 
-Line *line_x;
-Line *line_y;
-Line *line_z;
-
 Line *line_magneto_down_reference;
-
-Points x_axis_data = {
-    {0.0, 0.0, 0.0},
-    {1.0, 0.0, 0.0}};
-
-Points y_axis_data = {
-    {0.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0}};
-
-Points z_axis_data = {
-    {0.0, 0.0, 0.0},
-    {0.0, 0.0, 1.0}};
 
 void render_handler()
 {
@@ -119,13 +103,9 @@ void preload()
     light_0 = new Light();
     light_1 = new Light();
 
-    spaceship = new ScenarioItem();
+    spaceship = new ScenarioItem(true);
     pp_gaussian_noise = new GaussianNoise("gaussian_noise.post");
     pp_gaussian_blur = new GaussianBlur("gaussian_blur.post");
-
-    line_x = new Line(x_axis_data);
-    line_y = new Line(y_axis_data);
-    line_z = new Line(z_axis_data);
 
     line_magneto_down_reference = new Line();
 
@@ -135,9 +115,6 @@ void preload()
     scene->add(light_0);
     scene->add(spaceship);
 
-    scene->add(line_x);
-    scene->add(line_y);
-    scene->add(line_z);
     scene->add(line_magneto_down_reference);
 
     // scene->add(height_map);
@@ -190,15 +167,6 @@ void preload()
     // spaceship->set_on_height_map(0.5);
     spaceship->set_rotation(DroneState::instance->angle);
 
-    line_x->set_position(glm::vec3(0.0, 1.5, -5.0));
-    line_x->set_color(glm::vec4(1.0, 0.0, 0.0, 1.0));
-
-    line_y->set_position(glm::vec3(0.0, 1.5, -5.0));
-    line_y->set_color(glm::vec4(0.0, 1.0, 0.0, 1.0));
-
-    line_z->set_position(glm::vec3(0.0, 1.5, -5.0));
-    line_z->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
-
     line_magneto_down_reference->set_position(glm::vec3(0.0, 1.5, -5.0));
     line_magneto_down_reference->set_color(glm::vec4(0.0, 0.0, 0.0, 1.0));
     line_magneto_down_reference->set(glm::vec3(-1.0, 1.0, 1.0));
@@ -237,7 +205,7 @@ void shuffle_direction()
 {
     int i = std::rand() % scene->scenario_items.size();
     ScenarioItem *si = scene->scenario_items[i];
-    scene->camera.point_to(si);
+    scene->camera.point_to((BasicItem *)si);
     scene->camera.update_view_matrix();
 }
 

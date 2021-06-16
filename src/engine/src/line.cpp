@@ -43,7 +43,18 @@ void Line::draw(const Camera &camera, const Perspective &perspective)
     }
 
     this->update_model_matrix();
-    this->line_mesh->draw(this->model_matrix, camera.view_matrix, perspective.projection_matrix);
+    this->draw(this->model_matrix, camera, perspective);
+}
+
+void Line::draw(const glm::mat4 model_matrix, const Camera &camera, const Perspective &perspective)
+{
+
+    if (!this->loaded) // Se não foi carregado na hora do draw()
+    {
+        this->set(); // carrega config padrão
+    }
+
+    this->line_mesh->draw(model_matrix, camera.view_matrix, perspective.projection_matrix);
 }
 
 void Line::set_color(const glm::vec4 &color)

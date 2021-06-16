@@ -13,6 +13,14 @@
 #include "material_loader.hpp"
 #include "height_map.hpp"
 
+ScenarioItem::ScenarioItem(bool use_item_ref)
+{
+	if (use_item_ref)
+	{
+		this->item_ref = new ReferenceItem();
+	}
+}
+
 void ScenarioItem::load_scene_from_file(const std::string &file_path)
 {
 

@@ -46,7 +46,7 @@ void Camera::update_view_matrix()
     this->view_matrix = glm::lookAt(this->m_position, this->m_position + this->m_direction, this->m_up);
 }
 
-void Camera::point_to(ScenarioItem *item)
+void Camera::point_to(BasicItem *item)
 {
     glm::vec3 item_position = item->get_position();
     this->m_direction = item_position - this->m_position;
