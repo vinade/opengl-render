@@ -227,9 +227,30 @@ var Vector3D = function (x, y, z, unitaryVector) {
 
 function getInclination(v_mag, v_accel) {
     var alpha = v_mag.getAlphaAngle();
-    var accel_copy = v_accel.copy().addAlphaAngle(-alpha);
+    console.log(alpha);
+    // var accel_copy = v_accel.copy().addAlphaAngle((360 - alpha) % 360);
+    var accel_copy = v_accel.copy().addAlphaAngle( -alpha );
+    console.log(accel_copy.getAlphaAngle());
     var accel_projected = accel_copy.getXZProjection().setUnitary();
-    return accel_projected.getAngle() + 90;
+    console.log(accel_projected.getAngle());
+    var angle = accel_projected.getAngle() + 90;
+    console.log(angle);
+    // angle = (360 + angle) % 360;
+    // angle = angle % 360;
+    console.log(angle);
+    if (angle < 180) {
+        angle = -angle;
+    } else {
+        angle = 360 - angle;
+    }
+    console.log(angle);
+
+    return angle;
+}
+
+function setInclination(v_mag, v_accel) {
+    var angle = getInclination(v_mag, v_accel);
+    v_mag.addBetaAngle(angle);
 }
 
 var tests1 = [
@@ -300,3 +321,31 @@ console.log(v1.calcBetaOffset(v2));
 // tests3.forEach(item => {
 //     item.log();
 // });
+
+
+// var mag = new Vector3D(1, 0, 1, true);
+// var accel = new Vector3D(-0.5, 0, 1, true);
+console.log("mag x accel");
+var mag = new Vector3D(-0.5, 0, -1, true);
+var accel = new Vector3D(0.5, 0, -1, true);
+mag.log();
+accel.log();
+console.log(getInclination(mag, accel));
+
+console.log("mag x accel");
+mag = new Vector3D(-0.9, 0, -0.438, true);
+accel = new Vector3D(-0.438, 0, -0.9, true);
+mag.log();
+accel.log();
+
+console.log(getInclination(mag, accel));
+
+console.log("mag x accel");
+mag = new Vector3D(0.9, 0, -0.438, true);
+accel = new Vector3D(-0.438, 0, -0.9, true);
+mag.log();
+accel.log();
+
+console.log(getInclination(mag, accel));
+setInclination(mag, accel);
+mag.log();
