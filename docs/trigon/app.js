@@ -176,6 +176,13 @@ var Vector3D = function (x, y, z, unitaryVector) {
         return this;
     };
 
+    this.addAngles = function (alpha, beta) {
+        this.addBetaAngle(beta);
+        this.addAlphaAngle(alpha);
+
+        return this;
+    };
+
     this.addBetaAngle = function (angle) {
         var v = this.copy();
         var alphaAngle = this.getAlphaAngle();
@@ -229,7 +236,7 @@ function getInclination(v_mag, v_accel) {
     var alpha = v_mag.getAlphaAngle();
     console.log(alpha);
     // var accel_copy = v_accel.copy().addAlphaAngle((360 - alpha) % 360);
-    var accel_copy = v_accel.copy().addAlphaAngle( -alpha );
+    var accel_copy = v_accel.copy().addAlphaAngle(-alpha);
     console.log(accel_copy.getAlphaAngle());
     var accel_projected = accel_copy.getXZProjection().setUnitary();
     console.log(accel_projected.getAngle());
@@ -349,3 +356,71 @@ accel.log();
 console.log(getInclination(mag, accel));
 setInclination(mag, accel);
 mag.log();
+
+var TestVectors = {
+    isEqual: function (v1, v2) {
+        var diffX = Math.abs(v1.x - v2.x);
+        var diffY = Math.abs(v1.y - v2.y);
+        var diffZ = Math.abs(v1.z - v2.z);
+        var diffLimit = 0.01;
+        return (diffX < diffLimit && diffY < diffLimit && diffZ < diffLimit);
+    },
+    createRandomVector: function () {
+        var maxRange = 10000;
+        var middle = maxRange / 2;
+        var vx = Math.random() * maxRange - middle;
+        var vy = Math.random() * maxRange - middle;
+        var vz = Math.random() * maxRange - middle;
+        return new Vector3D(vx, vy, vz, true);
+    },
+    generateOriginTest: function () {
+        var v0 = new Vector3D(0, 0, -1, true);
+        var v1 = TestVectors.createRandomVector();
+
+        var v1Alpha = v1.getAlphaAngle();
+        var v1Beta = v1.getBetaAngle();
+        v1.addAngles(-v1Alpha, -v1Beta);
+        return TestVectors.isEqual(v0, v1);
+    },
+    generateRotateTest: function () {
+        var v0 = new Vector3D(0, 0, -1, true);
+        var v1 = TestVectors.createRandomVector();
+
+        var v1Alpha = v1.getAlphaAngle();
+        var v1Beta = v1.getBetaAngle();
+
+        v0.addAngles(v1Alpha, v1Beta);
+        return TestVectors.isEqual(v0, v1);
+    },
+    logStatus: function (testName, success, fails) {
+        var status = 'font-weight:bold;';
+        if (fails) {
+            status = status + 'color: red;';
+        } else {
+            status = status + 'color: green;';
+        }
+
+        console.log('%c[' + testName + "] Success: " + success + " Fail: " + fails, status);
+    },
+    runTests: function (test, testName) {
+        var maxTests = 10000;
+        var testCount = 0;
+        var testSuccess = 0;
+        var testFail = 0;
+        while (testCount < maxTests) {
+            testCount++;
+            if (test()) {
+                testSuccess++;
+            } else {
+                testFail++;
+            }
+        }
+        TestVectors.logStatus(testName, testSuccess, testFail);
+    },
+    runAllTests: function () {
+        TestVectors.runTests(TestVectors.generateOriginTest, "Origin Test");
+        TestVectors.runTests(TestVectors.generateRotateTest, "Rotate Test");
+    }
+};
+
+TestVectors.runAllTests();
