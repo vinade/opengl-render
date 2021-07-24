@@ -4,8 +4,9 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "imgui.h"
 #include <vector>
+#include <glm/glm.hpp>
+#include "imgui.h"
 
 template <typename T>
 struct imgui_item
@@ -36,6 +37,8 @@ class ImGuiController
 private:
 	std::vector<struct imgui_item<float>> f_variables;
 	std::vector<struct imgui_item<int>> i_variables;
+	std::vector<struct imgui_item<glm::vec2>> vec2_variables;
+	std::vector<struct imgui_item<glm::vec3>> vec3_variables;
 	std::vector<struct imgui_radio> radios;
 	std::vector<struct imgui_button> buttons;
 
@@ -48,6 +51,8 @@ public:
 
 	void observef(const std::string &title, float *variable);
 	void observei(const std::string &title, int *variable);
+	void observev2(const std::string &title, glm::vec2 *variable);
+	void observev3(const std::string &title, glm::vec3 *variable);
 	void observef(const std::string &title, float *variable, float min, float max);
 	void observei(const std::string &title, int *variable, int min, int max);
 	void radio(const std::string &title, int *variable, int values);
@@ -64,6 +69,12 @@ public:
 
 	template <typename T>
 	void display_number_item(struct imgui_item<T> &item);
+
+	template <typename T>
+	void display_vec2(struct imgui_item<T> &item);
+
+	template <typename T>
+	void display_vec3(struct imgui_item<T> &item);
 };
 
 template <typename T>
@@ -124,4 +135,32 @@ void ImGuiController::display_number_item(struct imgui_item<T> &item)
 		assert(value <= item.max);
 	}
 }
+
+template <typename T>
+void ImGuiController::display_vec2(struct imgui_item<T> &item)
+{
+	T value = *(item.variable);
+
+	if (item.read_only)
+	{
+		ImGui::Text("%s: (%s, %s)", item.title.c_str(),
+					std::to_string(value.x).c_str(),
+					std::to_string(value.y).c_str());
+	}
+}
+
+template <typename T>
+void ImGuiController::display_vec3(struct imgui_item<T> &item)
+{
+	T value = *(item.variable);
+
+	if (item.read_only)
+	{
+		ImGui::Text("%s: (%s, %s, %s)", item.title.c_str(),
+					std::to_string(value.x).c_str(),
+					std::to_string(value.y).c_str(),
+					std::to_string(value.z).c_str());
+	}
+}
+
 #endif

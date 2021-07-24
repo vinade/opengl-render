@@ -56,6 +56,16 @@ void ImGuiController::display(GLFWwindow *window)
 			}
 		}
 
+		for (auto &item : this->vec2_variables)
+		{
+			this->display_vec2(item);
+		}
+
+		for (auto &item : this->vec3_variables)
+		{
+			this->display_vec3(item);
+		}
+
 		for (auto &item : this->radios)
 		{
 			ImGui::Text("%s", item.title.c_str());
@@ -130,6 +140,16 @@ void ImGuiController::observef(const std::string &title, float *variable, float 
 void ImGuiController::observei(const std::string &title, int *variable, int min, int max)
 {
 	this->observe(this->i_variables, title, variable, min, max);
+}
+
+void ImGuiController::observev2(const std::string &title, glm::vec2 *variable)
+{
+	this->observe(this->vec2_variables, title, variable);
+}
+
+void ImGuiController::observev3(const std::string &title, glm::vec3 *variable)
+{
+	this->observe(this->vec3_variables, title, variable);
 }
 
 #endif

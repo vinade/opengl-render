@@ -1,6 +1,8 @@
 #ifndef BASIC_ITEM_HPP
 #define BASIC_ITEM_HPP
 
+#include <glm/glm.hpp>
+
 class BasicItem
 {
 
