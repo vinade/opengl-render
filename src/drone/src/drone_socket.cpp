@@ -19,6 +19,12 @@ int create_server()
     int socket_desc, client_sock, c;
     struct sockaddr_in server, client;
 
+    if (DroneState::instance->use_mock)
+    {
+        puts("[Server] Using mock");
+        return 0;
+    }
+
     //Create socket
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_desc == -1)

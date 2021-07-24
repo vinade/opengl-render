@@ -1,4 +1,4 @@
-file(GLOB ENGINE_SAMPLE "src/main.cpp" "src/drone_state.cpp")
+file(GLOB ENGINE_SAMPLE "src/main.cpp" "src/state.cpp")
 
 add_executable(engine-sample ${ENGINE_SAMPLE})
 target_link_libraries(engine-sample PRIVATE stb imgui engine)

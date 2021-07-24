@@ -65,9 +65,9 @@ void render_handler()
     light_1->set_color(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
     spaceship->set_rotation(glm::vec3(
-        (-DroneState::instance->angle.x + spaceship_offset.x),
-        180.0 + (-DroneState::instance->angle.z + spaceship_offset.z + 90),
-        (-DroneState::instance->angle.y + spaceship_offset.y) // cima, na cena
+        (-State::instance->angle.x + spaceship_offset.x),
+        180.0 + (-State::instance->angle.z + spaceship_offset.z + 90),
+        (-State::instance->angle.y + spaceship_offset.y) // cima, na cena
         ));
 
     // scene->skybox->inc_rotation(glm::vec3(0.0, 0.01f, 0.0));
@@ -165,7 +165,7 @@ void preload()
     spaceship->set_position(glm::vec3(0.0, 1.5, -5.0));
     spaceship->set_scale(1.0);
     // spaceship->set_on_height_map(0.5);
-    spaceship->set_rotation(DroneState::instance->angle);
+    spaceship->set_rotation(State::instance->angle);
 
     line_magneto_down_reference->set_position(glm::vec3(0.0, 1.5, -5.0));
     line_magneto_down_reference->set_color(glm::vec4(0.0, 0.0, 0.0, 1.0));
@@ -296,7 +296,7 @@ void keyboard_handler(int key, int scancode, int action, int mods)
 int main()
 {
 
-    DroneState::instance = new DroneState();
+    State::instance = new State();
 
 #ifdef DEBUG_MODE_COMPILE
     engine.render.imgui_controller->observef("fps", &engine.render.fps);

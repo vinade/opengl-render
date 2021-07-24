@@ -1,5 +1,5 @@
-#ifndef DRONE_SOCKET_CPP
-#define DRONE_SOCKET_CPP
+#ifndef SOCKET_CPP
+#define SOCKET_CPP
 
 #include <stdio.h>
 #include <string.h> //strlen
@@ -9,7 +9,7 @@
 #include <unistd.h>    //write
 #include <pthread.h>   //for threading , link with lpthread
 #include <glm/glm.hpp>
-#include "drone_state.h"
+#include "state.h"
 
 //the thread function
 void *connection_handler(void *);
@@ -88,8 +88,8 @@ void *connection_handler(void *socket_desc)
     while ((read_size = recv(sock, client_message, 2000, 0)) > 0)
     {
 
-        DroneState::instance->read_buffer(client_message);
-        // DroneState::instance->print();
+        State::instance->read_buffer(client_message);
+        // State::instance->print();
 
         //clear the message buffer
         // memset(client_message, 0, 2000);

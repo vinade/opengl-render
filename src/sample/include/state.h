@@ -1,5 +1,5 @@
-#ifndef DRONE_STATE_H
-#define DRONE_STATE_H
+#ifndef STATE_H
+#define STATE_H
 
 #include <iostream>
 #include <glm/glm.hpp>
@@ -10,10 +10,10 @@ union GenericFloatData
     u_char b[4];
 };
 
-class DroneState
+class State
 {
 public:
-    static DroneState *instance;
+    static State *instance;
 
     glm::vec3 angle = {0.0, 0.0, 0.0};
     glm::vec3 accel = {0.0, 0.0, 0.0};

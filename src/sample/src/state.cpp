@@ -1,19 +1,19 @@
-#ifndef DRONE_STATE_CPP
-#define DRONE_STATE_CPP
+#ifndef STATE_CPP
+#define STATE_CPP
 
-#include "drone_state.h"
+#include "state.h"
 
-void DroneState::print()
+void State::print()
 {
-    DroneState::print_vec3f("angle", &this->angle);
-    DroneState::print_vec3f("accel", &this->accel);
-    DroneState::print_vec3f("coords", &this->coords);
-    DroneState::print_vec3f("magneto", &this->magneto);
-    DroneState::print_float("height", &this->height);
-    DroneState::print_float("distance_ground", &this->distance_ground);
+    State::print_vec3f("angle", &this->angle);
+    State::print_vec3f("accel", &this->accel);
+    State::print_vec3f("coords", &this->coords);
+    State::print_vec3f("magneto", &this->magneto);
+    State::print_float("height", &this->height);
+    State::print_float("distance_ground", &this->distance_ground);
 }
 
-void DroneState::read_buffer(char *buffer)
+void State::read_buffer(char *buffer)
 {
     uint start = 0;
     start = read_vec3f(buffer, start, &this->angle);
@@ -24,12 +24,12 @@ void DroneState::read_buffer(char *buffer)
     start = read_float(buffer, start, &this->distance_ground);
 }
 
-void DroneState::print_float(const char *message, float *value)
+void State::print_float(const char *message, float *value)
 {
     std::cout << message << ": " << *value << "\n";
 }
 
-void DroneState::print_vec3f(const char *message, glm::vec3 *value)
+void State::print_vec3f(const char *message, glm::vec3 *value)
 {
     std::cout << message << ": (";
     std::cout << value->x << ",";
@@ -37,7 +37,7 @@ void DroneState::print_vec3f(const char *message, glm::vec3 *value)
     std::cout << value->z << ")\n";
 }
 
-uint DroneState::read_float(char *buffer, uint start, float *destiny)
+uint State::read_float(char *buffer, uint start, float *destiny)
 {
     GenericFloatData value;
 
@@ -51,7 +51,7 @@ uint DroneState::read_float(char *buffer, uint start, float *destiny)
     return start;
 }
 
-uint DroneState::read_vec3f(char *buffer, uint start, glm::vec3 *destiny)
+uint State::read_vec3f(char *buffer, uint start, glm::vec3 *destiny)
 {
     GenericFloatData ax, ay, az;
 
@@ -66,6 +66,6 @@ uint DroneState::read_vec3f(char *buffer, uint start, glm::vec3 *destiny)
     return start;
 }
 
-DroneState *DroneState::instance;
+State *State::instance;
 
 #endif
