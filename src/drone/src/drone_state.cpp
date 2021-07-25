@@ -15,15 +15,18 @@ void DroneState::accel_mag_adjust(Vec3 *mag, Vec3 *accel)
     accel_copy->add_alpha_angle(-alpha);
     accel_projected = accel_copy->get_XZ_projection();
     accel_projected->set_unitary();
+
+    accel_projected->log();
+
     angle = accel_projected->get_angle() + 90;
-    if (angle < 180)
-    {
-        angle = -angle;
-    }
-    else
-    {
-        angle = 360 - angle;
-    }
+    // if (angle < 180)
+    // {
+    //     angle = -angle;
+    // }
+    // else
+    // {
+    //     angle = 360 - angle;
+    // }
 
     mag->add_beta_angle(angle);
 }

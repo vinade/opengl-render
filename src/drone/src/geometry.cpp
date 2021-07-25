@@ -81,7 +81,8 @@ void Vec2::rotate(float angle)
 float Vec2::get_angle()
 {
     float angle = atan2(this->y, this->x);
-    // angle = angle || 0;
+
+    angle = isnan(angle) ? 0 : angle;
     return 180 * (angle / M_PI);
 }
 
@@ -235,7 +236,8 @@ float Vec3::calc_beta_offset(Vec3 *v)
     return beta2 - beta1;
 }
 
-void Vec3::add_angles(float alpha, float beta){
+void Vec3::add_angles(float alpha, float beta)
+{
     this->add_beta_angle(beta);
     this->add_alpha_angle(alpha);
 }
@@ -250,10 +252,10 @@ void Vec3::add_beta_angle(float angle)
     Vec3 *v = this->copy();
     float alpha_angle = this->get_alpha_angle();
 
-    // if (!isNaN(alpha_angle))
-    // {
-    //     v->add_alpha_angle(-alpha_angle);
-    // }
+    if (!isnan(alpha_angle))
+    {
+        v->add_alpha_angle(-alpha_angle);
+    }
 
     Vec2 *projection_XZ = v->get_XZ_projection();
     projection_XZ->set_unitary();
@@ -262,10 +264,10 @@ void Vec3::add_beta_angle(float angle)
     v->y = 0.0;
     v->z = projection_XZ->y;
 
-    // if (!isNaN(alpha_angle))
-    // {
-    //     v->add_alpha_angle(alpha_angle);
-    // }
+    if (!isnan(alpha_angle))
+    {
+        v->add_alpha_angle(alpha_angle);
+    }
 
     this->x = v->x;
     this->y = v->y;
