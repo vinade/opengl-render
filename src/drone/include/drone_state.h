@@ -16,6 +16,12 @@ class DroneState
 public:
     static DroneState *instance;
 
+    bool initialized = false;
+    glm::vec3 up = {0.0, 0.0, 1.0};
+    glm::vec3 front = {0.0, 1.0, 0.0};
+    glm::vec3 right = {1.0, 0.0, 0.0};
+    glm::vec3 initial_north = {0.0, 0.0, 0.0};
+
     glm::vec3 angle = {0.0, 0.0, 0.0};
     glm::vec3 accel = {0.0, 0.0, -1.0};
     glm::vec3 accel_norm = {0.0, 0.0, 0.0};
@@ -24,12 +30,19 @@ public:
     glm::vec3 magneto_north = {0.0, 0.0, 0.0};
     glm::vec3 magneto_down = {0.0, 0.0, 0.0};
     glm::vec3 magneto_east = {0.0, 0.0, 0.0};
+    glm::vec3 magneto_front = {0.0, 1.0, 0.0};
 
     glm::vec3 magneto_offset_north = {0.0, 0.0, 0.0};
     glm::vec3 magneto_offset_down = {0.0, 0.0, 0.0};
     glm::vec3 magneto_offset_east = {0.0, 0.0, 0.0};
+    glm::vec2 magneto_offset_front = {0.0, 0.0};
+
+    float magneto_z_angle = 0.0;
+    float magneto_offset_z = 0.0;
 
     /* Mock */
+    float mock_pitch = 0;
+    float mock_roll = 0;
     float mock_mag_alpha = 0;
     float mock_mag_beta = 0;
     float mock_accel_alpha = 0;
@@ -47,11 +60,18 @@ public:
     void read_buffer(char *buffer);
 
     static void print();
+    static void unitary_vector(glm::vec3 &v);
     static void normalize_accel();
     static void normalize_magneto();
+    static void normalize_vectors_angle();
+    static void calc_z_angle();
     static void compensate_magneto_from_accel();
+    static void convert_magneto_coord_to_drone_coord(glm::vec3 &v);
+    static void convert_accel_coord_to_drone_coord(glm::vec3 &v);
+    static void set_initialized();
     static void update_north();
     static void update_mag_down();
+    static void update_mag_front();
     static void update_east();
     static void accel_mag_adjust(Vec3 *mag, Vec3 *accel);
 

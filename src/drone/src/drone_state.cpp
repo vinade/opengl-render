@@ -4,6 +4,11 @@
 #include <math.h>
 #include "drone_state.h"
 
+void DroneState::set_initialized()
+{
+    DroneState::instance->initialized = !DroneState::instance->initialized;
+}
+
 void DroneState::accel_mag_adjust(Vec3 *mag, Vec3 *accel)
 {
     float alpha, angle;
@@ -19,14 +24,14 @@ void DroneState::accel_mag_adjust(Vec3 *mag, Vec3 *accel)
     accel_projected->log();
 
     angle = accel_projected->get_angle() + 90;
-    // if (angle < 180)
-    // {
-    //     angle = -angle;
-    // }
-    // else
-    // {
-    //     angle = 360 - angle;
-    // }
+    if (angle < 180)
+    {
+        angle = -angle;
+    }
+    else
+    {
+        angle = 360 - angle;
+    }
 
     mag->add_beta_angle(angle);
 }
@@ -40,9 +45,18 @@ void DroneState::normalize_accel()
     DroneState::instance->accel_norm.z = accel->z;
 }
 
+void DroneState::unitary_vector(glm::vec3 &v)
+{
+    Vec3 *nv = new Vec3(v, true);
+    nv->set_unitary();
+    v.x = nv->x;
+    v.y = nv->y;
+    v.z = nv->z;
+}
+
 void DroneState::normalize_magneto()
 {
-    DroneState::compensate_magneto_from_accel();
+    // DroneState::compensate_magneto_from_accel();
     DroneState::update_north();
     DroneState::update_mag_down();
 }
@@ -59,16 +73,38 @@ void DroneState::compensate_magneto_from_accel()
     DroneState::instance->magneto.z = mag->z;
 }
 
+void DroneState::convert_magneto_coord_to_drone_coord(glm::vec3 &v)
+{
+    Vec3 *v_out = new Vec3(v);
+    v_out->add_angles(90, 180);
+    v.x = v_out->x;
+    v.y = -v_out->y;
+    v.z = v_out->z;
+}
+
+void DroneState::convert_accel_coord_to_drone_coord(glm::vec3 &v)
+{
+    Vec3 *v_out = new Vec3(v);
+    v_out->add_angles(90, 180);
+    v.x = v_out->x;
+    v.y = -v_out->y;
+    v.z = v_out->z;
+}
+
 void DroneState::update_north()
 {
     Vec3 *mag = new Vec3(DroneState::instance->magneto, true);
-    if (!DroneState::instance->has_north)
+    if (!DroneState::instance->initialized)
     {
         DroneState::instance->has_north = true;
 
         Vec3 *n_mag = mag->copy();
         n_mag->z = 0;
         n_mag->set_unitary();
+
+        DroneState::instance->initial_north.x = n_mag->x;
+        DroneState::instance->initial_north.y = n_mag->y;
+        DroneState::instance->initial_north.z = 0;
 
         glm::vec2 mag_offset_north;
         mag_offset_north.x = mag->calc_alpha_offset(n_mag);
@@ -83,6 +119,40 @@ void DroneState::update_north()
     DroneState::instance->magneto_north.x = mag->x;
     DroneState::instance->magneto_north.y = mag->y;
     DroneState::instance->magneto_north.z = mag->z;
+}
+
+void DroneState::update_mag_front()
+{
+    Vec3 *mag = new Vec3(DroneState::instance->magneto, true);
+
+    if (!DroneState::instance->initialized)
+    {
+        Vec3 *front = new Vec3(DroneState::instance->front, true);
+        DroneState::instance->magneto_offset_front.x = mag->calc_alpha_offset(front);
+        DroneState::instance->magneto_offset_front.y = mag->calc_beta_offset(front);
+    }
+
+    mag->add_angles(DroneState::instance->magneto_offset_front.x, DroneState::instance->magneto_offset_front.y);
+
+    DroneState::instance->magneto_front.x = mag->x;
+    DroneState::instance->magneto_front.y = mag->y;
+    DroneState::instance->magneto_front.z = mag->z;
+}
+
+void DroneState::calc_z_angle()
+{
+    Vec2 *mag = new Vec2(DroneState::instance->magneto.x, DroneState::instance->magneto.y, true);
+
+    if (!DroneState::instance->initialized)
+    {
+        Vec2 *front = new Vec2(DroneState::instance->front.x, DroneState::instance->front.y, true);
+        float alpha2 = front->get_angle();
+        float alpha1 = mag->get_angle();
+
+        DroneState::instance->magneto_offset_z = alpha2 - alpha1 - 90;
+    }
+
+    DroneState::instance->angle.z = mag->get_angle() + DroneState::instance->magneto_offset_z;
 }
 
 void DroneState::update_mag_down()
@@ -124,6 +194,37 @@ void DroneState::read_mock()
     DroneState::instance->accel.x = v_accel->x;
     DroneState::instance->accel.y = v_accel->y;
     DroneState::instance->accel.z = v_accel->z;
+
+    DroneState::instance->angle.x = DroneState::instance->mock_pitch;
+    DroneState::instance->angle.y = DroneState::instance->mock_roll;
+    DroneState::instance->angle.z = 0; // Na verdade a projeção de magneto no plano XY, convertido para um angulo.
+}
+
+void DroneState::normalize_vectors_angle()
+{
+    Vec3 *v_up = new Vec3(0, 0, 1);
+    Vec3 *v_mag = new Vec3(DroneState::instance->magneto);
+    if (DroneState::instance->use_mock)
+    {
+        // normalize_vectors_angle(); // normaliza as coordenadas dos angulos de rotação em relação ao pitch e roll
+        DroneState::instance->angle.x = DroneState::instance->mock_roll;
+        DroneState::instance->angle.y = DroneState::instance->mock_pitch;
+    }
+
+    // DroneState::instance->angle.z = 0;
+
+    v_up->rotate_Y(-DroneState::instance->angle.y);
+    v_up->rotate_X(-DroneState::instance->angle.x);
+    v_mag->rotate_Y(-DroneState::instance->angle.y);
+    v_mag->rotate_X(-DroneState::instance->angle.x);
+
+    DroneState::instance->up.x = v_up->x;
+    DroneState::instance->up.y = v_up->y;
+    DroneState::instance->up.z = v_up->z;
+
+    DroneState::instance->magneto.x = v_mag->x;
+    DroneState::instance->magneto.y = v_mag->y;
+    DroneState::instance->magneto.z = v_mag->z;
 }
 
 void DroneState::print()
@@ -153,8 +254,20 @@ void DroneState::read_buffer(char *buffer)
         DroneState::read_mock();
     }
 
-    normalize_accel();
-    normalize_magneto();
+    unitary_vector(this->accel);
+    unitary_vector(this->magneto);
+    convert_accel_coord_to_drone_coord(this->accel);
+    convert_magneto_coord_to_drone_coord(this->magneto);
+
+    if (!DroneState::instance->initialized)
+    {
+        // normalize_accel();
+        normalize_magneto();
+    }
+
+    normalize_vectors_angle(); // normaliza as coordenadas dos angulos de rotação em relação ao pitch e roll
+    calc_z_angle();
+    DroneState::update_mag_front();
 }
 
 void DroneState::print_float(const char *message, float *value)
