@@ -27,12 +27,12 @@ Material *MaterialLoader::get_material(const std::string &file_path)
         normalized_file_path = normalized_file_path + ".json";
     }
 
-    std::ifstream material_file(normalized_file_path);
+    std::ifstream material_file(normalized_file_path, std::ifstream::in);
     if (!material_file.good())
     {
         material_file.close();
         normalized_file_path = MaterialLoader::materials_folder + normalized_file_path;
-        material_file.open(normalized_file_path);
+        material_file.open(normalized_file_path, std::ifstream::in);
 
         if (!material_file.good())
         {
@@ -41,10 +41,8 @@ Material *MaterialLoader::get_material(const std::string &file_path)
         }
     }
 
-    std::string file_content((std::istreambuf_iterator<char>(material_file)), std::istreambuf_iterator<char>());
-
-    rapidjson::Document data;
-    data.Parse(file_content.c_str());
+    Json::Value data;
+    material_file >> data;
 
     Material *mtl = new Material();
 
@@ -55,17 +53,17 @@ Material *MaterialLoader::get_material(const std::string &file_path)
     MaterialLoader::set(data, "ambient_occlusion_map", mtl->ambient_occlusion_textures, TEXTURE_AMBIENT_OCLUSION);
     MaterialLoader::set(data, "reflection_map", mtl->reflection_textures, TEXTURE_REFLECTION);
 
-    if (data.HasMember("material_color"))
+    if (data.isMember("material_color"))
     {
-        rapidjson::Value &color = data["material_color"];
-        float r = color["r"].GetFloat();
-        float g = color["g"].GetFloat();
-        float b = color["b"].GetFloat();
+        Json::Value &color = data["material_color"];
+        float r = color["r"].asFloat();
+        float g = color["g"].asFloat();
+        float b = color["b"].asFloat();
         float a = 1.0;
 
-        if (color.HasMember("a"))
+        if (color.isMember("a"))
         {
-            a = color["a"].GetFloat();
+            a = color["a"].asFloat();
         }
 
         mtl->color = glm::vec4(r, g, b, a);
@@ -82,19 +80,19 @@ Material *MaterialLoader::get_material(const std::string &file_path)
     return mtl;
 }
 
-void MaterialLoader::set(rapidjson::Value &data, const char *key, float &component)
+void MaterialLoader::set(Json::Value &data, const char *key, float &component)
 {
-    if (data.HasMember(key))
+    if (data.isMember(key))
     {
-        component = data[key].GetFloat();
+        component = data[key].asFloat();
     }
 }
 
-void MaterialLoader::set(rapidjson::Value &data, const char *key, std::vector<Texture *> &texture_list, TextureType texture_type)
+void MaterialLoader::set(Json::Value &data, const char *key, std::vector<Texture *> &texture_list, TextureType texture_type)
 {
-    if (data.HasMember(key))
+    if (data.isMember(key))
     {
-        Texture *tex = new Texture(data[key].GetString(), texture_type);
+        Texture *tex = new Texture(data[key].asString(), texture_type);
         texture_list.push_back(tex);
     }
 }
